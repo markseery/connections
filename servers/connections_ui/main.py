@@ -47,18 +47,18 @@ def chat() -> str:
     return path.read_text(encoding="utf-8")
 
 
-@app.get("/api/chatserver-url")
-def chatserver_url() -> dict[str, str]:
-    """Return the chat server base URL from the registry (for the chat page to call)."""
+@app.get("/api/chatagent-url")
+def chatagent_url() -> dict[str, str]:
+    """Return the chatagent base URL from the registry (for the chat page to call)."""
     registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
     try:
         with httpx.Client(timeout=5.0) as client:
-            r = client.get(f"{registry}/servers/chatserver")
+            r = client.get(f"{registry}/servers/chatagent")
             r.raise_for_status()
             data = r.json()
             url = data.get("url")
             if not url:
-                raise HTTPException(status_code=502, detail="Registry missing chatserver url")
+                raise HTTPException(status_code=502, detail="Registry missing chatagent url")
             return {"url": url.rstrip("/")}
     except httpx.HTTPError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e

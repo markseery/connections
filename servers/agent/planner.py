@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any
 
 import httpx
@@ -103,18 +104,44 @@ def _trace_llm(stage: str, payload: dict[str, Any]) -> None:
 
 def _loads_json_object(text: str) -> dict[str, Any]:
     """
-    The model sometimes returns extra prose around the JSON. Extract the first JSON
-    object and parse it.
+    Extract the first JSON object from model output (which may include prose or
+    fenced code blocks) and parse it.  If the raw extraction fails json.loads,
+    attempt common structural repairs before giving up.
     """
     t = text.strip()
     if not t:
         raise ValueError("Empty plan text")
-    if t.startswith("{") and t.endswith("}"):
-        return json.loads(t)
 
+    # Strip fenced code blocks.
+    if t.startswith("```"):
+        t = re.sub(r"^```[a-zA-Z0-9]*\n?", "", t)
+        t = re.sub(r"\n?```$", "", t).strip()
+
+    candidate = _extract_brace_block(t)
+    if candidate is None:
+        raise ValueError("No JSON object found in plan text")
+
+    # Happy path: valid JSON on first try.
+    try:
+        return json.loads(candidate)
+    except json.JSONDecodeError:
+        pass
+
+    # Repair pass: fix common LLM mistakes before giving up.
+    repaired = _repair_json(candidate)
+    try:
+        return json.loads(repaired)
+    except json.JSONDecodeError:
+        pass
+
+    raise ValueError(f"Could not parse JSON from plan text: {candidate[:200]}")
+
+
+def _extract_brace_block(t: str) -> str | None:
+    """Find the first top-level {...} block using brace-depth tracking."""
     start = t.find("{")
     if start == -1:
-        raise ValueError("No JSON object found in plan text")
+        return None
     depth = 0
     in_str = False
     esc = False
@@ -136,6 +163,76 @@ def _loads_json_object(text: str) -> dict[str, Any]:
         elif ch == "}":
             depth -= 1
             if depth == 0:
-                candidate = t[start : i + 1]
-                return json.loads(candidate)
-    raise ValueError("Unterminated JSON object in plan text")
+                return t[start : i + 1]
+    return None
+
+
+def _repair_json(text: str) -> str:
+    """
+    Attempt to fix common LLM JSON mistakes by rebuilding the plan from parts.
+
+    The most frequent error: step fields (especially "depends_on") end up outside
+    the step object but still inside the steps array, producing invalid JSON like:
+        "steps":[{...step...},"depends_on":[]]
+
+    Strategy: extract "objective" and each step-like {...} from the text, merge any
+    orphaned key:value pairs back into the preceding step, and reassemble.
+    """
+    # Extract objective.
+    m = re.search(r'"objective"\s*:\s*"((?:[^"\\]|\\.)*)"', text)
+    objective = m.group(1) if m else ""
+
+    # Find all {...} blocks inside the "steps" array.
+    steps_match = re.search(r'"steps"\s*:\s*\[', text)
+    if not steps_match:
+        return text
+
+    remainder = text[steps_match.end():]
+    step_objects: list[dict[str, Any]] = []
+
+    pos = 0
+    while pos < len(remainder):
+        # Find next { that starts a step object.
+        brace_start = remainder.find("{", pos)
+        if brace_start == -1:
+            # Check for orphaned key:value pairs between last } and ]
+            tail = remainder[pos:]
+            _absorb_orphans(tail, step_objects)
+            break
+
+        # Check for orphaned "key":value between previous } and this {
+        gap = remainder[pos:brace_start]
+        _absorb_orphans(gap, step_objects)
+
+        # Extract the {...} block.
+        block = _extract_brace_block(remainder[brace_start:])
+        if block is None:
+            break
+        try:
+            obj = json.loads(block)
+            if isinstance(obj, dict):
+                step_objects.append(obj)
+        except json.JSONDecodeError:
+            pass
+        pos = brace_start + len(block)
+
+    # Reassemble clean JSON.
+    plan = {"objective": objective, "steps": step_objects}
+    return json.dumps(plan, ensure_ascii=False)
+
+
+def _absorb_orphans(gap: str, steps: list[dict[str, Any]]) -> None:
+    """
+    Scan a text gap between step objects for orphaned "key":value pairs
+    and merge them into the last step.
+    """
+    if not steps:
+        return
+    for m in re.finditer(r'"(\w+)"\s*:\s*(\[[^\]]*\]|"(?:[^"\\]|\\.)*"|\d+|true|false|null)', gap):
+        key = m.group(1)
+        val_str = m.group(2)
+        try:
+            val = json.loads(val_str)
+        except Exception:
+            continue
+        steps[-1][key] = val

@@ -25,6 +25,10 @@ servers:
     app: servers.chatserver.main:app
     host: 127.0.0.1
     port: 7022
+  - name: chatagent
+    app: servers.chatagent.main:app
+    host: 127.0.0.1
+    port: 7023
   - name: connections_ui
     app: servers.connections_ui.main:app
     host: 127.0.0.1

@@ -1,8 +1,7 @@
 """
 License: MIT
 Description: Demo script: use already-running servers (registry/agent/config/worker),
-load statistics skill into a worker, register skill config, ask the agent a question,
-and print the response.
+load skills via SkillLifecycle, ask the agent a question, and print the response.
 """
 
 from __future__ import annotations
@@ -16,6 +15,8 @@ import time
 from typing import Any
 
 import httpx
+
+from common.skill_lifecycle import SkillLifecycle
 
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -34,11 +35,6 @@ def _wait_ok(url: str, timeout_s: float = 30.0) -> None:
             last_err = str(e)
         time.sleep(0.25)
     raise RuntimeError(f"Timed out waiting for {url}. Last error: {last_err}")
-
-
-def _is_pid_running_with_substring(pid: int, needle: str) -> bool:
-    # Kept for compatibility with earlier versions of this script; no longer required.
-    return True
 
 
 def _find_urls_via_registry(timeout_s: float = 60.0) -> dict[str, str]:
@@ -90,15 +86,12 @@ def main() -> int:
     urls = _find_urls_via_registry(timeout_s=30.0)
     registry_url = urls.get("registry")
     if not registry_url:
-        # Fallback: registry is always the one that answered /servers.
-        # In this function we don't return it explicitly, so use default.
         registry_url = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 
     config_url = urls["configuration"]
     _wait_ok(f"{config_url}/health", timeout_s=30.0)
 
-    # Start a dedicated worker instance for this demo run (avoids stale loaded modules
-    # in long-running workers after code changes).
+    # Start a dedicated worker instance for this demo run.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
         worker_port = int(s.getsockname()[1])
@@ -108,14 +101,8 @@ def main() -> int:
     worker_env["REGISTRY_SERVER_URL"] = registry_url
     worker_proc = subprocess.Popen(
         [
-            sys.executable,
-            "-m",
-            "uvicorn",
-            "servers.worker.main:app",
-            "--host",
-            "127.0.0.1",
-            "--port",
-            str(worker_port),
+            sys.executable, "-m", "uvicorn", "servers.worker.main:app",
+            "--host", "127.0.0.1", "--port", str(worker_port),
         ],
         cwd=ROOT,
         env=worker_env,
@@ -124,7 +111,7 @@ def main() -> int:
         stderr=None,
     )
 
-    # Start an agent instance (only the agent, not the whole supervisor).
+    # Start an agent instance.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
         agent_port = int(s.getsockname()[1])
@@ -134,14 +121,8 @@ def main() -> int:
     env["REGISTRY_SERVER_URL"] = registry_url
     agent_proc = subprocess.Popen(
         [
-            sys.executable,
-            "-m",
-            "uvicorn",
-            "servers.agent.main:app",
-            "--host",
-            "127.0.0.1",
-            "--port",
-            str(agent_port),
+            sys.executable, "-m", "uvicorn", "servers.agent.main:app",
+            "--host", "127.0.0.1", "--port", str(agent_port),
         ],
         cwd=ROOT,
         env=env,
@@ -153,34 +134,13 @@ def main() -> int:
         _wait_ok(f"{agent_url}/health", timeout_s=30.0)
         _wait_ok(f"{worker_url}/health", timeout_s=30.0)
 
-        # Load/register skills into worker + config so the agent can discover them.
-        skill_defs: dict[str, dict[str, Any]] = {
-            "statistics": {
-                "base_url": worker_url,
-                "routes": [
-                    {"method": "POST", "path": "/skills/statistics/mean", "description": "Compute mean of values"},
-                    {"method": "POST", "path": "/skills/statistics/median", "description": "Compute median of values"},
-                    {"method": "POST", "path": "/skills/statistics/stddev", "description": "Compute stddev of values"},
-                ],
-            },
-            "notification_skill": {
-                "base_url": worker_url,
-                "routes": [
-                    {"method": "POST", "path": "/skills/notification_skill/send", "description": "Send an email"},
-                    {"method": "GET", "path": "/skills/notification_skill/notifications", "description": "List notifications"},
-                    {"method": "GET", "path": "/skills/notification_skill/stats", "description": "Notification stats"},
-                    {"method": "GET", "path": "/skills/notification_skill/config", "description": "Email config (masked)"},
-                ],
-            },
-        }
-
-        with httpx.Client(timeout=10.0) as client:
-            for skill_name, defn in skill_defs.items():
-                # Best-effort load; if the module isn't available in the worker, keep going.
-                lr = client.post(f"{worker_url}/worker/skills/{skill_name}/load")
-                if lr.status_code >= 400:
-                    continue
-                client.put(f"{config_url}/configs/skill/{skill_name}", json=defn).raise_for_status()
+        # Use the shared SkillLifecycle to load + register skills.
+        lifecycle = SkillLifecycle(
+            registry_url=registry_url,
+            config_url=config_url,
+            worker_url=worker_url,
+        )
+        lifecycle.prepare()
 
         # Ask the agent.
         with httpx.Client(timeout=60.0) as client:
@@ -212,4 +172,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

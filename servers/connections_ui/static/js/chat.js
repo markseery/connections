@@ -10,7 +10,7 @@
   const submitBtn = document.getElementById("chat-submit");
   const profileSelect = document.getElementById("chat-profile");
 
-  let chatserverUrl = null;
+  let chatagentUrl = null;
   let namespace = null;
 
   function hidePlaceholder() {
@@ -53,16 +53,16 @@
     }
   }
 
-  function getChatserverUrl() {
-    if (chatserverUrl) return Promise.resolve(chatserverUrl);
-    return fetch("/api/chatserver-url")
+  function getChatagentUrl() {
+    if (chatagentUrl) return Promise.resolve(chatagentUrl);
+    return fetch("/api/chatagent-url")
       .then(function (r) {
         if (!r.ok) throw new Error("Could not get chat server URL");
         return r.json();
       })
       .then(function (data) {
-        chatserverUrl = data.url || null;
-        return chatserverUrl;
+        chatagentUrl = data.url || null;
+        return chatagentUrl;
       });
   }
 
@@ -76,9 +76,9 @@
 
     setLoading(true);
     showThinking();
-    getChatserverUrl()
+    getChatagentUrl()
       .then(function (base) {
-        if (!base) throw new Error("No chat server URL");
+        if (!base) throw new Error("No chat agent URL");
         const body = { prompt: text, profile: profile };
         if (namespace) body.namespace = namespace;
         return fetch(base + "/chat", {
