@@ -11,6 +11,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
+from decorations.monitor import monitor_fastapi_app
 from .backend import FileEncryptedBackend, StorageBackend
 from .routes import router
 
@@ -48,3 +49,4 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 app.include_router(router)
+monitor_fastapi_app(app)

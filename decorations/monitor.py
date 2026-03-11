@@ -164,3 +164,28 @@ def monitor(obj: Any) -> Any:
         return _wrap_callable(obj)
     raise TypeError("@monitor can only decorate a class or callable")
 
+
+def monitor_fastapi_app(app: Any) -> None:
+    """
+    Wrap all FastAPI route endpoints with the monitor wrapper.
+
+    This applies the same monitoring behavior as @monitor without needing to
+    decorate every route function manually.
+    """
+    try:
+        from fastapi.routing import APIRoute  # type: ignore
+    except Exception:
+        APIRoute = None  # type: ignore
+
+    for route in getattr(app, "router", getattr(app, "routes", None)).routes if getattr(app, "router", None) else []:
+        endpoint = getattr(route, "endpoint", None)
+        if not callable(endpoint):
+            continue
+        # Avoid double-wrapping.
+        if getattr(endpoint, "__wrapped__", None) is not None:
+            continue
+        # Only wrap FastAPI API routes when we can identify them.
+        if APIRoute is not None and not isinstance(route, APIRoute):
+            continue
+        route.endpoint = _wrap_callable(endpoint)
+

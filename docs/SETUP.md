@@ -1,0 +1,117 @@
+## Installation & setup
+
+### Prerequisites
+- Python 3.11+ (3.12 recommended)
+- A local Ollama install (optional, for `AISERVER_DEFAULT_PROVIDER=ollama`)
+- If using Google/OpenAI/xAI providers: valid API keys
+
+### Install dependencies
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Create `.env`
+Copy the example:
+
+```bash
+cp .env.example .env
+```
+
+Fill in the values you need.
+
+### Run the stack (supervised)
+
+```bash
+python start_app.py
+```
+
+This starts servers listed in `app_config.yaml`, monitors `/health`, and registers each server into the registry.
+
+### Run the demo agent script
+
+```bash
+python run_agent_mean_demo.py "what is the mean of 10,13,45,23"
+```
+
+The demo script:
+- finds `configuration` and `registry`
+- starts a dedicated `worker` and `agent` for the run
+- loads skills into the worker
+- registers skill definitions into configuration
+- calls `POST /agent/execute`
+
+---
+
+## Environment variables
+
+This project loads `.env` in multiple servers. Some values are required; many are optional.
+
+### Core / required for most runs
+- **`STORAGE_ENCRYPTION_KEY`**: Fernet key for encrypting records at rest in the storage server.
+  - Generate: `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
+- **`TRANSPORT_ENCRYPTION_KEY`**: Fernet key used for optional encrypted HTTP bodies (`_enc`) between services.
+  - Generate: same as above.
+
+### Service discovery / wiring
+- **`REGISTRY_SERVER_URL`**: base URL of the registry (used by clients/servers to discover others).
+  - Example: `http://127.0.0.1:7002`
+- **`STORAGE_SERVER_URL`**: base URL of the storage server (used by configuration server).
+  - This is injected by `start_app.py` when it starts the configuration server, but it can also be set manually.
+
+### AI server configuration (`servers/aiserver`)
+
+#### Provider selection
+- **`AISERVER_DEFAULT_PROVIDER`**: default provider when a profile has no per-profile provider.
+  - Allowed: `ollama`, `openai`, `xai`, `google`
+- **`AISERVER_PROFILE_<PROFILE>_PROVIDER`**: override provider for a specific profile.
+  - Profiles: `FAST`, `CHAT`, `REASON`, `AGENT`, `CODE`, `IMAGE`, `VIDEO`
+  - Example: `AISERVER_PROFILE_FAST_PROVIDER=google`
+
+#### Model selection
+- **`AISERVER_PROFILE_<PROFILE>_MODEL`**: override model for a specific profile.
+  - Example: `AISERVER_PROFILE_FAST_MODEL=gemini-3-flash-preview`
+- **`AISERVER_MODEL_<PROVIDER>_<PROFILE>`**: override model for a provider+profile pair.
+  - Example: `AISERVER_MODEL_OLLAMA_REASON=gemma3:4b`
+
+#### Provider API keys
+- **`OPENAI_API_KEY`**: required if using provider `openai`
+- **`XAI_API_KEY`**: required if using provider `xai`
+- **`GOOGLE_API_KEY`**: required if using provider `google`
+
+#### Optional provider base URLs
+- **`OLLAMA_BASE_URL`**: default `http://localhost:11434`
+- **`OPENAI_BASE_URL`**: default `https://api.openai.com`
+- **`XAI_BASE_URL`**: default `https://api.x.ai`
+- **`GOOGLE_BASE_URL`**: default `https://generativelanguage.googleapis.com`
+
+### Agent tracing (optional)
+- **`AGENT_TRACE`**: `1` (default) prints agent stage logs to stdout; set `0` to disable.
+- **`AGENT_TRACE_LLM`**: `1` (default) prints the AI `/generate` request payload and raw response text; set `0` to disable.
+
+### Skill: notification/email (`skills/notification_skill.py`)
+- **`EMAIL_SENDER`**: SMTP username/from address.
+- **`EMAIL_PASSWORD`**: SMTP password (for Gmail, typically an app password).
+- **`EMAIL_SENDER_NAME`**: display name used in the From header.
+- **`EMAIL_RECEIVER_DEFAULT`**: optional default recipient; used to replace placeholder emails.
+- **`SMTP_HOST`**: SMTP host, default `smtp.gmail.com`.
+- **`SMTP_PORT`**: SMTP port, default `587`.
+- **`SMTP_USE_TLS`**: `true`/`false`, default `true` (STARTTLS).
+- **`NOTIFICATION_THROTTLE_PER_MINUTE`**: per-recipient throttling window size, default `60`.
+
+### Generic server port override (optional)
+Some `run.py` entrypoints honor:
+- **`PORT`**: the port uvicorn will bind to when running that server directly.
+
+---
+
+## Troubleshooting
+
+### “Email not configured”
+Ensure the worker process sees your `.env`. The worker loads `.env` on startup; if you run workers some other way, ensure `.env` is present or the variables are exported.
+
+### Ports already in use
+`start_app.py` will automatically pick a different free port in the configured range and will register the chosen port in the registry.
+

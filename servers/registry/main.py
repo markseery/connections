@@ -13,6 +13,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
+from decorations.monitor import monitor_fastapi_app
 from common.transport_encryption import get_transport_encryption
 from .routes import router
 from .state import RegistryState
@@ -39,4 +40,5 @@ def health() -> dict[str, str]:
 
 
 app.include_router(router)
+monitor_fastapi_app(app)
 

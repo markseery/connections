@@ -17,6 +17,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
+from decorations.monitor import monitor_fastapi_app
+
 _here = Path(__file__).resolve().parent
 _templates = _here / "templates"
 _static = _here / "static"
@@ -64,3 +66,5 @@ def chatserver_url() -> dict[str, str]:
 
 if _static.is_dir():
     app.mount("/static", StaticFiles(directory=str(_static)), name="static")
+
+monitor_fastapi_app(app)

@@ -13,6 +13,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from dotenv import load_dotenv
 
+from decorations.monitor import monitor_fastapi_app
 from .routes import router
 
 _env_path = Path(__file__).resolve().parents[2] / ".env"
@@ -31,4 +32,5 @@ def health() -> dict[str, str]:
 
 
 app.include_router(router)
+monitor_fastapi_app(app)
 

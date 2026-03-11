@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from decorations.monitor import monitor_fastapi_app
 from common.transport_encryption import get_transport_encryption
 from .routes import router
 from .storage_client import StorageClient
@@ -37,4 +38,5 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 app.include_router(router)
+monitor_fastapi_app(app)
 

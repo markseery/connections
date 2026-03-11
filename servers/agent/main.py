@@ -10,6 +10,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from decorations.monitor import monitor_fastapi_app
 from .routes import router
 
 app = FastAPI(
@@ -32,3 +33,4 @@ def health() -> dict[str, str]:
 
 
 app.include_router(router)
+monitor_fastapi_app(app)
