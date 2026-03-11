@@ -192,7 +192,8 @@ def _extract_numbers(text: str) -> list[float]:
     for t in raw:
         try:
             out.append(float(t))
-        except Exception:
+        except Exception as exc:
+            print(f"[skill_matcher] float parse failed for {t!r}: {exc}", flush=True)
             continue
     return out
 

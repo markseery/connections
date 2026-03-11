@@ -201,7 +201,8 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
                     if pl.netloc == base_domain and link not in visited:
                         queue.append((link, depth + 1))
                 await asyncio.sleep(0.1)
-            except Exception:
+            except Exception as exc:
+                print(f"[webscraper] page scrape failed for {url}: {exc}", flush=True)
                 job["pages_failed"] += 1
                 continue
 
@@ -273,6 +274,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
         try:
             job["summary"] = await _summarize(md)
         except Exception as e:
+            print(f"[webscraper] summary generation failed: {e}", flush=True)
             job["summary"] = ""
             job["error"] = f"summary failed: {e}"
 

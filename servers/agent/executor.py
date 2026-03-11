@@ -125,7 +125,8 @@ def _execute_step(
         duration_ms = (time.monotonic() - start) * 1000
         try:
             response_data = r.json()
-        except Exception:
+        except Exception as exc:
+            print(f"[executor] JSON decode failed for {step.skill_name}, using raw text: {exc}", flush=True)
             response_data = r.text
 
         if r.status_code == 200:
@@ -142,6 +143,7 @@ def _execute_step(
             duration_ms=duration_ms,
         )
     except Exception as e:
+        print(f"[executor] step {step.step_id} ({step.skill_name}) failed: {e}", flush=True)
         return StepResult(
             step_id=step.step_id,
             skill_name=step.skill_name,

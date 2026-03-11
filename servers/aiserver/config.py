@@ -13,11 +13,11 @@ from typing import Literal
 
 from dotenv import load_dotenv
 
-Provider = Literal["ollama", "openai", "xai", "google"]
-Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video"]
+Provider = Literal["ollama", "openai", "xai", "google", "perplexity"]
+Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search"]
 
-SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google"}
-SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video"}
+SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity"}
+SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search"}
 
 
 _env_path = Path(__file__).resolve().parents[2] / ".env"
@@ -44,11 +44,14 @@ def get_provider_for_profile(profile: Profile) -> Provider:
     Provider to use for this profile when the client does not send one.
     Set AISERVER_PROFILE_{PROFILE}_PROVIDER (e.g. AISERVER_PROFILE_FAST_PROVIDER=google)
     so each profile can use a different provider.
+    The "search" profile defaults to Perplexity unless overridden.
     """
     key = f"AISERVER_PROFILE_{profile.upper()}_PROVIDER"
     v = _get_env(key)
     if v and v in SUPPORTED_PROVIDERS:
         return v  # type: ignore[return-value]
+    if profile == "search":
+        return "perplexity"
     return get_default_provider()
 
 
@@ -59,6 +62,8 @@ def get_provider_key(provider: Provider) -> str | None:
         return _get_env("XAI_API_KEY")
     if provider == "google":
         return _get_env("GOOGLE_API_KEY")
+    if provider == "perplexity":
+        return _get_env("PERPLEXITY_API_KEY")
     return None
 
 
@@ -70,8 +75,9 @@ def get_provider_base_url(provider: Provider) -> str | None:
     if provider == "xai":
         return _get_env("XAI_BASE_URL", "https://api.x.ai")
     if provider == "google":
-        # For now, use the generativelanguage API base; request builder can refine.
         return _get_env("GOOGLE_BASE_URL", "https://generativelanguage.googleapis.com")
+    if provider == "perplexity":
+        return _get_env("PERPLEXITY_BASE_URL", "https://api.perplexity.ai")
     return None
 
 
@@ -100,6 +106,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "code": "gemma3:4b",
             "image": "gemma3:4b",
             "video": "gemma3:4b",
+            "search": "gemma3:4b",
         }
         return defaults[profile]
 
@@ -112,6 +119,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "code": "gpt-4o",
             "image": "gpt-image-1",
             "video": "gpt-4o",
+            "search": "gpt-4o-mini",
         }
         return defaults[profile]
 
@@ -124,6 +132,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "code": "grok-3",
             "image": "grok-3",
             "video": "grok-3",
+            "search": "grok-3-mini",
         }
         return defaults[profile]
 
@@ -136,8 +145,12 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "code": "gemini-2.0-pro",
             "image": "gemini-2.0-flash",
             "video": "gemini-2.0-flash",
+            "search": "gemini-2.0-flash",
         }
         return defaults[profile]
+
+    if provider == "perplexity":
+        return "search"
 
     raise RuntimeError(f"Unsupported provider: {provider}")
 

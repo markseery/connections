@@ -38,8 +38,8 @@ def _trace(request_id: str, stage: str, **fields: Any) -> None:
     payload = {"request_id": request_id, "stage": stage, **fields}
     try:
         print(f"[agent] {json.dumps(payload, default=str)}", flush=True)
-    except Exception:
-        print(f"[agent] request_id={request_id} stage={stage}", flush=True)
+    except Exception as exc:
+        print(f"[agent] request_id={request_id} stage={stage} (json encode failed: {exc})", flush=True)
 
 
 class JobStore:
@@ -208,6 +208,7 @@ class AgentService:
                 "plan_cache_hit": plan_cache_hit,
             }
         except Exception as e:
+            print(f"[agent] request {request_id} failed: {e}", flush=True)
             _trace(request_id, "request_failed", error=str(e))
             self.job_store.update(
                 request_id,

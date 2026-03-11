@@ -33,6 +33,7 @@ def _wait_ok(url: str, timeout_s: float = 30.0) -> None:
                     return
         except Exception as e:
             last_err = str(e)
+            print(f"[demo] health check retry for {url}: {e}", flush=True)
         time.sleep(0.25)
     raise RuntimeError(f"Timed out waiting for {url}. Last error: {last_err}")
 
@@ -72,7 +73,8 @@ def _find_urls_via_registry(timeout_s: float = 60.0) -> dict[str, str]:
                     if k in by_name and by_name[k].get("url"):
                         out[k] = str(by_name[k]["url"]).rstrip("/")
                 return out
-            except Exception:
+            except Exception as exc:
+                print(f"[demo] URL discovery attempt failed: {exc}", flush=True)
                 continue
         time.sleep(0.25)
     raise RuntimeError("Could not find registry/agent URLs for this run")
@@ -156,18 +158,20 @@ def main() -> int:
     finally:
         try:
             os.killpg(worker_proc.pid, signal.SIGTERM)
-        except Exception:
+        except Exception as exc:
+            print(f"[demo] worker killpg failed: {exc}", flush=True)
             try:
                 worker_proc.terminate()
-            except Exception:
-                pass
+            except Exception as exc2:
+                print(f"[demo] worker terminate also failed: {exc2}", flush=True)
         try:
             os.killpg(agent_proc.pid, signal.SIGTERM)
-        except Exception:
+        except Exception as exc:
+            print(f"[demo] agent killpg failed: {exc}", flush=True)
             try:
                 agent_proc.terminate()
-            except Exception:
-                pass
+            except Exception as exc2:
+                print(f"[demo] agent terminate also failed: {exc2}", flush=True)
 
 
 if __name__ == "__main__":

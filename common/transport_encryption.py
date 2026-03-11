@@ -34,7 +34,8 @@ def _derive_fernet_key(key_bytes: bytes) -> bytes:
     try:
         Fernet(key_bytes)
         return key_bytes
-    except Exception:
+    except Exception as exc:
+        print(f"[transport] raw Fernet key invalid, deriving via PBKDF2: {exc}", flush=True)
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,

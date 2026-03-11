@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.routing import APIRoute
 
 from .skill_manager import SkillManager
 
@@ -32,6 +33,26 @@ def list_loaded_skills(request: Request) -> dict[str, Any]:
             for s in loaded
         ]
     }
+
+
+@router.get("/skills/{skill_name}/routes")
+def skill_routes(request: Request, skill_name: str) -> dict[str, Any]:
+    """Return route metadata for a loaded skill."""
+    name = skill_name.strip()
+    if not _mgr(request).is_loaded(name):
+        raise HTTPException(status_code=404, detail=f"Skill '{name}' is not loaded")
+    prefix = f"/skills/{name}"
+    routes: list[dict[str, str]] = []
+    for route in request.app.routes:
+        if not isinstance(route, APIRoute) or not route.path.startswith(prefix):
+            continue
+        for method in route.methods or []:
+            routes.append({
+                "method": method.upper(),
+                "path": route.path,
+                "description": route.summary or route.name or "",
+            })
+    return {"skill_name": name, "routes": routes}
 
 
 @router.post("/skills/load")

@@ -109,7 +109,8 @@ def _load_notifications() -> list[dict[str, Any]]:
         try:
             raw = json.loads(NOTIFICATIONS_FILE.read_text(encoding="utf-8"))
             return raw if isinstance(raw, list) else []
-        except Exception:
+        except Exception as exc:
+            print(f"[notification_skill] notifications file corrupted: {exc}", flush=True)
             return []
     return []
 
@@ -177,7 +178,8 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
             encoders.encode_base64(part)
             part.add_header("Content-Disposition", f"attachment; filename={att.filename}")
             msg.attach(part)
-        except Exception:
+        except Exception as exc:
+            print(f"[notification_skill] attachment {att.filename} failed: {exc}", flush=True)
             continue
 
     all_recipients = req.to + req.cc + req.bcc
@@ -193,6 +195,7 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
             server.sendmail(sender, all_recipients, msg.as_string())
         return True, None
     except Exception as e:
+        print(f"[notification_skill] SMTP send failed: {e}", flush=True)
         return False, str(e)
 
 

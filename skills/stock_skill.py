@@ -1,6 +1,6 @@
 """
 License: MIT
-Description: Stock skill (connections) — quotes/fundamentals/news via yfinance.
+Description: Stock skill (connections) — quotes/fundamentals/earnings via yfinance.
 
 Adapted from apps/agents stock_skill:
 - Exposes an APIRouter (worker-loadable), not a standalone FastAPI app.
@@ -38,7 +38,8 @@ def _safe_value(value: Any) -> Any:
             if value.tzinfo is None:
                 value = value.tz_localize(timezone.utc)
             return value.tz_convert(timezone.utc).isoformat().replace("+00:00", "Z")
-        except Exception:
+        except Exception as exc:
+            print(f"[stock_skill] timestamp conversion failed: {exc}", flush=True)
             return str(value)
     if hasattr(value, "tolist"):
         return value.tolist()
@@ -117,7 +118,8 @@ def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
                 if math.isnan(fv) or math.isinf(fv):
                     return None
                 return fv
-            except Exception:
+            except Exception as exc:
+                print(f"[stock_skill] float conversion failed for {k}={v}: {exc}", flush=True)
                 return None
 
         out = {
@@ -148,23 +150,6 @@ def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
         return {k: _safe_value(v) for k, v in out.items()}
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
-
-
-@router.get("/news/{symbol}")
-def news(symbol: str, limit: int = 10, response: Response | None = None) -> dict[str, Any]:
-    start = time.perf_counter()
-    t = _ticker(symbol)
-    try:
-        items = t.news or []
-        norm = []
-        for it in items[: max(1, min(limit, 50))]:
-            if not isinstance(it, dict):
-                continue
-            norm.append({k: _safe_value(v) for k, v in it.items() if k in {"title", "publisher", "link", "providerPublishTime"}})
-        return {"symbol": symbol.strip().upper(), "news": norm}
-    finally:
-        if response is not None:
-            response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 
 
 @router.get("/earnings/{symbol}")

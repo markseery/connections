@@ -83,6 +83,54 @@ def _google_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
         return {"type": "text", "text": text}
 
 
+def _perplexity_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
+    base = (get_provider_base_url("perplexity") or "https://api.perplexity.ai").rstrip("/")
+    key = _require_key("perplexity")
+    url = f"{base}/search"
+    payload: dict[str, Any] = {
+        "query": prompt,
+        "max_results": 10,
+        "max_tokens_per_page": 4096,
+    }
+    with httpx.Client(timeout=30.0) as client:
+        r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
+        r.raise_for_status()
+        data = r.json()
+
+    results = data.get("results") or []
+    if not results:
+        return {"type": "search", "text": "No search results found.", "results": []}
+
+    lines: list[str] = []
+    structured: list[dict[str, Any]] = []
+    for item in results:
+        title = item.get("title", "")
+        item_url = item.get("url", "")
+        snippet = item.get("snippet", "")
+        date = item.get("date", "")
+        entry: dict[str, Any] = {"title": title, "url": item_url}
+        if date:
+            entry["date"] = date
+        if snippet:
+            entry["snippet"] = snippet[:500]
+        structured.append(entry)
+
+        line = f"- **{title}**"
+        if date:
+            line += f" ({date})"
+        if item_url:
+            line += f"\n  [Link]({item_url})"
+        if snippet:
+            short = snippet[:300].replace("\n", " ").strip()
+            if len(snippet) > 300:
+                short += "..."
+            line += f"\n  {short}"
+        lines.append(line)
+
+    text = "\n\n".join(lines)
+    return {"type": "search", "text": text, "results": structured}
+
+
 def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any]:
     model = get_model(provider, profile)
 
@@ -94,6 +142,8 @@ def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any
         out = _xai_generate(prompt, model, profile)
     elif provider == "google":
         out = _google_generate(prompt, model, profile)
+    elif provider == "perplexity":
+        out = _perplexity_generate(prompt, model, profile)
     else:
         raise RuntimeError(f"Unsupported provider: {provider}")
 

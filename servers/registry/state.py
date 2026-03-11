@@ -64,8 +64,8 @@ class RegistryState:
                     for k, v in raw.items():
                         if isinstance(v, dict):
                             self._by_name[k] = Registration.from_dict(v)
-            except Exception:
-                # If persistence is corrupted, just start fresh.
+            except Exception as exc:
+                print(f"[registry] persistence load failed, starting fresh: {exc}", flush=True)
                 self._by_name = {}
 
     def list(self) -> list[dict[str, Any]]:

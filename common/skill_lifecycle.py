@@ -13,6 +13,7 @@ from __future__ import annotations
 import os
 import re
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -21,6 +22,7 @@ from servers.agent.skill_discovery import SkillDefinition, SkillRoute, discover_
 
 
 WORKER_NAMES = ["worker-1", "worker-2", "worker"]
+_SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"
 
 
 @dataclass
@@ -30,9 +32,11 @@ class SkillLifecycle:
 
         1. Resolve registry + configuration URLs.
         2. Find a healthy worker from the registry.
-        3. Load each configured skill into the worker.
-        4. Update configuration entries so base_url points at the live worker.
-        5. Return SkillDefinitions ready for the planner/executor.
+        3. Auto-discover skill modules from the skills/ directory that aren't
+           yet in configuration, register them so they become visible.
+        4. Load each configured skill into the worker.
+        5. Update configuration entries so base_url points at the live worker.
+        6. Return SkillDefinitions ready for the planner/executor.
     """
 
     registry_url: str = ""
@@ -49,6 +53,7 @@ class SkillLifecycle:
         """
         self._resolve_urls()
         self._find_worker()
+        self._seed_new_skills()
         self._load_and_register()
         return list(self._skills)
 
@@ -76,6 +81,38 @@ class SkillLifecycle:
             raise RuntimeError("No live worker found in registry")
         self.worker_url = url
 
+    # ── Auto-seed new skills ────────────────────────────────────────────
+
+    def _seed_new_skills(self) -> None:
+        """Load skill modules found in skills/ into the worker and register
+        any that aren't yet in config.  Route discovery is delegated to the
+        worker (GET /worker/skills/{name}/routes) so we never import heavy
+        skill dependencies inside the calling process."""
+        try:
+            existing = discover_skills(
+                config_url=self.config_url, registry_url=self.registry_url
+            )
+        except Exception as exc:
+            print(f"[skill_lifecycle] discover_skills failed: {exc}", flush=True)
+            existing = []
+        known_names = {sk.skill_name for sk in existing}
+
+        fs_names = _scan_skill_modules()
+        new_names = [n for n in fs_names if n not in known_names]
+        if not new_names:
+            return
+
+        with httpx.Client(timeout=10.0) as client:
+            for name in new_names:
+                if not _load_skill(client, self.worker_url, name):
+                    continue
+                routes = _worker_skill_routes(client, self.worker_url, name)
+                if not routes:
+                    continue
+                _register_skill(
+                    client, self.config_url, self.worker_url, name, routes
+                )
+
     # ── Load + register ─────────────────────────────────────────────────
 
     def _load_and_register(self) -> None:
@@ -87,14 +124,18 @@ class SkillLifecycle:
             for sk in raw:
                 if not _load_skill(client, self.worker_url, sk.skill_name):
                     continue
+                fresh_routes = _worker_skill_routes(
+                    client, self.worker_url, sk.skill_name
+                )
+                routes = fresh_routes if fresh_routes else sk.routes
                 _register_skill(
-                    client, self.config_url, self.worker_url, sk.skill_name, sk.routes
+                    client, self.config_url, self.worker_url, sk.skill_name, routes
                 )
                 live.append(
                     SkillDefinition(
                         skill_name=sk.skill_name,
                         base_url=self.worker_url,
-                        routes=sk.routes,
+                        routes=routes,
                     )
                 )
         self._skills = live
@@ -121,7 +162,8 @@ def find_live_worker(
                 h = client.get(f"{url}/health")
                 if h.status_code == 200:
                     return url
-            except Exception:
+            except Exception as exc:
+                print(f"[skill_lifecycle] worker {name} probe failed: {exc}", flush=True)
                 continue
     return None
 
@@ -169,11 +211,47 @@ def _server_url(registry_url: str, server_name: str) -> str:
         return str(url).rstrip("/")
 
 
+def _scan_skill_modules() -> list[str]:
+    """Return skill module names found in the skills/ directory."""
+    if not _SKILLS_DIR.is_dir():
+        return []
+    names: list[str] = []
+    for p in sorted(_SKILLS_DIR.iterdir()):
+        if p.suffix != ".py" or p.name.startswith("_"):
+            continue
+        names.append(p.stem)
+    return names
+
+
+def _worker_skill_routes(
+    client: httpx.Client, worker_url: str, skill_name: str
+) -> list[SkillRoute]:
+    """Ask the worker for route metadata of an already-loaded skill."""
+    try:
+        r = client.get(f"{worker_url}/worker/skills/{skill_name}/routes")
+        if r.status_code != 200:
+            return []
+        data = r.json()
+        return [
+            SkillRoute(
+                method=str(ro.get("method", "")).upper(),
+                path=str(ro.get("path", "")),
+                description=str(ro.get("description", "")),
+            )
+            for ro in (data.get("routes") or [])
+            if ro.get("method") and ro.get("path")
+        ]
+    except Exception as exc:
+        print(f"[skill_lifecycle] route query for {skill_name} failed: {exc}", flush=True)
+        return []
+
+
 def _load_skill(client: httpx.Client, worker_url: str, skill_name: str) -> bool:
     try:
         r = client.post(f"{worker_url}/worker/skills/{skill_name}/load")
         return r.status_code < 400
-    except Exception:
+    except Exception as exc:
+        print(f"[skill_lifecycle] load {skill_name} failed: {exc}", flush=True)
         return False
 
 
@@ -193,5 +271,5 @@ def _register_skill(
     }
     try:
         client.put(f"{config_url}/configs/skill/{skill_name}", json=defn)
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[skill_lifecycle] register {skill_name} failed: {exc}", flush=True)

@@ -43,7 +43,8 @@ def _clean(values: list[float]) -> list[float]:
             continue
         try:
             fv = float(v)
-        except Exception:
+        except Exception as exc:
+            print(f"[statistics] skipping non-numeric value {v!r}: {exc}", flush=True)
             continue
         if math.isnan(fv) or math.isinf(fv):
             continue

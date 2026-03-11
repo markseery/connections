@@ -37,16 +37,16 @@ def parse_llm_json(text: str) -> dict[str, Any]:
         obj = json.loads(candidate)
         if isinstance(obj, dict):
             return obj
-    except json.JSONDecodeError:
-        pass
+    except json.JSONDecodeError as exc:
+        print(f"[json_repair] raw parse failed, attempting repair: {exc}", flush=True)
 
     repaired = repair_json(candidate)
     try:
         obj = json.loads(repaired)
         if isinstance(obj, dict):
             return obj
-    except json.JSONDecodeError:
-        pass
+    except json.JSONDecodeError as exc:
+        print(f"[json_repair] repaired parse also failed: {exc}", flush=True)
 
     raise ValueError(f"Could not parse JSON from text: {candidate[:200]}")
 
@@ -55,7 +55,8 @@ def parse_llm_json_or_none(text: str) -> dict[str, Any] | None:
     """Like parse_llm_json but returns None instead of raising."""
     try:
         return parse_llm_json(text)
-    except (ValueError, Exception):
+    except (ValueError, Exception) as exc:
+        print(f"[json_repair] parse_llm_json_or_none failed: {exc}", flush=True)
         return None
 
 
@@ -135,8 +136,8 @@ def repair_json(text: str) -> str:
             obj = json.loads(block)
             if isinstance(obj, dict):
                 objects.append(obj)
-        except json.JSONDecodeError:
-            pass
+        except json.JSONDecodeError as exc:
+            print(f"[json_repair] skipping malformed block in repair: {exc}", flush=True)
         pos = brace_start + len(block)
 
     result: dict[str, Any] = {**top_fields, array_key: objects}
@@ -169,6 +170,7 @@ def _absorb_orphans(gap: str, objects: list[dict[str, Any]]) -> None:
         val_str = m.group(2)
         try:
             val = json.loads(val_str)
-        except Exception:
+        except Exception as exc:
+            print(f"[json_repair] orphan value parse failed for key={key}: {exc}", flush=True)
             continue
         objects[-1][key] = val

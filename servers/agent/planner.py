@@ -17,18 +17,41 @@ from .context import AgentContext
 from .models import AgentExecutionRequest, AgentPlan, PlannedStep
 from .skill_discovery import SkillDefinition
 
-PLANNING_INSTRUCTIONS = """You are a planner. Given a user request and available skills, produce a JSON execution plan.
+PLANNING_INSTRUCTIONS = """You are a planner. Given a user request and a FIXED list of available skills, produce a JSON execution plan.
 
-Return ONLY a valid JSON object with this exact schema:
-{"objective":"string","steps":[{"step_id":1,"skill_name":"exact_skill_name","method":"GET or POST","route_path_template":"/exact/path/or/{param}","reason":"why","arguments":{},"depends_on":[]}]}
+ABSOLUTELY CRITICAL — READ THIS FIRST:
+You may ONLY use skills and routes that appear in the "Skills:" list below.
+DO NOT hallucinate, guess, or invent skill names or route paths.
+If a skill or route is NOT in the list, it DOES NOT EXIST. Do not use it.
+Every skill_name and route_path_template you output MUST be copied from the list.
+
+Return ONLY a valid JSON object with this schema:
+{"objective":"<goal>","steps":[{"step_id":1,"skill_name":"<skill>","method":"GET or POST","route_path_template":"<route path with params filled in>","reason":"<why>","arguments":{},"depends_on":[]}]}
+
+ROUTE SELECTION — how to fill route_path_template:
+1. Find the skill in the list that best matches the user's request.
+2. Copy that route's path EXACTLY as written.
+3. Replace ONLY {param} placeholders with actual values from the user's request.
+4. Do NOT modify, shorten, rearrange, or invent any part of the path.
+
+Examples:
+  Listed route: GET /skills/news_skill/stock/{symbol}
+  User asks about CRWV → "route_path_template": "/skills/news_skill/stock/CRWV"
+
+  Listed route: POST /skills/statistics/mean
+  User asks for mean → "route_path_template": "/skills/statistics/mean"
 
 RULES:
-- skill_name MUST be the exact skill name from the skills list (exactly as shown after "skill_name=").
+- skill_name MUST exactly match a "skill_name=" value from the skills list.
+- route_path_template MUST exactly match a listed route path (with {param} replaced).
+- If NO skill in the list can handle the request, return {"objective":"...","steps":[]}.
 - depends_on MUST be a list of integer step_id values, e.g. [1] or [].
-- Use only the listed skills and their exact routes. Return ONLY JSON, no markdown.
-- Arguments MUST be valid JSON types. If an argument is a list of numbers, it MUST be a JSON array (e.g. {"values":[10,13,45,23]}), not a comma-separated string.
-- Do NOT call routes that are tests (paths containing "/test") unless the user explicitly requests a test.
-- Do NOT call "verification" or "listing" routes (e.g. GET /notifications, GET /stats, GET /config) unless the user explicitly asks to check status/history/config.
+- Return ONLY JSON, no markdown, no explanation.
+- Arguments MUST be valid JSON types (arrays not comma-separated strings).
+- Do NOT call test routes (paths containing "/test") unless explicitly requested.
+- Do NOT call listing/status routes (e.g. GET /notifications, GET /stats, GET /config) unless explicitly requested.
+
+FINAL REMINDER: Only use skills and routes from the list. Nothing else exists.
 """
 
 
@@ -98,7 +121,7 @@ def _trace_llm_enabled() -> bool:
 def _trace_llm(stage: str, payload: dict[str, Any]) -> None:
     try:
         print(f"[agent_llm] {json.dumps({'stage': stage, **payload}, default=str)}", flush=True)
-    except Exception:
-        print(f"[agent_llm] stage={stage}", flush=True)
+    except Exception as exc:
+        print(f"[agent_llm] stage={stage} (json encode failed: {exc})", flush=True)
 
 

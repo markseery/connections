@@ -174,7 +174,8 @@ def monitor_fastapi_app(app: Any) -> None:
     """
     try:
         from fastapi.routing import APIRoute  # type: ignore
-    except Exception:
+    except Exception as exc:
+        print(f"[monitor] FastAPI APIRoute import failed: {exc}", flush=True)
         APIRoute = None  # type: ignore
 
     for route in getattr(app, "router", getattr(app, "routes", None)).routes if getattr(app, "router", None) else []:

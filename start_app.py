@@ -132,7 +132,8 @@ class Supervisor:
             try:
                 sock.bind((host, port))
                 return True
-            except OSError:
+            except OSError as exc:
+                print(f"[supervisor] port {port} on {host} not free: {exc}", flush=True)
                 return False
 
     def _choose_port(self, s: ServerConfig) -> int:
@@ -194,14 +195,16 @@ class Supervisor:
             if proc.poll() is None:
                 try:
                     os.killpg(proc.pid, signal.SIGTERM)
-                except Exception:
+                except Exception as exc:
+                    print(f"[supervisor] killpg SIGTERM failed for {name}: {exc}", flush=True)
                     proc.terminate()
                 try:
                     proc.wait(timeout=5)
                 except subprocess.TimeoutExpired:
                     try:
                         os.killpg(proc.pid, signal.SIGKILL)
-                    except Exception:
+                    except Exception as exc:
+                        print(f"[supervisor] killpg SIGKILL failed for {name}: {exc}", flush=True)
                         proc.kill()
         finally:
             self.procs.pop(name, None)
@@ -220,7 +223,8 @@ class Supervisor:
                     return False
                 data = r.json()
                 return isinstance(data, dict) and data.get("status") == "ok"
-        except Exception:
+        except Exception as exc:
+            print(f"[supervisor] health check failed for {s.name}: {exc}", flush=True)
             return False
 
     def _check_health_with_retries(self, s: ServerConfig) -> bool:
@@ -252,7 +256,8 @@ class Supervisor:
                 r = client.get(f"{registry.base_url}/health")
                 if r.status_code != 200:
                     return
-        except Exception:
+        except Exception as exc:
+            print(f"[supervisor] registry health check failed: {exc}", flush=True)
             return
 
         pid = self.procs.get(s.name).pid if self.procs.get(s.name) else None
@@ -261,8 +266,8 @@ class Supervisor:
             with httpx.Client(timeout=3.0) as client:
                 client.put(f"{registry.base_url}/servers/{s.name}", json=payload).raise_for_status()
             self._registered.add(s.name)
-        except Exception:
-            # Don't crash supervisor on registry issues.
+        except Exception as exc:
+            print(f"[supervisor] registry registration failed for {s.name}: {exc}", flush=True)
             return
 
     def monitor_loop(self) -> None:

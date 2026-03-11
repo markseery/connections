@@ -17,12 +17,28 @@
     if (placeholderEl) placeholderEl.hidden = true;
   }
 
+  function renderMarkdown(text) {
+    if (typeof marked !== "undefined" && marked.parse) {
+      var html = marked.parse(text, { breaks: true, gfm: true });
+      if (typeof DOMPurify !== "undefined") {
+        return DOMPurify.sanitize(html);
+      }
+      return html;
+    }
+    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+  }
+
   function appendMessage(role, text) {
     hidePlaceholder();
     const div = document.createElement("div");
     div.className = "chat-message " + role;
     div.setAttribute("role", "listitem");
-    div.textContent = text;
+    if (role === "assistant") {
+      div.classList.add("markdown-body");
+      div.innerHTML = renderMarkdown(text);
+    } else {
+      div.textContent = text;
+    }
     messagesEl.appendChild(div);
     messagesEl.scrollTop = messagesEl.scrollHeight;
   }

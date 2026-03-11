@@ -19,8 +19,8 @@ def _make_fernet(key_bytes: bytes) -> Fernet:
     """Build a Fernet instance from raw key bytes (32 url-safe base64 or arbitrary)."""
     try:
         return Fernet(key_bytes)
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"[storage] raw Fernet key invalid, deriving via PBKDF2: {exc}", flush=True)
     # If not valid Fernet key, derive one via PBKDF2
     kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=b"storage", iterations=480000)
     derived = base64.urlsafe_b64encode(kdf.derive(key_bytes))
