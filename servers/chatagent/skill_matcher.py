@@ -6,12 +6,12 @@ Description: Skill discovery + simple prompt matching + argument extraction.
 from __future__ import annotations
 
 import re
-import json
 from dataclasses import dataclass
 from typing import Any
 
 import httpx
 
+from common.json_repair import parse_llm_json_or_none
 from .config import get_aiserver_url, get_config_url, get_registry_url
 
 
@@ -145,7 +145,7 @@ def decide_skill_call(prompt: str, skills: list[SkillDefinition], *, profile: st
         if not isinstance(text, str) or not text.strip():
             return None
 
-    raw = _loads_json_object(text)
+    raw = parse_llm_json_or_none(text)
     if not isinstance(raw, dict):
         return None
     if raw.get("use_skill") is not True:
@@ -176,38 +176,6 @@ def decide_skill_call(prompt: str, skills: list[SkillDefinition], *, profile: st
         path=route.path,
         arguments=arguments,
     )
-
-
-def _loads_json_object(text: str) -> dict[str, Any] | None:
-    """
-    Extract the first JSON object from model output (which may include prose or fenced code).
-    """
-    s = text.strip()
-    # strip fenced code blocks
-    if s.startswith("```"):
-        s = re.sub(r"^```[a-zA-Z0-9]*\n", "", s)
-        s = re.sub(r"\n```$", "", s).strip()
-    # find first {...} region
-    start = s.find("{")
-    if start < 0:
-        return None
-    depth = 0
-    end = -1
-    for i in range(start, len(s)):
-        if s[i] == "{":
-            depth += 1
-        elif s[i] == "}":
-            depth -= 1
-            if depth == 0:
-                end = i + 1
-                break
-    if end < 0:
-        return None
-    try:
-        obj = json.loads(s[start:end])
-    except Exception:
-        return None
-    return obj if isinstance(obj, dict) else None
 
 
 def _find_route(skill: SkillDefinition, method: str, path: str) -> SkillRoute | None:
