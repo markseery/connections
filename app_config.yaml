@@ -1,0 +1,40 @@
+app_name: connections
+health:
+  interval_seconds: 60
+  timeout_seconds: 1
+  retries: 3
+  fail_retry_delay_seconds: 2
+servers:
+  - name: registry
+    app: servers.registry.main:app
+    host: 127.0.0.1
+    port: 7002
+  - name: storage
+    app: servers.storage.main:app
+    host: 127.0.0.1
+    port: 7010
+  - name: configuration
+    app: servers.configuration.main:app
+    host: 127.0.0.1
+    port: 7011
+  - name: aiserver
+    app: servers.aiserver.main:app
+    host: 127.0.0.1
+    port: 7012
+  - name: chatserver
+    app: servers.chatserver.main:app
+    host: 127.0.0.1
+    port: 7022
+  - name: connections_ui
+    app: servers.connections_ui.main:app
+    host: 127.0.0.1
+    port: 7020
+  - name: agent
+    app: servers.agent.main:app
+    host: 127.0.0.1
+    port: 7024
+  - name: worker
+    app: servers.worker.main:app
+    host: 127.0.0.1
+    port: 7030
+    instances: 2

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat — Connections</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+</head>
+<body class="page-chat">
+  <header class="app-header">
+    <a href="/" class="back-link" aria-label="Back to home">←</a>
+    <h1>Chat</h1>
+  </header>
+
+  <section class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+    <p class="chat-placeholder" id="chat-placeholder">No messages yet. Send a message below.</p>
+  </section>
+
+  <footer class="chat-input-row">
+    <div class="chat-input-wrap">
+      <label for="chat-prompt" class="sr-only">Message</label>
+      <input
+        type="text"
+        id="chat-prompt"
+        class="chat-prompt"
+        placeholder="Type a message…"
+        autocomplete="off"
+        enterkeyhint="send"
+      />
+    </div>
+    <div class="chat-actions">
+      <label for="chat-profile" class="sr-only">AI profile</label>
+      <select id="chat-profile" class="chat-profile" aria-label="AI profile">
+        <option value="fast" selected>Fast</option>
+        <option value="chat">Chat</option>
+        <option value="reason">Reason</option>
+        <option value="agent">Agent</option>
+        <option value="code">Code</option>
+        <option value="image">Image</option>
+        <option value="video">Video</option>
+      </select>
+      <button type="button" id="chat-submit" class="chat-submit" aria-label="Send message">Send</button>
+    </div>
+  </footer>
+
+  <script src="/static/js/chat.js"></script>
+</body>
+</html>

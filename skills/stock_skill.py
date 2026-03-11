@@ -1,0 +1,188 @@
+"""
+License: MIT
+Description: Stock skill (connections) — quotes/fundamentals/news via yfinance.
+
+Adapted from apps/agents stock_skill:
+- Exposes an APIRouter (worker-loadable), not a standalone FastAPI app.
+- No CryptoMiddleware/manifest; plain JSON.
+"""
+
+from __future__ import annotations
+
+import math
+import time
+from datetime import datetime, timezone
+from typing import Any
+
+import pandas as pd
+import yfinance as yf
+from fastapi import APIRouter, HTTPException, Response
+
+
+router = APIRouter()
+
+
+def _safe_value(value: Any) -> Any:
+    if value is None:
+        return None
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            return None
+        return value
+    if isinstance(value, (int, bool, str)):
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, pd.Timestamp):
+        try:
+            if value.tzinfo is None:
+                value = value.tz_localize(timezone.utc)
+            return value.tz_convert(timezone.utc).isoformat().replace("+00:00", "Z")
+        except Exception:
+            return str(value)
+    if hasattr(value, "tolist"):
+        return value.tolist()
+    if hasattr(value, "to_dict"):
+        return value.to_dict()
+    return str(value)
+
+
+def _dataframe_to_records(df: Any, date_key: str = "Date") -> list[dict[str, Any]]:
+    if df is None or (hasattr(df, "empty") and df.empty) or not hasattr(df, "iterrows"):
+        return []
+    records: list[dict[str, Any]] = []
+    for idx, row in df.iterrows():
+        rec: dict[str, Any] = {date_key: _safe_value(idx)}
+        for col in row.index:
+            rec[str(col)] = _safe_value(row[col])
+        records.append(rec)
+    return records
+
+
+def _ticker(symbol: str) -> yf.Ticker:
+    sym = symbol.strip().upper()
+    if not sym:
+        raise HTTPException(status_code=400, detail="symbol is required")
+    try:
+        return yf.Ticker(sym)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+
+
+@router.get("/quote/{symbol}")
+def quote(symbol: str, response: Response) -> dict[str, Any]:
+    start = time.perf_counter()
+    t = _ticker(symbol)
+    try:
+        info = t.info or {}
+        hist = t.history(period="2d")
+        prev_close = None
+        if hist is not None and len(hist) >= 2:
+            prev_close = float(hist.iloc[-2]["Close"])
+        current_price = info.get("regularMarketPrice") or info.get("currentPrice")
+        if current_price is None and hist is not None and not hist.empty:
+            current_price = float(hist.iloc[-1]["Close"])
+
+        change = None
+        change_pct = None
+        if current_price is not None and prev_close:
+            change = round(float(current_price) - prev_close, 2)
+            change_pct = round((change / prev_close) * 100, 2)
+
+        out = {
+            "symbol": symbol.strip().upper(),
+            "price": _safe_value(current_price),
+            "previous_close": _safe_value(prev_close),
+            "change": _safe_value(change),
+            "change_pct": _safe_value(change_pct),
+            "volume": _safe_value(info.get("regularMarketVolume") or info.get("volume")),
+            "market_cap": _safe_value(info.get("marketCap")),
+            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        }
+        return out
+    finally:
+        response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
+
+
+@router.get("/fundamentals/{symbol}")
+def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
+    start = time.perf_counter()
+    t = _ticker(symbol)
+    try:
+        info = t.info or {}
+        def _num(k: str) -> float | None:
+            v = info.get(k)
+            try:
+                fv = float(v)
+                if math.isnan(fv) or math.isinf(fv):
+                    return None
+                return fv
+            except Exception:
+                return None
+
+        out = {
+            "symbol": symbol.strip().upper(),
+            "company": {
+                "name": info.get("longName") or info.get("shortName"),
+                "sector": info.get("sector"),
+                "industry": info.get("industry"),
+                "country": info.get("country"),
+                "website": info.get("website"),
+            },
+            "valuation": {
+                "pe_ratio": _num("trailingPE"),
+                "forward_pe": _num("forwardPE"),
+                "peg_ratio": _num("pegRatio"),
+                "price_to_book": _num("priceToBook"),
+            },
+            "growth": {
+                "revenue_growth": _num("revenueGrowth"),
+                "earnings_growth": _num("earningsGrowth"),
+            },
+            "profitability": {
+                "gross_margin": _num("grossMargins"),
+                "operating_margin": _num("operatingMargins"),
+                "net_margin": _num("profitMargins"),
+            },
+        }
+        return {k: _safe_value(v) for k, v in out.items()}
+    finally:
+        response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
+
+
+@router.get("/news/{symbol}")
+def news(symbol: str, limit: int = 10, response: Response | None = None) -> dict[str, Any]:
+    start = time.perf_counter()
+    t = _ticker(symbol)
+    try:
+        items = t.news or []
+        norm = []
+        for it in items[: max(1, min(limit, 50))]:
+            if not isinstance(it, dict):
+                continue
+            norm.append({k: _safe_value(v) for k, v in it.items() if k in {"title", "publisher", "link", "providerPublishTime"}})
+        return {"symbol": symbol.strip().upper(), "news": norm}
+    finally:
+        if response is not None:
+            response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
+
+
+@router.get("/earnings/{symbol}")
+def earnings(symbol: str, response: Response) -> dict[str, Any]:
+    start = time.perf_counter()
+    t = _ticker(symbol)
+    try:
+        ed = getattr(t, "earnings_dates", None)
+        qf = getattr(t, "quarterly_financials", None)
+        return {
+            "symbol": symbol.strip().upper(),
+            "earnings_dates": _dataframe_to_records(ed)[:10],
+            "quarterly_financials": _dataframe_to_records(qf.T)[:8] if qf is not None else [],
+        }
+    finally:
+        response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
+
+
+def get_router() -> APIRouter:
+    return router
+
