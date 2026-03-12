@@ -16,11 +16,20 @@ from .config import get_aiserver_url
 from common.skill_lifecycle import SkillLifecycle, route_exists
 from servers.agent.context import AgentContext
 from servers.agent.executor import execute_plan
-from servers.agent.models import AgentExecutionRequest, AgentPlan, PlannedStep
+from servers.agent.models import AgentExecutionRequest, AgentPlan, PlannedStep, StepResult
 from servers.agent.planner import create_plan
 
 
 router = APIRouter(prefix="/chat", tags=["chatagent"])
+
+
+def _format_step_failures(step_results: list[StepResult]) -> str:
+    """Format failed step results for display when no step succeeded."""
+    lines = ["**Skill execution failed** — no step returned success.\n"]
+    for sr in step_results:
+        err = sr.error or str(sr.status_code)
+        lines.append(f"- **Step {sr.step_id}** ({sr.skill_name}): {sr.status_code} — {err[:300]}")
+    return "\n".join(lines)
 
 
 def _default_namespace() -> str:
@@ -67,7 +76,11 @@ def chat(body: dict[str, Any]) -> dict[str, Any]:
                 plan = _sanitize_plan(plan, skills)
                 if not plan.steps:
                     print("[chatagent] plan empty after sanitize — falling back to AI", flush=True)
-                if plan.steps:
+                else:
+                    for step in plan.steps:
+                        if step.arguments is None:
+                            step.arguments = {}
+                        step.arguments["prompt"] = prompt.strip()
                     step_results = execute_plan(
                         plan=plan, context=ctx, skills=skills, timeout_seconds=60.0
                     )
@@ -79,29 +92,53 @@ def chat(body: dict[str, Any]) -> dict[str, Any]:
                         )
                     ok = [r for r in step_results if not r.error and r.status_code == 200]
                     if ok:
-                        last = ok[-1]
-                        out = last.response_data
+                        primary = ok[0]
+                        out = primary.response_data
                         return {
                             "namespace": namespace,
                             "profile": profile,
                             "prompt": prompt,
-                            "output": {"text": _skill_to_text(last.skill_name, out)},
+                            "output": {"text": _skill_to_text(primary.skill_name, out)},
                             "used": {
                                 "type": "skill",
-                                "skill_name": last.skill_name,
-                                "path": last.path,
-                                "method": last.method,
+                                "skill_name": primary.skill_name,
+                                "path": primary.path,
+                                "method": primary.method,
                             },
                             "raw": out,
                         }
                     else:
-                        print("[chatagent] no successful step results — falling back to AI", flush=True)
+                        primary = step_results[0]
+                        return {
+                            "namespace": namespace,
+                            "profile": profile,
+                            "prompt": prompt,
+                            "output": {"text": _format_step_failures(step_results)},
+                            "used": {
+                                "type": "skill",
+                                "skill_name": primary.skill_name,
+                                "path": primary.path,
+                                "method": primary.method,
+                            },
+                            "raw": {
+                                "success": False,
+                                "step_results": [sr.model_dump(mode="json") for sr in step_results],
+                            },
+                        }
             except Exception as exc:
                 print(f"[chatagent] plan execution FAILED: {exc}", flush=True)
+                return {
+                    "namespace": namespace,
+                    "profile": profile,
+                    "prompt": prompt,
+                    "output": {"text": f"**Skill execution failed**\n\n{exc!s}"},
+                    "used": {"type": "skill"},
+                    "raw": {"success": False, "error": str(exc)},
+                }
         else:
             print("[chatagent] planner returned no steps — falling back to AI", flush=True)
 
-    # AI fallback
+    # AI fallback — only when no skill was selected or no steps were executed
     base = get_aiserver_url()
     payload: dict[str, Any] = {"prompt": prompt.strip(), "profile": profile.strip()}
     try:
@@ -201,6 +238,8 @@ def _skill_to_text(skill_name: str, payload: Any) -> str:
             return _format_stock(payload)
         if skill_name == "news_skill":
             return _format_news(payload)
+        if skill_name == "workflow_skill":
+            return _format_workflow(payload)
         return str(payload)
     return str(payload)
 
@@ -343,5 +382,77 @@ def _format_news(data: dict[str, Any]) -> str:
         if link:
             entry += f"  \n  [Read more]({link})"
         lines.append(entry)
+
+    return "\n".join(lines)
+
+
+def _format_workflow(data: dict[str, Any]) -> str:
+    """Render workflow_skill responses as readable text.
+    When the workflow is scrape_and_summarize or the last step has a summary
+    field, show the full summary at the top; step list below for reference.
+    """
+    name = data.get("name", "unnamed")
+    status = data.get("status", "unknown")
+    total = data.get("steps_total", 0)
+    completed = data.get("steps_completed", 0)
+    failed = data.get("steps_failed", 0)
+    step_results = data.get("step_results") or []
+
+    status_icon = "completed" if status == "completed" else "failed"
+    lines: list[str] = []
+
+    # Extract full summary from last step (or any step with summary) when applicable
+    summary_text: str | None = None
+    if "scrape_and_summarize" in name or any(
+        isinstance(sr.get("data"), dict) and sr.get("data", {}).get("summary") is not None
+        for sr in step_results
+    ):
+        for sr in reversed(step_results):
+            d = sr.get("data") if isinstance(sr.get("data"), dict) else None
+            if d and d.get("summary") is not None:
+                summary_text = d.get("summary")
+                if isinstance(summary_text, str) and summary_text.strip():
+                    break
+
+    if summary_text:
+        lines.append("### Summary")
+        lines.append("")
+        lines.append(summary_text)
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+
+    lines.append(f"**Workflow: {name}** — {status_icon}")
+    lines.append(
+        f"_{completed}/{total} steps completed"
+        + (f", {failed} failed" if failed else "")
+        + "_"
+    )
+    lines.append("")
+
+    for sr in step_results:
+        sid = sr.get("step_id", "?")
+        skill = sr.get("skill", "")
+        ok = sr.get("success", False)
+        ms = sr.get("duration_ms", 0)
+        mark = "OK" if ok else "FAIL"
+        line = f"- **Step {sid}** ({skill}): {mark} ({ms:.0f}ms)"
+        if not ok and sr.get("error"):
+            line += f"  \n  _{sr['error'][:200]}_"
+        if ok and sr.get("data"):
+            d = sr["data"]
+            if isinstance(d, dict) and d.get("summary") is not None:
+                n = len(str(d.get("summary", "")))
+                line += f"  \n  _summary ({n} chars, shown above)_"
+            else:
+                preview = str(d)
+                if len(preview) > 200:
+                    preview = preview[:200] + "..."
+                line += f"  \n  `{preview}`"
+        lines.append(line)
+
+    if data.get("error"):
+        lines.append("")
+        lines.append(f"**Error:** {data['error']}")
 
     return "\n".join(lines)

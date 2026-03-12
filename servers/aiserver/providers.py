@@ -84,51 +84,48 @@ def _google_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
 
 
 def _perplexity_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
-    base = (get_provider_base_url("perplexity") or "https://api.perplexity.ai").rstrip("/")
+    from perplexity import Perplexity
+
     key = _require_key("perplexity")
-    url = f"{base}/search"
-    payload: dict[str, Any] = {
-        "query": prompt,
-        "max_results": 10,
-        "max_tokens_per_page": 4096,
-    }
-    with httpx.Client(timeout=30.0) as client:
-        r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
-        r.raise_for_status()
-        data = r.json()
+    client = Perplexity(api_key=key)
 
-    results = data.get("results") or []
-    if not results:
-        return {"type": "search", "text": "No search results found.", "results": []}
+    print(f"[perplexity] responses.create input={prompt!r}", flush=True)
+    try:
+        response = client.responses.create(
+            preset="pro-search",
+            input=prompt,
+            instructions="You are an expert on current events.",
+            tools=[
+                {
+                    "type": "web_search",
+                    "filters": {
+                        "search_recency_filter": "day",
+                    },
+                }
+            ],
+        )
+    finally:
+        client.close()
 
-    lines: list[str] = []
-    structured: list[dict[str, Any]] = []
-    for item in results:
-        title = item.get("title", "")
-        item_url = item.get("url", "")
-        snippet = item.get("snippet", "")
-        date = item.get("date", "")
-        entry: dict[str, Any] = {"title": title, "url": item_url}
-        if date:
-            entry["date"] = date
-        if snippet:
-            entry["snippet"] = snippet[:500]
-        structured.append(entry)
+    text = response.output_text or ""
+    print(f"[perplexity] response OK: {len(text)} chars", flush=True)
 
-        line = f"- **{title}**"
-        if date:
-            line += f" ({date})"
-        if item_url:
-            line += f"\n  [Link]({item_url})"
-        if snippet:
-            short = snippet[:300].replace("\n", " ").strip()
-            if len(snippet) > 300:
-                short += "..."
-            line += f"\n  {short}"
-        lines.append(line)
+    citations: list[dict[str, Any]] = []
+    for item in getattr(response, "citations", None) or []:
+        if isinstance(item, str):
+            citations.append({"url": item})
+        elif isinstance(item, dict):
+            citations.append(item)
+        else:
+            entry: dict[str, Any] = {}
+            for attr in ("url", "title", "snippet", "date"):
+                val = getattr(item, attr, None)
+                if val:
+                    entry[attr] = str(val)
+            if entry:
+                citations.append(entry)
 
-    text = "\n\n".join(lines)
-    return {"type": "search", "text": text, "results": structured}
+    return {"type": "search", "text": text, "results": citations}
 
 
 def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any]:

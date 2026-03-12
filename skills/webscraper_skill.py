@@ -339,6 +339,40 @@ def get_markdown(job_id: str) -> dict[str, Any]:
     return {"job_id": job_id, "url": job["url"], "markdown": path.read_text(encoding="utf-8")}
 
 
+def _summarize_by_topic_sync(text: str, topic: str) -> str:
+    """Call aiserver to summarize text focused on the given topic (e.g. products, brand, positioning)."""
+    aiserver = _aiserver_url()
+    truncated = (text or "")[:15000]
+    prompt = (
+        f"Summarize ONLY content related to: {topic}. "
+        "Focus on products, offerings, brand/positioning phrases, and concrete claims. "
+        "Use terse bullet points. If nothing relevant, say so.\n\n"
+        f"{truncated}"
+    )
+    with httpx.Client(timeout=120.0) as client:
+        r = client.post(f"{aiserver}/generate", json={"prompt": prompt, "profile": "fast"})
+        r.raise_for_status()
+        out = r.json().get("output") or {}
+        if isinstance(out, dict):
+            return str(out.get("text") or "")
+        return str(out)
+
+
+@router.post("/summarize_text")
+def summarize_text(body: dict[str, Any]) -> dict[str, Any]:
+    """Summarize arbitrary text focused on a topic (e.g. products, brand, positioning)."""
+    text = body.get("text") or body.get("markdown") or ""
+    topic = (body.get("topic") or "").strip() or "key themes"
+    if not text:
+        raise HTTPException(status_code=400, detail="text or markdown is required")
+    try:
+        summary = _summarize_by_topic_sync(text, topic)
+    except Exception as exc:
+        print(f"[webscraper] summarize_text failed: {exc}", flush=True)
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+    return {"topic": topic, "summary": summary}
+
+
 @router.get("/scrape/{job_id}/summary")
 def get_summary(job_id: str) -> dict[str, Any]:
     job = _jobs.get(job_id)

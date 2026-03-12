@@ -89,6 +89,26 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "GET /skills/webscraper_skill/scrape/{job_id}": "Get job status.",
             "GET /skills/webscraper_skill/scrape/{job_id}/markdown": "Get extracted markdown.",
             "GET /skills/webscraper_skill/scrape/{job_id}/summary": "Get AI summary.",
+            "POST /skills/webscraper_skill/summarize_text": "Summarize text by topic (body: text, topic).",
+        },
+    },
+    "workflow_skill": {
+        "description": "Save and run reusable multi-step workflow templates with parameters.",
+        "examples": [
+            "run workflow scrape_and_summarize with url https://example.com",
+            "run workflow webscrape_and_extract with url https://example.com topic products",
+            "list workflow templates",
+            "show workflow executions",
+        ],
+        "routes": {
+            "POST /skills/workflow_skill/templates": "Save a new workflow template.",
+            "GET /skills/workflow_skill/templates": "List all saved templates.",
+            "GET /skills/workflow_skill/templates/{name}": "Get a template by name.",
+            "DELETE /skills/workflow_skill/templates/{name}": "Delete a template.",
+            "POST /skills/workflow_skill/run/{name}": "Run a saved template with parameters.",
+            "POST /skills/workflow_skill/execute": "Execute an ad-hoc workflow plan.",
+            "GET /skills/workflow_skill/executions": "List all workflow executions.",
+            "GET /skills/workflow_skill/executions/{workflow_id}": "Get execution details.",
         },
     },
     "help_skill": {

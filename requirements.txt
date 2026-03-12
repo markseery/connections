@@ -6,6 +6,9 @@ cryptography>=44.0.0
 httpx>=0.27.0
 pyyaml>=6.0.0
 
+# AI provider SDKs
+perplexityai>=0.30.0
+
 # Skill dependencies
 yfinance>=0.2.0
 pandas>=2.0.0

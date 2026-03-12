@@ -41,6 +41,12 @@ Examples:
   Listed route: POST /skills/statistics/mean
   User asks for mean → "route_path_template": "/skills/statistics/mean"
 
+WORKFLOW ROUTING (MANDATORY):
+- If the user asks to "run workflow <name>" or "execute workflow <name>", you MUST select `workflow_skill`.
+- Use `POST /skills/workflow_skill/run/{name}` with `{name}` filled in from the user's text.
+- Put the workflow parameters in `arguments` (e.g. url/pages/depth/timeout).
+- Do NOT invent new routes and do NOT suggest CLI commands/scripts.
+
 RULES:
 - skill_name MUST exactly match a "skill_name=" value from the skills list.
 - route_path_template MUST exactly match a listed route path (with {param} replaced).
@@ -50,6 +56,8 @@ RULES:
 - Arguments MUST be valid JSON types (arrays not comma-separated strings).
 - Do NOT call test routes (paths containing "/test") unless explicitly requested.
 - Do NOT call listing/status routes (e.g. GET /notifications, GET /stats, GET /config) unless explicitly requested.
+- ONLY include steps that DIRECTLY answer the user's request. Do NOT add extra steps (like listing skills, showing help, etc.) unless the user explicitly asked for them. One request = one step in most cases.
+- Do NOT output instructions, shell commands, or "here's what you should run". Your output must be a plan that actually calls skills.
 
 FINAL REMINDER: Only use skills and routes from the list. Nothing else exists.
 """
@@ -83,7 +91,7 @@ def create_plan(
         prompt_parts.insert(1, f"\nSystem: {request.system_prompt}")
     prompt = "\n".join(prompt_parts)
 
-    payload: dict[str, Any] = {"prompt": prompt, "profile": "reason"}
+    payload: dict[str, Any] = {"prompt": prompt, "profile": "agent"}
     if _trace_llm_enabled():
         _trace_llm("llm_request", {"url": f"{base}/generate", "payload": payload})
     with httpx.Client(timeout=120.0) as client:

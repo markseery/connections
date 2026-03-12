@@ -71,17 +71,19 @@ def news_search(body: dict[str, Any]) -> dict[str, Any]:
 
 
 @router.get("/topic/{topic}")
-def news_by_topic(topic: str, limit: int = 10) -> dict[str, Any]:
+def news_by_topic(topic: str, limit: int = 10, prompt: str = "") -> dict[str, Any]:
     """GET convenience route for topic-based news."""
-    return news_search({"query": topic.strip(), "limit": min(limit, 20)})
+    real_query = prompt.strip() or topic.strip()
+    return news_search({"query": real_query, "limit": min(limit, 20)})
 
 
 @router.get("/stock/{symbol}")
-def news_by_stock(symbol: str, limit: int = 10) -> dict[str, Any]:
+def news_by_stock(symbol: str, limit: int = 10, prompt: str = "") -> dict[str, Any]:
     """GET convenience route for stock-specific news."""
     sym = symbol.strip().upper()
+    real_query = prompt.strip() or f"latest news for {sym}"
     return news_search({
-        "query": f"latest news for {sym}",
+        "query": real_query,
         "symbol": sym,
         "limit": min(limit, 20),
     })
@@ -163,11 +165,13 @@ def _web_search_news(query: str, limit: int) -> list[dict[str, Any]]:
     if not aiserver_url:
         print("[news_skill] web_search SKIP: no aiserver url", flush=True)
         return []
+    search_payload = {"prompt": query, "profile": "search"}
+    print(f"[news_skill] web_search prompt → {search_payload}", flush=True)
     try:
         with httpx.Client(timeout=30.0) as client:
             r = client.post(
                 f"{aiserver_url}/generate",
-                json={"prompt": query, "profile": "search"},
+                json=search_payload,
             )
             if r.status_code != 200:
                 print(f"[news_skill] web_search FAIL: status {r.status_code}", flush=True)
