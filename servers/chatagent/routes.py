@@ -240,6 +240,8 @@ def _skill_to_text(skill_name: str, payload: Any) -> str:
             return _format_news(payload)
         if skill_name == "workflow_skill":
             return _format_workflow(payload)
+        if skill_name == "stored_webscrape_skill":
+            return _format_stored_webscrape(payload)
         return str(payload)
     return str(payload)
 
@@ -456,3 +458,27 @@ def _format_workflow(data: dict[str, Any]) -> str:
         lines.append(f"**Error:** {data['error']}")
 
     return "\n".join(lines)
+
+
+def _format_stored_webscrape(data: dict[str, Any]) -> str:
+    """Render stored_webscrape_skill responses as readable text."""
+    if data.get("stored") is True:
+        n = data.get("url_count", 0)
+        base = data.get("base_url", "?")
+        return f"Stored **{n}** URLs for `{base}`. Retrieve with GET /stored?base_url=..."
+    if "value" in data:
+        val = data["value"]
+        if isinstance(val, dict):
+            urls = val.get("urls") or []
+            base = val.get("base_url", data.get("key", "?"))
+            return f"Retrieved scrape for `{base}`: **{len(urls)}** URLs (content in `value.content_by_url`)."
+    if "keys" in data:
+        keys = data["keys"] if isinstance(data["keys"], list) else []
+        count = data.get("count", len(keys))
+        lines = [f"Stored scrapes: **{count}** keys"]
+        for k in keys[:20]:
+            lines.append(f"- `{k}`")
+        if len(keys) > 20:
+            lines.append(f"- ... and {len(keys) - 20} more")
+        return "\n".join(lines)
+    return str(data)

@@ -52,7 +52,7 @@ def list_records(request: Request, namespace: str, backend: BackendDep) -> Any:
     return _maybe_encrypt_response(request, {"namespace": namespace, "keys": keys})
 
 
-@router.get("/{key}")
+@router.get("/{key:path}")
 def get_record(request: Request, namespace: str, key: str, backend: BackendDep) -> Any:
     """Return the JSON record for the given namespace and key. 404 if missing."""
     value = get_json(backend, namespace, key)
@@ -61,7 +61,7 @@ def get_record(request: Request, namespace: str, key: str, backend: BackendDep) 
     return _maybe_encrypt_response(request, {"namespace": namespace, "key": key, "value": value})
 
 
-@router.put("/{key}")
+@router.put("/{key:path}")
 def put_record(request: Request, namespace: str, key: str, body: dict[str, Any], backend: BackendDep) -> Any:
     """Create or replace a JSON record. Body is the stored value."""
     body_any = _maybe_decrypt_body(body)
@@ -85,7 +85,7 @@ def put_record(request: Request, namespace: str, key: str, body: dict[str, Any],
     return _maybe_encrypt_response(request, {"namespace": namespace, "key": key, "value": value})
 
 
-@router.delete("/{key}")
+@router.delete("/{key:path}")
 def delete_record(request: Request, namespace: str, key: str, backend: BackendDep) -> Any:
     """Remove the record. 404 if it did not exist."""
     if not backend.delete(namespace, key):

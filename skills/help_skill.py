@@ -92,6 +92,20 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "POST /skills/webscraper_skill/summarize_text": "Summarize text by topic (body: text, topic).",
         },
     },
+    "stored_webscrape_skill": {
+        "description": "Crawl a website and persist URLs + content in storage (namespace webscrape, key = base URL). Other skills/plans can retrieve stored scrapes for repeated analysis without re-scraping.",
+        "examples": [
+            "store scrape of https://example.com for later analysis",
+            "list stored scrapes",
+            "get stored scrape for https://example.com",
+        ],
+        "routes": {
+            "POST /skills/stored_webscrape_skill/scrape": "Crawl and store URLs + content (body: url, max_pages, max_depth).",
+            "GET /skills/stored_webscrape_skill/stored": "Retrieve stored scrape by base_url query param.",
+            "GET /skills/stored_webscrape_skill/stored/{key}": "Retrieve stored scrape by path-encoded base URL.",
+            "GET /skills/stored_webscrape_skill/list": "List all stored scrape keys (base URLs).",
+        },
+    },
     "workflow_skill": {
         "description": "Save and run reusable multi-step workflow templates with parameters.",
         "examples": [
