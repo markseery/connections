@@ -29,9 +29,18 @@ MAX_CONTENT_CHARS = 120_000  # trim combined content so prompts stay within cont
 AI_TIMEOUT = 180.0
 
 ANALYSIS_TOPICS = [
+    "Headquarters",
+    "Years in business",
+    "Company executive names and titles",
+    "number of data centers, their locations, GPUs, and power capacity",
+    "active and contracted megawatts, terawatts, and other measures of power",
+    "installed, active and future number of GPUs",
+    "teraflops and exaflops",
+    "customer names, locations, industry/type of entity, and other relevant details",
     "products",
     "solutions",
     "services",
+    "ideal customer profile",
     "positioning statements",
     "overall brand identity",
     "value proposition statements",
