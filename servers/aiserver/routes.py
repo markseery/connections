@@ -46,7 +46,7 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
     Body:
       - prompt: str (required)
       - profile: one of fast/chat/reason/agent/code/image/video (required)
-      - provider: one of ollama/openai/xai/google (optional)
+      - provider: one of ollama/openai/xai/google/perplexity/wandb (optional)
     """
     body_any = _maybe_decrypt_body(body)
     if not isinstance(body_any, dict):

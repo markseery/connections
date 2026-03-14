@@ -83,6 +83,21 @@ def _google_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
         return {"type": "text", "text": text}
 
 
+def _wandb_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
+    """W&B Inference (OpenAI-compatible); uses WANDB_API_KEY only."""
+    base = (get_provider_base_url("wandb") or "https://api.inference.wandb.ai/v1").rstrip("/")
+    key = _require_key("wandb")
+    url = f"{base}/chat/completions"
+    messages = [{"role": "user", "content": prompt}]
+    payload = {"model": model, "messages": messages}
+    with httpx.Client(timeout=60.0) as client:
+        r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
+        r.raise_for_status()
+        j = r.json()
+        text = (j.get("choices") or [{}])[0].get("message", {}).get("content", "")
+        return {"type": "text", "text": text}
+
+
 def _perplexity_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     from perplexity import Perplexity
 
@@ -141,6 +156,8 @@ def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any
         out = _google_generate(prompt, model, profile)
     elif provider == "perplexity":
         out = _perplexity_generate(prompt, model, profile)
+    elif provider == "wandb":
+        out = _wandb_generate(prompt, model, profile)
     else:
         raise RuntimeError(f"Unsupported provider: {provider}")
 

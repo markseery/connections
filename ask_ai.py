@@ -65,7 +65,7 @@ def main() -> int:
     ap.add_argument(
         "--provider",
         default=None,
-        help="Optional provider: ollama, openai, xai, google (default: server default)",
+        help="Optional provider: ollama, openai, xai, google, perplexity, wandb (default: server default)",
     )
     ap.add_argument(
         "--url",

@@ -27,6 +27,7 @@ from common.skill_lifecycle import find_live_worker
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 MAX_CONTENT_CHARS = 120_000  # trim combined content so prompts stay within context
 AI_TIMEOUT = 180.0
+AI_PROFILE = "agent"
 
 ANALYSIS_TOPICS = [
     "Headquarters",
@@ -151,8 +152,8 @@ def combined_text(value: dict[str, Any], max_chars: int = MAX_CONTENT_CHARS) -> 
     return "\n\n---\n\n".join(parts) if parts else ""
 
 
-def summarize_via_ai(aiserver_url: str, topic: str, content: str) -> str:
-    """One AI call: summarize content with focus on topic. Profile fast."""
+def summarize_via_ai(aiserver_url: str, topic: str, content: str, profile: str = AI_PROFILE) -> tuple[str, dict[str, Any]]:
+    """One AI call: summarize content with focus on topic. Returns (text, aiserver response meta)."""
     prompt = (
         f"Summarize the following website content with focus on: **{topic}**. "
         "Be concise; use bullet points where helpful. If the site does not clearly address this topic, say so.\n\n"
@@ -161,23 +162,39 @@ def summarize_via_ai(aiserver_url: str, topic: str, content: str) -> str:
     with httpx.Client(timeout=AI_TIMEOUT) as client:
         r = client.post(
             f"{aiserver_url}/generate",
-            json={"prompt": prompt, "profile": "fast"},
+            json={"prompt": prompt, "profile": profile},
         )
         r.raise_for_status()
     out = r.json()
+    meta = {
+        "provider": out.get("provider"),
+        "profile": out.get("profile"),
+        "model": out.get("model"),
+    }
     output = out.get("output") if isinstance(out.get("output"), dict) else out
     if isinstance(output, dict) and "text" in output:
-        return str(output["text"]).strip()
-    return str(output).strip() if output else ""
+        text = str(output["text"]).strip()
+    else:
+        text = str(output).strip() if output else ""
+    return text, meta
 
 
 def run_analyses(aiserver_url: str, content: str) -> dict[str, str]:
     """Run all 7 marketing analyses; return topic -> summary."""
     results: dict[str, str] = {}
+    provider_reported = False
     for topic in ANALYSIS_TOPICS:
         print(f"  Summarizing: {topic} ...", flush=True)
         try:
-            results[topic] = summarize_via_ai(aiserver_url, topic, content)
+            text, meta = summarize_via_ai(aiserver_url, topic, content)
+            results[topic] = text
+            if not provider_reported:
+                provider_reported = True
+                prov = meta.get("provider") or "?"
+                model = meta.get("model") or "?"
+                print(f"  (aiserver: profile={AI_PROFILE}, provider={prov}, model={model})", flush=True)
+                if prov != "wandb":
+                    print(f"  WARNING: provider is {prov!r}, not wandb. Set AISERVER_PROFILE_AGENT_PROVIDER=wandb in .env to use W&B.", flush=True)
         except Exception as e:
             results[topic] = f"[Error: {e}]"
     return results
@@ -275,7 +292,8 @@ def main() -> int:
         return 1
     print(f"  Using {len(content)} chars from {len(value.get('content_by_url') or {})} pages.", flush=True)
 
-    print("Running AI marketing analyses (profile=fast) ...", flush=True)
+    print(f"Using profile: {AI_PROFILE}", flush=True)
+    print(f"Running AI marketing analyses ...", flush=True)
     try:
         analyses = run_analyses(aiserver_url, content)
     except Exception as e:

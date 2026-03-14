@@ -13,10 +13,10 @@ from typing import Literal
 
 from dotenv import load_dotenv
 
-Provider = Literal["ollama", "openai", "xai", "google", "perplexity"]
+Provider = Literal["ollama", "openai", "xai", "google", "perplexity", "wandb"]
 Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search"]
 
-SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity"}
+SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity", "wandb"}
 SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search"}
 
 
@@ -64,6 +64,8 @@ def get_provider_key(provider: Provider) -> str | None:
         return _get_env("GOOGLE_API_KEY")
     if provider == "perplexity":
         return _get_env("PERPLEXITY_API_KEY")
+    if provider == "wandb":
+        return _get_env("WANDB_API_KEY")
     return None
 
 
@@ -78,6 +80,8 @@ def get_provider_base_url(provider: Provider) -> str | None:
         return _get_env("GOOGLE_BASE_URL", "https://generativelanguage.googleapis.com")
     if provider == "perplexity":
         return _get_env("PERPLEXITY_BASE_URL", "https://api.perplexity.ai")
+    if provider == "wandb":
+        return _get_env("WANDB_INFERENCE_BASE_URL", "https://api.inference.wandb.ai/v1")
     return None
 
 
@@ -151,6 +155,19 @@ def get_model(provider: Provider, profile: Profile) -> str:
 
     if provider == "perplexity":
         return "search"
+
+    if provider == "wandb":
+        defaults = {
+            "fast": "zai-org/GLM-5-FP8",
+            "chat": "zai-org/GLM-5-FP8",
+            "reason": "zai-org/GLM-5-FP8",
+            "agent": "zai-org/GLM-5-FP8",
+            "code": "zai-org/GLM-5-FP8",
+            "image": "zai-org/GLM-5-FP8",
+            "video": "zai-org/GLM-5-FP8",
+            "search": "zai-org/GLM-5-FP8",
+        }
+        return defaults[profile]
 
     raise RuntimeError(f"Unsupported provider: {provider}")
 
