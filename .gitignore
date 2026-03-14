@@ -14,6 +14,12 @@ data/
 
 .DS_Store
 
+# Root scripts: only ask_ai.py, kill_start_app.py, start_app.py are tracked
+run_agent_mean_demo.py
+test_wandb_provider.py
+wandb_ai_provider.py
+website_marketing_analysis.py
+
 # Generated marketing reports (do not track)
 coreweave_report.md
 iren_report.md
