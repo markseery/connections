@@ -1,6 +1,7 @@
-.env
-.env.*
+# Ignore dotfiles only (.*); track everything else
+.*
 !.env.example
+!.gitignore
 
 __pycache__/
 *.py[cod]
