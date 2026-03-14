@@ -13,3 +13,10 @@ logs/
 data/
 
 .DS_Store
+
+# Generated marketing reports (do not track)
+coreweave_report.md
+iren_report.md
+nebius_report.md
+nscale_report.md
+nspace_report.md
