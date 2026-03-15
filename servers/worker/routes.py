@@ -57,12 +57,24 @@ def skill_routes(request: Request, skill_name: str) -> dict[str, Any]:
 
 @router.post("/skills/load")
 def load_skill(request: Request, body: dict[str, Any]) -> dict[str, Any]:
-    loaded = _mgr(request).load_from_config(body)
-    return {"status": "loaded", "skill_name": loaded.name, "prefix": loaded.prefix}
+    try:
+        loaded = _mgr(request).load_from_config(body)
+        return {"status": "loaded", "skill_name": loaded.name, "prefix": loaded.prefix}
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load skill: {exc!s}. Check that dependencies are installed (e.g. pip install -r requirements.txt).",
+        )
 
 
 @router.post("/skills/{skill_name}/load")
 def load_skill_by_name(request: Request, skill_name: str) -> dict[str, Any]:
-    loaded = _mgr(request).load(skill_name.strip())
-    return {"status": "loaded", "skill_name": loaded.name, "prefix": loaded.prefix}
+    try:
+        loaded = _mgr(request).load(skill_name.strip())
+        return {"status": "loaded", "skill_name": loaded.name, "prefix": loaded.prefix}
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to load skill '{skill_name}': {exc!s}. Check that dependencies are installed (e.g. pip install -r requirements.txt).",
+        )
 

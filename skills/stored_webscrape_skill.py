@@ -30,11 +30,21 @@ STORAGE_NAMESPACE = "webscrape"
 _jobs: dict[str, dict[str, Any]] = {}
 
 
+def _canonical_base_url(url: str) -> str:
+    """Single canonical form for storage key so store and load always match."""
+    u = (url or "").strip().rstrip("/")
+    return u or url
+
+
 def _registry_url() -> str:
     return os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 
 
 def _storage_url() -> str:
+    """Storage server URL: prefer STORAGE_SERVER_URL from env (set by supervisor), else registry."""
+    env_url = os.environ.get("STORAGE_SERVER_URL", "").strip().rstrip("/")
+    if env_url:
+        return env_url
     with httpx.Client(timeout=5.0) as client:
         r = client.get(f"{_registry_url()}/servers/storage")
         r.raise_for_status()
@@ -176,10 +186,11 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
 
     base_url = req.url
     payload = _build_stored_payload(base_url, pages)
+    storage_key = _canonical_base_url(base_url)
 
     try:
         storage_base = _storage_url()
-        key_encoded = quote(base_url, safe="")
+        key_encoded = quote(storage_key, safe="")
         put_url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records/{key_encoded}"
         async with httpx.AsyncClient(timeout=60.0) as client:
             r = await client.put(put_url, json=payload)
@@ -257,21 +268,32 @@ def get_stored_by_query(base_url: str) -> dict[str, Any]:
 
 
 def _fetch_stored(base_url: str) -> dict[str, Any]:
+    """Fetch stored scrape by base URL. Uses canonical key; on 404 tries alternate (e.g. with/without trailing slash)."""
     storage_base = _storage_url()
-    key_encoded = quote(base_url, safe="")
-    url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records/{key_encoded}"
+    canonical = _canonical_base_url(base_url)
+    keys_to_try = [canonical]
+    if base_url.strip() != canonical:
+        keys_to_try.append(base_url.strip())
 
-    with httpx.Client(timeout=10.0) as client:
-        r = client.get(url)
-        if r.status_code == 404:
-            raise HTTPException(status_code=404, detail="Stored scrape not found for this base URL")
-        r.raise_for_status()
+    last_404_detail: str | None = None
+    for key in keys_to_try:
+        if not key:
+            continue
+        key_encoded = quote(key, safe="")
+        url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records/{key_encoded}"
+        with httpx.Client(timeout=10.0) as client:
+            r = client.get(url)
+            if r.status_code == 404:
+                last_404_detail = "Stored scrape not found for this base URL"
+                continue
+            r.raise_for_status()
+        data = r.json()
+        value = data.get("value")
+        if value is None:
+            raise HTTPException(status_code=502, detail="Storage returned no value")
+        return {"namespace": STORAGE_NAMESPACE, "key": key, "value": value}
 
-    data = r.json()
-    value = data.get("value")
-    if value is None:
-        raise HTTPException(status_code=502, detail="Storage returned no value")
-    return {"namespace": STORAGE_NAMESPACE, "key": base_url, "value": value}
+    raise HTTPException(status_code=404, detail=last_404_detail or "Stored scrape not found for this base URL")
 
 
 @monitor

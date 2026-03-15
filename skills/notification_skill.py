@@ -120,6 +120,12 @@ def _save_notifications(records: list[dict[str, Any]]) -> None:
     NOTIFICATIONS_FILE.write_text(json.dumps(records, indent=2, sort_keys=True), encoding="utf-8")
 
 
+def _parse_throttle(value: str) -> int:
+    """Parse throttle value; allow '60' or '60%'."""
+    s = (value or "").strip().rstrip("%").strip()
+    return int(s) if s else 60
+
+
 def _smtp_config() -> dict[str, Any]:
     return {
         "sender": os.getenv("EMAIL_SENDER", ""),
@@ -128,7 +134,7 @@ def _smtp_config() -> dict[str, Any]:
         "smtp_host": os.getenv("SMTP_HOST", "smtp.gmail.com"),
         "smtp_port": int(os.getenv("SMTP_PORT", "587")),
         "use_tls": os.getenv("SMTP_USE_TLS", "true").lower() == "true",
-        "throttle_per_min": int(os.getenv("NOTIFICATION_THROTTLE_PER_MINUTE", "60")),
+        "throttle_per_min": _parse_throttle(os.getenv("NOTIFICATION_THROTTLE_PER_MINUTE", "60")),
         "default_receiver": os.getenv("EMAIL_RECEIVER_DEFAULT", ""),
     }
 

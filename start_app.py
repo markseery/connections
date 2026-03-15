@@ -164,10 +164,12 @@ class Supervisor:
             env["REGISTRY_SERVER_URL"] = registry.base_url
 
         # Inject derived configuration between servers.
-        # Configuration server talks to storage server.
-        if s.base_name == "configuration" or s.name == "configuration":
-            storage = next((x for x in self.servers if x.base_name == "storage" or x.name == "storage"), None)
-            if storage is not None:
+        # Configuration and worker (skills) talk to the storage server.
+        storage = next((x for x in self.servers if x.base_name == "storage" or x.name == "storage"), None)
+        if storage is not None:
+            if s.base_name == "configuration" or s.name == "configuration":
+                env["STORAGE_SERVER_URL"] = storage.base_url
+            if s.base_name == "worker" or s.name.startswith("worker"):
                 env["STORAGE_SERVER_URL"] = storage.base_url
 
         cmd = [
