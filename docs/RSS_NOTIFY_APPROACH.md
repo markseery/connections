@@ -90,7 +90,7 @@
 - **Schedule:** Run via cron (e.g. every 15–60 minutes).
 
 **Option 2 – Skill**  
-- New skill (e.g. `rss_notify_skill`) that exposes something like:
+- New skill (e.g. `rss_new_skill`) that exposes something like:
   - `POST /check-and-notify` with body `{ "feed_urls": [...], "to_email": "mark.a.seery@gmail.com" }`.
   - Skill uses storage (same namespace/key scheme) and calls notification_skill (HTTP to same worker or another) to send email.
 - A cron job or external scheduler then calls this skill’s endpoint periodically.

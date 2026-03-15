@@ -87,6 +87,26 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "POST /skills/rss_skill/feed": "Fetch feed (body: { \"url\": \"...\" }).",
         },
     },
+    "rss_new_skill": {
+        "description": "RSS new-item fetcher: load a feed list from data/lists, fetch via rss_skill, diff against storage (rss_notified). For each item fetches the article URL and adds a sanitized content field (HTML/JS removed). Returns new items only; no email or persist.",
+        "examples": [
+            "get new RSS items for list ai-news",
+            "get new RSS items for ai-news dry run",
+        ],
+        "routes": {
+            "POST /skills/rss_new_skill/run": "Return new items with content (body: list_name, dry_run?, worker_url?). Response: new_items (feed_title, title, link, published, content), new_item_ids, counts.",
+        },
+    },
+    "rss_new_and_save_skill": {
+        "description": "RSS new items + storage update: calls rss_new_skill then persists new_item_ids to storage (rss_notified). Single place for storage update logic; no notification.",
+        "examples": [
+            "get new RSS items for ai-news and save to storage",
+            "rss new and save for list general-news dry run",
+        ],
+        "routes": {
+            "POST /skills/rss_new_and_save_skill/run": "Get new items and persist (body: list_name, dry_run?, worker_url?). Response: same as rss_new_skill plus persisted_count, persist_errors?.",
+        },
+    },
     "webscraper_skill": {
         "description": "Crawl a website, extract text, and optionally summarize it.",
         "examples": [

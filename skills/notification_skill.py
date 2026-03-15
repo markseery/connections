@@ -172,9 +172,9 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
     if req.reply_to:
         msg["Reply-To"] = req.reply_to
 
-    msg.attach(MIMEText(req.body or "", "plain"))
+    msg.attach(MIMEText(req.body or "", "plain", "utf-8"))
     if req.html_body:
-        msg.attach(MIMEText(req.html_body, "html"))
+        msg.attach(MIMEText(req.html_body, "html", "utf-8"))
 
     for att in req.attachments:
         try:
