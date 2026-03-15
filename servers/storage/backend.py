@@ -8,6 +8,7 @@ is not exposed. All stored values are encrypted JSON bytes.
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -17,6 +18,12 @@ from typing import Any
 def _safe_filename(s: str) -> str:
     """Encode string for use as filesystem path segment (reversible)."""
     return base64.urlsafe_b64encode(s.encode("utf-8")).decode("ascii").rstrip("=")
+
+
+def _key_hash(key: str) -> str:
+    """Stable short filename for key (avoids 'file name too long' on long URLs)."""
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()
+
 
 from .encryption import decrypt, encrypt
 
@@ -46,31 +53,75 @@ class StorageBackend(ABC):
 
 
 class FileEncryptedBackend(StorageBackend):
-    """File-based backend: one file per record under data/namespaces/{namespace}/{key}.enc."""
+    """File-based backend: one file per record under data/namespaces/{ns}/{hash}.enc.
+    Uses SHA256(key) for filename to avoid 'file name too long' on long URL keys.
+    A per-namespace .index.json maps hash -> key for list_keys.
+    """
 
     def __init__(self, root: str | Path = "data/storage") -> None:
         self._root = Path(root)
 
-    def _path(self, namespace: str, key: str) -> Path:
-        return self._root / "namespaces" / _safe_filename(namespace) / f"{_safe_filename(key)}.enc"
+    def _ns_dir(self, namespace: str) -> Path:
+        return self._root / "namespaces" / _safe_filename(namespace)
+
+    def _index_path(self, namespace: str) -> Path:
+        return self._ns_dir(namespace) / ".index.json"
+
+    def _path_for_hash(self, namespace: str, h: str) -> Path:
+        return self._ns_dir(namespace) / f"{h}.enc"
+
+    def _path_legacy(self, namespace: str, key: str) -> Path:
+        """Legacy path (base64 key); can exceed path limit for long keys."""
+        return self._ns_dir(namespace) / f"{_safe_filename(key)}.enc"
+
+    def _load_index(self, namespace: str) -> dict[str, str]:
+        path = self._index_path(namespace)
+        if not path.is_file():
+            return {}
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return dict(data.get("hash_to_key") or {})
+        except Exception:
+            return {}
+
+    def _save_index(self, namespace: str, index: dict[str, str]) -> None:
+        path = self._index_path(namespace)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"hash_to_key": index}, indent=0), encoding="utf-8")
 
     def get(self, namespace: str, key: str) -> bytes | None:
-        p = self._path(namespace, key)
-        if not p.is_file():
-            return None
-        return p.read_bytes()
+        h = _key_hash(key)
+        p = self._path_for_hash(namespace, h)
+        if p.is_file():
+            return p.read_bytes()
+        p_legacy = self._path_legacy(namespace, key)
+        if p_legacy.is_file():
+            return p_legacy.read_bytes()
+        return None
 
     def set(self, namespace: str, key: str, value: bytes) -> None:
-        p = self._path(namespace, key)
-        p.parent.mkdir(parents=True, exist_ok=True)
-        p.write_bytes(value)
+        h = _key_hash(key)
+        ns_dir = self._ns_dir(namespace)
+        ns_dir.mkdir(parents=True, exist_ok=True)
+        self._path_for_hash(namespace, h).write_bytes(value)
+        index = self._load_index(namespace)
+        index[h] = key
+        self._save_index(namespace, index)
 
     def delete(self, namespace: str, key: str) -> bool:
-        p = self._path(namespace, key)
-        if not p.is_file():
-            return False
-        p.unlink()
-        return True
+        h = _key_hash(key)
+        p = self._path_for_hash(namespace, h)
+        if p.is_file():
+            p.unlink()
+            index = self._load_index(namespace)
+            index.pop(h, None)
+            self._save_index(namespace, index)
+            return True
+        p_legacy = self._path_legacy(namespace, key)
+        if p_legacy.is_file():
+            p_legacy.unlink()
+            return True
+        return False
 
     def _decode_filename(self, b64: str) -> str:
         pad = 4 - (len(b64) % 4)
@@ -79,13 +130,24 @@ class FileEncryptedBackend(StorageBackend):
         return base64.urlsafe_b64decode(b64.encode("ascii")).decode("utf-8")
 
     def list_keys(self, namespace: str) -> list[str]:
-        dir_path = self._root / "namespaces" / _safe_filename(namespace)
-        if not dir_path.is_dir():
+        ns_dir = self._ns_dir(namespace)
+        if not ns_dir.is_dir():
             return []
+        index = self._load_index(namespace)
         keys: list[str] = []
-        for f in dir_path.iterdir():
-            if f.suffix == ".enc":
-                keys.append(self._decode_filename(f.stem))
+        for f in ns_dir.iterdir():
+            if f.suffix != ".enc" or f.name.startswith("."):
+                continue
+            stem = f.stem
+            if len(stem) == 64 and all(c in "0123456789abcdef" for c in stem):
+                k = index.get(stem)
+                if k is not None:
+                    keys.append(k)
+            else:
+                try:
+                    keys.append(self._decode_filename(stem))
+                except Exception:
+                    pass
         return sorted(keys)
 
 

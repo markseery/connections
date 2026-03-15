@@ -220,34 +220,53 @@ def _format_date(s: str) -> str:
     return s[:10].strip()
 
 
-def _build_email(entries: list[dict[str, str]]) -> tuple[str, str]:
+def _build_email(entries: list[dict[str, str]]) -> tuple[str, str, str]:
+    """Return (subject, plain_body, html_body). Title is hyperlinked in HTML; URL not repeated."""
     n = len(entries)
     subject = f"RSS: {n} new item{'s' if n != 1 else ''}"
-    lines = []
+    plain_lines = []
+    html_parts = []
     for e in entries:
         title = (e.get("title") or "(No title)").strip()
         link = (e.get("link") or "").strip()
         feed = (e.get("feed_title") or "").strip()
         pub = _format_date(e.get("published") or "")
+        # Plain: one line per item, no separate URL line
         if feed and pub:
-            lines.append(f"[{feed}] {title} ({pub})")
+            plain_lines.append(f"[{feed}] {title} ({pub})")
         elif feed:
-            lines.append(f"[{feed}] {title}")
+            plain_lines.append(f"[{feed}] {title}")
         elif pub:
-            lines.append(f"{title} ({pub})")
+            plain_lines.append(f"{title} ({pub})")
         else:
-            lines.append(title)
+            plain_lines.append(title)
+        # HTML: title as hyperlink; optional feed and date after
         if link:
-            lines.append(link)
-        lines.append("")
-    return subject, "\n".join(lines).strip()
+            safe_title = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+            safe_link = link.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+            anchor = f'<a href="{safe_link}">{safe_title}</a>'
+        else:
+            anchor = title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        suffix = []
+        if feed:
+            suffix.append(feed)
+        if pub:
+            suffix.append(pub)
+        line = anchor + (" — " + " ".join(suffix) if suffix else "")
+        html_parts.append(f"<p>{line}</p>")
+    plain_body = "\n".join(plain_lines).strip()
+    html_body = "\n".join(html_parts)
+    return subject, plain_body, html_body
 
 
-def _send_email(worker_url: str, to: str, subject: str, body: str) -> bool:
+def _send_email(worker_url: str, to: str, subject: str, body: str, html_body: str | None = None) -> bool:
+    payload: dict = {"to": [to], "subject": subject[:500], "body": body}
+    if html_body:
+        payload["html_body"] = html_body
     with httpx.Client(timeout=NOTIFY_TIMEOUT) as client:
         r = client.post(
             f"{worker_url}/skills/notification_skill/send",
-            json={"to": [to], "subject": subject[:500], "body": body},
+            json=payload,
         )
         return r.is_success
 
@@ -317,9 +336,9 @@ def main() -> int:
     total = len(all_entries)
     if ids_to_persist and not args.dry_run:
         if all_entries:
-            subject, body = _build_email(all_entries)
+            subject, body, html_body = _build_email(all_entries)
             print(f"Sending 1 email ({total} item(s))...", flush=True)
-            sent = _send_email(worker_url, to_email, subject, body)
+            sent = _send_email(worker_url, to_email, subject, body, html_body)
             _persist_new_items(storage_base, ids_to_persist)
             print("Email sent, storage updated." if sent else "Email send failed; storage updated (no retry of same links).", flush=True)
             if not sent:

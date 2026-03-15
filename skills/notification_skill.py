@@ -190,7 +190,18 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
 
     all_recipients = req.to + req.cc + req.bcc
 
+    # Use certifi's CA bundle so TLS verification works on macOS (Python.org builds)
     context = ssl.create_default_context()
+    if not (os.getenv("SMTP_SSL_VERIFY", "true").lower() in ("false", "0", "no")):
+        try:
+            import certifi
+            context = ssl.create_default_context(cafile=certifi.where())
+        except ImportError:
+            pass
+    else:
+        context.check_hostname = False
+        context.verify_mode = ssl.CERT_NONE
+
     try:
         with smtplib.SMTP(cfg["smtp_host"], cfg["smtp_port"], timeout=20) as server:
             server.ehlo()
