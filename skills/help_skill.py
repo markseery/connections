@@ -76,6 +76,17 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "GET /skills/news_skill/stock/{symbol}": "News for a stock ticker.",
         },
     },
+    "rss_skill": {
+        "description": "Fetch an RSS or Atom feed URL and return normalized JSON (same structure for any feed).",
+        "examples": [
+            "get RSS feed from https://example.com/feed.xml",
+            "parse Atom feed https://blog.example.com/atom.xml",
+        ],
+        "routes": {
+            "GET /skills/rss_skill/feed": "Fetch feed (query param: url).",
+            "POST /skills/rss_skill/feed": "Fetch feed (body: { \"url\": \"...\" }).",
+        },
+    },
     "webscraper_skill": {
         "description": "Crawl a website, extract text, and optionally summarize it.",
         "examples": [

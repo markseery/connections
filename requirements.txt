@@ -12,3 +12,4 @@ perplexityai>=0.30.0
 # Skill dependencies
 yfinance>=0.2.0
 pandas>=2.0.0
+feedparser>=6.0.0
