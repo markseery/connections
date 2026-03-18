@@ -24,7 +24,9 @@ from urllib.parse import urljoin, urlparse
 
 import httpx
 from fastapi import APIRouter, HTTPException, Response
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from common.skill_response import skill_result
 
 
 router = APIRouter()
@@ -307,7 +309,7 @@ async def start_scrape(body: ScrapeRequest, response: Response) -> dict[str, Any
     _jobs[job_id] = job
     asyncio.create_task(_run_job(job_id, body))
     response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
-    return {"summary": f"Scrape job started for **{body.url}**.", "job_id": job_id, "status": "pending", "url": body.url}
+    return skill_result(summary=f"Scrape job started for **{body.url}**.", job_id=job_id, status="pending", url=body.url)
 
 
 @router.get("/scrape")
@@ -318,7 +320,7 @@ def list_jobs(offset: int = 0, limit: int = 100) -> dict[str, Any]:
     safe = [{k: v for k, v in j.items() if k != "markdown_path"} for j in page]
     total = len(all_jobs)
     items = [{"title": j.get("job_id", ""), "link": j.get("url", ""), "summary": j.get("status", "")} for j in safe]
-    return {"summary": f"**{total}** scrape jobs.", "items": items, "total": total, "offset": offset, "limit": limit, "jobs": safe}
+    return skill_result(summary=f"**{total}** scrape jobs.", items=items, total=total, offset=offset, limit=limit, jobs=safe)
 
 
 @router.get("/scrape/{job_id}")
@@ -328,8 +330,7 @@ def get_job(job_id: str) -> dict[str, Any]:
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     out = {k: v for k, v in job.items() if k != "markdown_path"}
-    out["summary"] = f"Job **{job_id}**: {out.get('status', 'unknown')} — {out.get('url', '')}"
-    return out
+    return skill_result(summary=f"Job **{job_id}**: {out.get('status', 'unknown')} — {out.get('url', '')}", **out)
 
 
 @router.get("/scrape/{job_id}/markdown")
@@ -344,7 +345,7 @@ def get_markdown(job_id: str) -> dict[str, Any]:
     path = Path(str(p))
     if not path.exists():
         raise HTTPException(status_code=404, detail="Markdown file missing")
-    return {"summary": f"Markdown for **{job['url']}**.", "job_id": job_id, "url": job["url"], "markdown": path.read_text(encoding="utf-8")}
+    return skill_result(summary=f"Markdown for **{job['url']}**.", text=path.read_text(encoding="utf-8"), job_id=job_id, url=job["url"])
 
 
 def _summarize_by_topic_sync(text: str, topic: str) -> str:
@@ -366,11 +367,26 @@ def _summarize_by_topic_sync(text: str, topic: str) -> str:
         return str(out)
 
 
+class SummarizeTextRequest(BaseModel):
+    """Body for POST /summarize_text.  Accepts ``text`` or ``markdown`` (first
+    non-empty wins) and an optional ``topic``."""
+
+    text: str = ""
+    markdown: str = ""
+    topic: str = ""
+
+    @model_validator(mode="after")
+    def _resolve_text(self) -> "SummarizeTextRequest":
+        if not self.text and self.markdown:
+            self.text = self.markdown
+        return self
+
+
 @router.post("/summarize_text")
-def summarize_text(body: dict[str, Any]) -> dict[str, Any]:
+def summarize_text(body: SummarizeTextRequest) -> dict[str, Any]:
     """Summarize text by topic. Body: text or markdown (required), topic (optional). Use when user asks to summarize content by theme or topic."""
-    text = body.get("text") or body.get("markdown") or ""
-    topic = (body.get("topic") or "").strip() or "key themes"
+    text = body.text
+    topic = body.topic.strip() or "key themes"
     if not text:
         raise HTTPException(status_code=400, detail="text or markdown is required")
     try:
@@ -378,7 +394,7 @@ def summarize_text(body: dict[str, Any]) -> dict[str, Any]:
     except Exception as exc:
         print(f"[webscraper] summarize_text failed: {exc}", flush=True)
         raise HTTPException(status_code=502, detail=str(exc)) from exc
-    return {"summary": f"Summary by topic **{topic}**.", "text": summary, "topic": topic}
+    return skill_result(summary=f"Summary by topic **{topic}**.", text=summary, topic=topic)
 
 
 @router.get("/scrape/{job_id}/summary")
@@ -390,7 +406,7 @@ def get_summary(job_id: str) -> dict[str, Any]:
     if job.get("status") != "completed":
         raise HTTPException(status_code=400, detail=f"Job not completed (status={job.get('status')})")
     summ = job.get("summary") or ""
-    return {"summary": f"AI summary for **{job['url']}**.", "text": summ, "job_id": job_id, "url": job["url"], "top_words": job.get("top_words")}
+    return skill_result(summary=f"AI summary for **{job['url']}**.", text=summ, job_id=job_id, url=job["url"], top_words=job.get("top_words"))
 
 
 def get_router() -> APIRouter:

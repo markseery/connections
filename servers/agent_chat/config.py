@@ -1,21 +1,6 @@
 """
 License: MIT
-Description: Agent chat server config. Registry and optional storage URL from env.
+Description: Agent chat server config. Delegates to common registry client.
 """
 
-from __future__ import annotations
-
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
-
-_env_path = Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(_env_path)
-
-REGISTRY_SERVER_URL_ENV = "REGISTRY_SERVER_URL"
-
-
-def get_registry_url() -> str:
-    url = os.environ.get(REGISTRY_SERVER_URL_ENV, "http://127.0.0.1:7002").strip()
-    return url.rstrip("/") if url else "http://127.0.0.1:7002"
+from common.registry_client import get_registry_url, get_server_url  # noqa: F401

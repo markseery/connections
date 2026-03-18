@@ -14,6 +14,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from common.skill_response import skill_result
+
 router = APIRouter()
 
 DEFAULT_PROFILE = "agent"
@@ -63,12 +65,12 @@ def respond(body: AgentRequest) -> dict[str, Any]:
     else:
         text = str(output) if output is not None else ""
     profile = data.get("profile", body.profile) or body.profile
-    return {
-        "summary": f"Agent response from profile **{profile}**.",
-        "text": text,
-        "profile": profile,
-        "provider": data.get("provider"),
-    }
+    return skill_result(
+        summary=f"Agent response from profile **{profile}**.",
+        text=text,
+        profile=profile,
+        provider=data.get("provider"),
+    )
 
 
 def get_router() -> APIRouter:

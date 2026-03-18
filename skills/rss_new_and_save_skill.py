@@ -21,6 +21,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from common.skill_response import skill_result
+
 from common.skill_lifecycle import find_live_worker
 
 router = APIRouter()
@@ -125,13 +127,26 @@ def run(body: RunRequest) -> dict[str, Any]:
         elapsed = time.perf_counter() - t0
         print(f"[rss_new_and_save_skill] Persist done in {elapsed:.2f}s: {persisted_count} written", file=sys.stderr, flush=True)
 
-    out = dict(data)
-    out["persisted_count"] = persisted_count
+    upstream_summary = data.get("summary") or ""
+    upstream_items = data.get("items") or []
+    upstream_data = data.get("data") or {}
+    if not isinstance(upstream_data, dict):
+        upstream_data = {}
+
+    summary = upstream_summary
+    if persisted_count:
+        summary = summary.rstrip(". ") + f" Persisted **{persisted_count}** to storage."
+
+    extra = dict(upstream_data)
+    extra["persisted_count"] = persisted_count
     if persist_errors:
-        out["persist_errors"] = persist_errors
-    if persisted_count and out.get("summary"):
-        out["summary"] = out["summary"].rstrip(". ") + f" Persisted **{persisted_count}** to storage."
-    return out
+        extra["persist_errors"] = persist_errors
+    for k in ("ok", "list_name", "dry_run", "feeds_count", "already_notified_count",
+              "new_items_count", "new_items", "new_item_ids", "errors", "fetch_debug"):
+        if k in data and k not in extra:
+            extra[k] = data[k]
+
+    return skill_result(summary=summary, items=upstream_items, **extra)
 
 
 def get_router() -> APIRouter:

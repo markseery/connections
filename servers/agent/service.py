@@ -334,17 +334,27 @@ def _build_answer(
     step_results: list[StepResult],
     partial: bool,
 ) -> str:
-    """Build the raw answer from plan and step results. No UI formatting; APIs get structured output."""
-    parts = [f"Objective: {plan.objective}", "\nResults:"]
-    for r in step_results:
-        if not r.error:
-            data_str = json.dumps(r.response_data, default=str) if r.response_data else "no data"
-            parts.append(f"  - {r.skill_name} {r.method} {r.path}: {data_str}")
-    failures = [r for r in step_results if r.error]
-    if failures:
-        parts.append("\nFailed:")
-        for r in failures:
-            parts.append(f"  - {r.skill_name}: {r.error}")
+    """Build a concise natural-language summary from step results.
+
+    The full structured data is available in AgentExecutionResult.step_results;
+    this text is only for human-readable context (e.g. memory, direct display).
+    """
+    ok = [r for r in step_results if not r.error]
+    failed = [r for r in step_results if r.error]
+    parts: list[str] = []
+    if plan.objective:
+        parts.append(plan.objective)
+    for r in ok:
+        summary = ""
+        if isinstance(r.response_data, dict):
+            summary = r.response_data.get("summary", "")
+        if summary:
+            parts.append(f"{r.skill_name}: {summary}")
+        else:
+            parts.append(f"{r.skill_name} ({r.method} {r.path}): completed.")
+    if failed:
+        for r in failed:
+            parts.append(f"{r.skill_name}: failed — {r.error}")
     if partial:
-        parts.append("\n(Partial result — some steps failed.)")
+        parts.append("(Partial result — some steps failed.)")
     return "\n".join(parts)

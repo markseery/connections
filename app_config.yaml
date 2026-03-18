@@ -21,12 +21,8 @@ servers:
     app: servers.aiserver.main:app
     host: 127.0.0.1
     port: 7012
-  - name: chatserver
-    app: servers.chatserver.main:app
-    host: 127.0.0.1
-    port: 7022
-  - name: chatagent
-    app: servers.chatagent.main:app
+  - name: chat
+    app: servers.chat.main:app
     host: 127.0.0.1
     port: 7023
   - name: connections_ui
@@ -42,7 +38,3 @@ servers:
     host: 127.0.0.1
     port: 7030
     instances: 2
-  - name: agent_chat
-    app: servers.agent_chat.main:app
-    host: 127.0.0.1
-    port: 7025

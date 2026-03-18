@@ -2,8 +2,10 @@
 License: MIT
 Description: Agent chat API. POST /chat with namespace and prompt; uses storage
 for current_memory and the agent server (planner + executor) for skills or direct answer.
-Memory lifecycle unchanged: load/ensure current_memory, pass as conversation_context,
-append exchange and save.
+
+Returns ServiceResponse: structured SkillOutput for API consumers, plus
+`text` (markdown) for backward-compatible UI rendering. Memory stores the
+concise answer text (not markdown formatting).
 """
 
 from __future__ import annotations
@@ -16,11 +18,12 @@ from urllib.parse import quote
 import httpx
 from fastapi import APIRouter, HTTPException
 
+from common.models import ServiceResponse, SkillOutput, ErrorDetail
 from common.skill_response import skill_response_to_markdown
 
 from .config import get_registry_url
 
-router = APIRouter(prefix="/chat", tags=["chat"])
+router = APIRouter(prefix="/agent-chat", tags=["agent-chat"])
 
 AGENT_EXECUTE_TIMEOUT = 180.0
 STORAGE_TIMEOUT = 15.0
@@ -30,37 +33,24 @@ DEFAULT_PROFILE = "agent"
 
 
 def _agent_url() -> str:
-    reg = get_registry_url()
-    with httpx.Client(timeout=5.0) as client:
-        r = client.get(f"{reg}/servers/agent")
-        r.raise_for_status()
-        u = (r.json() or {}).get("url", "").strip().rstrip("/")
-        if not u:
-            raise HTTPException(status_code=503, detail="Registry has no agent URL")
-        return u
+    from common.registry_client import get_server_url
+    return get_server_url("agent")
 
 
 def _storage_url() -> str:
-    reg = get_registry_url()
-    with httpx.Client(timeout=5.0) as client:
-        r = client.get(f"{reg}/servers/storage")
-        r.raise_for_status()
-        u = (r.json() or {}).get("url", "").strip().rstrip("/")
-        if not u:
-            raise HTTPException(status_code=503, detail="Registry has no storage URL")
-        return u
+    from common.registry_client import get_server_url
+    return get_server_url("storage")
 
 
 def _call_agent_server(
     agent_url: str, prompt: str, conversation_context: str | None = None
 ) -> dict[str, Any]:
-    """POST /agent/execute with prompt and optional conversation_context. Returns agent result."""
+    from common.registry_client import get_http_client
     payload: dict[str, Any] = {"prompt": prompt}
     if conversation_context:
         payload["conversation_context"] = conversation_context
-    with httpx.Client(timeout=AGENT_EXECUTE_TIMEOUT) as client:
-        r = client.post(f"{agent_url}/agent/execute", json=payload)
-        r.raise_for_status()
+    r = get_http_client().post(f"{agent_url}/agent/execute", json=payload, timeout=AGENT_EXECUTE_TIMEOUT)
+    r.raise_for_status()
     return r.json()
 
 
@@ -85,20 +75,21 @@ def _format_memory_context(attributes: list[dict]) -> str:
 
 
 def _get_current_memory(storage_url: str, namespace: str) -> dict | None:
+    from common.registry_client import get_http_client
     ns = quote(namespace.strip(), safe="")
     key = quote(CURRENT_MEMORY_KEY, safe="")
     url = f"{storage_url}/namespaces/{ns}/records/{key}"
-    with httpx.Client(timeout=STORAGE_TIMEOUT) as client:
-        r = client.get(url)
-        if r.status_code == 404:
-            return None
-        r.raise_for_status()
+    r = get_http_client().get(url, timeout=STORAGE_TIMEOUT)
+    if r.status_code == 404:
+        return None
+    r.raise_for_status()
     data = r.json()
     val = data.get("value")
     return val if isinstance(val, dict) else None
 
 
 def _put_current_memory(storage_url: str, namespace: str, record: dict) -> None:
+    from common.registry_client import get_http_client
     ns = quote(namespace.strip(), safe="")
     key = quote(CURRENT_MEMORY_KEY, safe="")
     url = f"{storage_url}/namespaces/{ns}/records/{key}"
@@ -107,9 +98,8 @@ def _put_current_memory(storage_url: str, namespace: str, record: dict) -> None:
         "namespace": record.get("namespace", namespace),
         "attributes": record.get("attributes", []),
     }
-    with httpx.Client(timeout=STORAGE_TIMEOUT) as client:
-        r = client.put(url, json=body)
-        r.raise_for_status()
+    r = get_http_client().put(url, json=body, timeout=STORAGE_TIMEOUT)
+    r.raise_for_status()
 
 
 def _ensure_current_memory(storage_url: str, namespace: str) -> dict:
@@ -121,99 +111,51 @@ def _ensure_current_memory(storage_url: str, namespace: str) -> dict:
     return record
 
 
-def _build_display_from_result(result: dict[str, Any]) -> str | None:
-    """
-    Build chat-friendly markdown from agent result.step_results and result.objective.
-    Returns None to mean use result.answer as-is (e.g. direct answer, no steps).
-    """
+def _build_output_from_result(result: dict[str, Any]) -> SkillOutput:
+    """Build SkillOutput from agent result. Uses step_results for structured data."""
     step_results = result.get("step_results") or []
-    if not step_results:
-        return None
+    answer = (result.get("answer") or "").strip()
     objective = (result.get("objective") or "").strip()
-    parts = [f"## {objective}", ""] if objective else []
-    for r in step_results:
-        if r.get("error"):
-            continue
-        data = r.get("response_data")
-        if data is not None:
-            if isinstance(data, str):
-                try:
-                    data = json.loads(data)
-                except (json.JSONDecodeError, TypeError):
-                    pass
-            parts.append(skill_response_to_markdown(data))
-            parts.append("")
-    failures = [r for r in step_results if r.get("error")]
-    if failures:
-        parts.append("---")
-        parts.append("**Failed steps:**")
-        for r in failures:
-            parts.append(f"- {r.get('skill_name', '?')}: {r.get('error', '')}")
-    return "\n".join(parts).strip() if parts else None
 
+    if not step_results:
+        return SkillOutput(text=answer, summary=objective)
 
-def _format_raw_answer_with_results(raw: str) -> str | None:
-    """
-    If raw answer is "Objective: ... Results: ... - skill path: {json}", parse and format for display.
-    Fallback when result.step_results is missing from the agent response.
-    """
-    s = (raw or "").strip()
-    if not s.startswith("Objective:") or "Results:" not in s:
-        return None
-    lines = s.split("\n")
-    objective = ""
-    for i, line in enumerate(lines):
-        if line.strip().startswith("Objective:"):
-            objective = line.strip().replace("Objective:", "").strip()
-            break
-    parts = [f"## {objective}", ""] if objective else []
-    for line in lines:
-        line = line.strip()
-        if not line.startswith("- "):
+    all_items: list[dict[str, Any]] = []
+    summaries: list[str] = []
+    texts: list[str] = []
+    combined_data: dict[str, Any] = {}
+    for sr in step_results:
+        if sr.get("error"):
             continue
-        # JSON starts at ": {" so we don't split on ": " inside the payload
-        idx = line.find(": {")
-        if idx < 0:
+        rd = sr.get("response_data")
+        if rd is None:
             continue
-        payload = line[idx + 2 :].strip()  # after ": "
-        if not payload.startswith("{"):
-            continue
-        try:
-            data = json.loads(payload)
-        except json.JSONDecodeError:
-            continue
-        if isinstance(data, dict):
-            parts.append(skill_response_to_markdown(data))
-            parts.append("")
-    if not parts:
-        return None
-    if "Failed:" in s:
-        failed_start = s.find("Failed:")
-        if failed_start >= 0:
-            failed_section = s[failed_start:].strip()
-            parts.append("---")
-            parts.append("**Failed steps:**")
-            for fl in failed_section.split("\n")[1:]:
-                fl = fl.strip()
-                if fl.startswith("- "):
-                    parts.append(fl)
-    return "\n".join(parts).strip()
+        if isinstance(rd, str):
+            try:
+                rd = json.loads(rd)
+            except (json.JSONDecodeError, TypeError):
+                continue
+        if isinstance(rd, dict):
+            if rd.get("summary"):
+                summaries.append(rd["summary"])
+            if isinstance(rd.get("text"), str) and rd["text"].strip():
+                texts.append(rd["text"].strip())
+            if isinstance(rd.get("items"), list):
+                all_items.extend(rd["items"])
+            combined_data[sr.get("skill_name", "step")] = rd
 
+    summary = objective
+    if summaries:
+        summary = (objective + " — " if objective else "") + " | ".join(summaries)
 
-def _format_answer_for_display(text: str) -> str:
-    """If the answer looks like a single raw JSON object, render with common formatter. Otherwise return as-is."""
-    s = (text or "").strip()
-    if not s or not s.startswith("{"):
-        return text
-    if "\n" in s and s.count("\n") > 3:
-        return text
-    try:
-        data = json.loads(s)
-        if isinstance(data, dict):
-            return skill_response_to_markdown(data)
-    except json.JSONDecodeError:
-        pass
-    return text
+    text = answer or "\n\n".join(texts)
+
+    return SkillOutput(
+        summary=summary,
+        items=all_items,
+        text=text,
+        data=combined_data,
+    )
 
 
 def _append_to_memory(record: dict, prompt: str, response_text: str) -> dict:
@@ -227,9 +169,14 @@ def _append_to_memory(record: dict, prompt: str, response_text: str) -> dict:
 @router.post("")
 def chat(body: dict[str, Any]) -> dict[str, Any]:
     """
-    Body: namespace (required), prompt (required), profile (optional, ignored; agent uses agent profile).
-    Loads or creates current_memory for namespace, passes it as conversation_context to the agent server
-    (planner + executor; direct answer when no skills needed). Appends exchange to memory, returns text.
+    Body: namespace (required), prompt (required).
+
+    Returns ServiceResponse (JSON):
+    - output: structured SkillOutput (summary, items, text, data)
+    - text: markdown-formatted display (backward compat for UI)
+    - source, metadata, error: standard envelope fields
+
+    API consumers use `output`; UI uses `text`.
     """
     namespace = (body.get("namespace") or "").strip()
     if not namespace:
@@ -249,20 +196,55 @@ def chat(body: dict[str, Any]) -> dict[str, Any]:
         raise HTTPException(status_code=502, detail=str(e)) from e
 
     result = data.get("result") or {}
-    raw_answer = (result.get("answer") or "").strip()
-    # UI-only: format for chat display; APIs get raw from agent
-    display = _build_display_from_result(result)
-    if not display:
-        display = _format_raw_answer_with_results(raw_answer)
-    text = display if display else _format_answer_for_display(raw_answer)
+    output = _build_output_from_result(result)
 
-    updated = _append_to_memory(memory_record, prompt, text)
+    # Determine source
+    step_results = result.get("step_results") or []
+    ok_steps = [sr for sr in step_results if not sr.get("error")]
+    if ok_steps:
+        source = f"skill:{ok_steps[0].get('skill_name', 'unknown')}"
+    else:
+        source = "ai:agent"
+
+    # Markdown for UI backward compat
+    text = skill_response_to_markdown(output.model_dump())
+
+    # Store concise answer in memory (not markdown formatting)
+    memory_text = output.text or output.summary or text
+    updated = _append_to_memory(memory_record, prompt, memory_text)
     _put_current_memory(storage_url, namespace, updated)
 
-    return {
-        "namespace": namespace,
-        "prompt": prompt,
-        "text": text,
-        "profile": DEFAULT_PROFILE,
-        "provider": None,
-    }
+    # Build metadata
+    metadata: dict[str, Any] = {}
+    if data.get("request_id"):
+        metadata["request_id"] = data["request_id"]
+    if data.get("plan_cache_hit") is not None:
+        metadata["plan_cache_hit"] = data["plan_cache_hit"]
+    if result.get("replan_count"):
+        metadata["replan_count"] = result["replan_count"]
+    if result.get("partial"):
+        metadata["partial"] = True
+
+    # Check for failures
+    failed = [sr for sr in step_results if sr.get("error")]
+    error = None
+    if failed and not ok_steps:
+        error = ErrorDetail(
+            error="All skill steps failed",
+            code="skill_execution_failed",
+            detail={"failed_steps": [{"skill": sr.get("skill_name"), "error": sr.get("error")} for sr in failed]},
+        )
+
+    response = ServiceResponse(
+        success=not error,
+        prompt=prompt,
+        namespace=namespace,
+        output=output,
+        source=source,
+        error=error,
+        metadata=metadata,
+    )
+    resp = response.model_dump(mode="json", exclude_none=True)
+    resp["text"] = text
+    resp["profile"] = DEFAULT_PROFILE
+    return resp

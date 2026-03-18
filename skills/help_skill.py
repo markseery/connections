@@ -13,6 +13,8 @@ from typing import Any
 import httpx
 from fastapi import APIRouter, HTTPException
 
+from common.skill_response import skill_result
+
 
 router = APIRouter()
 
@@ -34,6 +36,34 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "POST /skills/statistics/mean": "Compute the arithmetic mean.",
             "POST /skills/statistics/median": "Compute the median.",
             "POST /skills/statistics/stddev": "Compute the population standard deviation.",
+        },
+    },
+    "math_skill": {
+        "description": "Arithmetic and math: sum, multiply, divide, subtract, power, root, modulo, log, factorial, percentage.",
+        "examples": [
+            "sum of 10, 20, 30",
+            "total cost of 1 share each: add 82.12, 116.33, 42.96",
+            "what is 20% of 80",
+            "15 is what percent of 60",
+            "factorial of 5",
+            "square root of 144",
+            "2 to the power of 10",
+        ],
+        "routes": {
+            "POST /skills/math_skill/sum": "Sum a list of numbers (body: values or numbers).",
+            "POST /skills/math_skill/add": "Same as sum.",
+            "POST /skills/math_skill/multiply": "Product of numbers (body: values or numbers).",
+            "POST /skills/math_skill/divide": "Divide a by b (body: a, b).",
+            "POST /skills/math_skill/subtract": "Subtract b from a (body: a, b).",
+            "POST /skills/math_skill/power": "Exponentiation base^exponent (body: base, exponent).",
+            "POST /skills/math_skill/root": "Nth root (body: value, n; n=2 for square root).",
+            "POST /skills/math_skill/sqrt": "Square root (body: value).",
+            "POST /skills/math_skill/modulo": "a mod b (body: a, b).",
+            "POST /skills/math_skill/log": "Logarithm (body: value, base optional default 10).",
+            "POST /skills/math_skill/ln": "Natural log (body: value).",
+            "POST /skills/math_skill/factorial": "Factorial n! (body: n, non-negative int).",
+            "POST /skills/math_skill/percent_of": "percent% of value (body: percent, value).",
+            "POST /skills/math_skill/what_percent": "x is what % of of_y (body: x, of_y).",
         },
     },
     "notification_skill": {
@@ -186,7 +216,7 @@ def list_skills() -> dict[str, Any]:
         skills.append(entry)
     count = len(skills)
     items = [{"title": s.get("skill_name", ""), "summary": s.get("description", "")} for s in skills]
-    return {"summary": f"**{count}** skills available.", "items": items, "skills": skills, "count": count}
+    return skill_result(summary=f"**{count}** skills available.", items=items, skills=skills, count=count)
 
 
 @router.get("/skills/{skill_name}")
@@ -196,11 +226,9 @@ def skill_detail(skill_name: str) -> dict[str, Any]:
     discovered = _discover_skill_names()
     if name not in SKILL_CATALOG and name not in discovered:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
-    out = _skill_detail(name)
-    desc = out.get("description", "No description available.")
-    out["summary"] = f"Skill: **{name}**"
-    out["text"] = desc
-    return out
+    detail = _skill_detail(name)
+    desc = detail.get("description", "No description available.")
+    return skill_result(summary=f"Skill: **{name}**", text=desc, **detail)
 
 
 @router.get("/examples")
@@ -211,7 +239,7 @@ def examples() -> dict[str, Any]:
     for name in sorted(set(list(SKILL_CATALOG.keys()) + discovered)):
         catalog = SKILL_CATALOG.get(name, {})
         result[name] = catalog.get("examples", [])
-    return {"summary": "Example prompts by skill.", "examples": result}
+    return skill_result(summary="Example prompts by skill.", examples=result)
 
 
 @router.get("/about")
@@ -224,20 +252,19 @@ def about() -> dict[str, Any]:
         "AI model. Skills are dynamically loaded into worker servers and can be "
         "extended by adding new modules to the skills/ directory."
     )
-    return {
-        "summary": "Connections: AI-powered chat with skills.",
-        "text": description,
-        "system": "Connections",
-        "description": description,
-        "tips": [
+    return skill_result(
+        summary="Connections: AI-powered chat with skills.",
+        text=description,
+        system="Connections",
+        tips=[
             "Ask 'help' or 'what skills are available' to see this listing.",
             "Include numbers directly in your prompt for statistics: 'mean of 1, 2, 3'.",
             "For email, specify to:, subject:, and body: fields in your prompt.",
             "Stock queries need a ticker symbol: 'quote for AAPL'.",
             "You can chat naturally — if no skill matches, the AI answers directly.",
         ],
-        "skill_count": len(set(list(SKILL_CATALOG.keys()) + _discover_skill_names())),
-    }
+        skill_count=len(set(list(SKILL_CATALOG.keys()) + _discover_skill_names())),
+    )
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────

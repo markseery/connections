@@ -3,8 +3,8 @@ License: MIT
 Description: FastAPI application for the Connections UI server.
 
 Serves the home page (icon tiles) and applet pages such as chat. Static assets
-and HTML are served from the package directory. Exposes /api/chatserver-url so
-the chat page can discover the chat server from the registry.
+and HTML are served from the package directory. Exposes /api/chat-url so
+the chat page can discover the consolidated chat server from the registry.
 """
 
 from __future__ import annotations
@@ -53,38 +53,32 @@ def agent_chat() -> str:
     return path.read_text(encoding="utf-8")
 
 
-@app.get("/api/agent-chat-url")
-def agent_chat_url() -> dict[str, str]:
-    """Return the agent_chat server base URL from the registry (for the agent-chat page)."""
+@app.get("/api/chat-url")
+def chat_url() -> dict[str, str]:
+    """Return the consolidated chat server base URL from the registry."""
     registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
     try:
         with httpx.Client(timeout=5.0) as client:
-            r = client.get(f"{registry}/servers/agent_chat")
+            r = client.get(f"{registry}/servers/chat")
             r.raise_for_status()
             data = r.json()
             url = data.get("url")
             if not url:
-                raise HTTPException(status_code=502, detail="Registry missing agent_chat url")
+                raise HTTPException(status_code=502, detail="Registry missing chat url")
             return {"url": url.rstrip("/")}
     except httpx.HTTPError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
+
+
+# Backward-compatible aliases for any external callers
+@app.get("/api/agent-chat-url")
+def agent_chat_url() -> dict[str, str]:
+    return chat_url()
 
 
 @app.get("/api/chatagent-url")
 def chatagent_url() -> dict[str, str]:
-    """Return the chatagent base URL from the registry (for the chat page to call)."""
-    registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
-    try:
-        with httpx.Client(timeout=5.0) as client:
-            r = client.get(f"{registry}/servers/chatagent")
-            r.raise_for_status()
-            data = r.json()
-            url = data.get("url")
-            if not url:
-                raise HTTPException(status_code=502, detail="Registry missing chatagent url")
-            return {"url": url.rstrip("/")}
-    except httpx.HTTPError as e:
-        raise HTTPException(status_code=502, detail=str(e)) from e
+    return chat_url()
 
 
 if _static.is_dir():

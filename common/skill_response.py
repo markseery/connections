@@ -18,6 +18,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from .models import skill_result  # noqa: F401  — re-export for convenient access
+
 # Standard field names skills can use for consistent display
 SUMMARY = "summary"
 ITEMS = "items"

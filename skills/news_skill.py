@@ -14,25 +14,44 @@ from typing import Any
 
 import httpx
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field, model_validator
+
+from common.skill_response import skill_result
 
 router = APIRouter()
+
+
+class SearchRequest(BaseModel):
+    """Body for POST /search.  Accepts ``query``, ``q``, or ``topic`` as the
+    search term (first non-empty wins).  ``symbol`` and ``limit`` are optional."""
+
+    query: str = ""
+    q: str = ""
+    topic: str = ""
+    symbol: str = ""
+    limit: int = Field(default=10, ge=1, le=20)
+
+    @model_validator(mode="after")
+    def _resolve_query(self) -> "SearchRequest":
+        resolved = self.query or self.q or self.topic
+        if isinstance(resolved, list):
+            resolved = " ".join(str(x) for x in resolved)
+        self.query = str(resolved).strip()
+        return self
 
 
 # ── Routes ──────────────────────────────────────────────────────────────
 
 
 @router.post("/search")
-def news_search(body: dict[str, Any]) -> dict[str, Any]:
+def news_search(body: SearchRequest) -> dict[str, Any]:
     """Search for news on a topic or stock. Body: query or q or topic (required), symbol (optional), limit (optional). Use for news, headlines, or stock news."""
-    query = body.get("query") or body.get("q") or body.get("topic") or ""
-    if isinstance(query, list):
-        query = " ".join(str(x) for x in query)
-    query = str(query).strip()
+    query = body.query
     if not query:
         raise HTTPException(status_code=400, detail="query is required")
 
-    symbol = body.get("symbol", "").strip().upper() or _detect_symbol(query)
-    per_source = min(int(body.get("limit", 10)), 20)
+    symbol = body.symbol.strip().upper() or _detect_symbol(query)
+    per_source = body.limit
 
     yf_articles: list[dict[str, Any]] = []
     web_articles: list[dict[str, Any]] = []
@@ -55,25 +74,25 @@ def news_search(body: dict[str, Any]) -> dict[str, Any]:
 
     summary = _summarize_articles(query, merged)
 
-    return {
-        "query": query,
-        "symbol": symbol or None,
-        "summary": summary,
-        "articles": merged,
-        "sources": {
+    return skill_result(
+        summary=summary,
+        items=merged,
+        query=query,
+        symbol=symbol or None,
+        sources={
             "yfinance": len(yf_articles),
             "web_search": len(web_articles),
             "in_results": {"yfinance": yf_in_merged, "web": web_in_merged},
         },
-        "count": len(merged),
-    }
+        count=len(merged),
+    )
 
 
 @router.get("/topic/{topic}")
 def news_by_topic(topic: str, limit: int = 10, prompt: str = "") -> dict[str, Any]:
     """News for a topic. Replace {topic} with the topic. Query: limit, prompt. Use when user asks for news on a topic."""
     real_query = prompt.strip() or topic.strip()
-    return news_search({"query": real_query, "limit": min(limit, 20)})
+    return news_search(SearchRequest(query=real_query, limit=min(limit, 20)))
 
 
 @router.get("/stock/{symbol}")
@@ -81,11 +100,7 @@ def news_by_stock(symbol: str, limit: int = 10, prompt: str = "") -> dict[str, A
     """News for a stock symbol. Replace {symbol} with ticker (e.g. AAPL). Query: limit, prompt. Use when user asks for stock or company news."""
     sym = symbol.strip().upper()
     real_query = prompt.strip() or f"latest news for {sym}"
-    return news_search({
-        "query": real_query,
-        "symbol": sym,
-        "limit": min(limit, 20),
-    })
+    return news_search(SearchRequest(query=real_query, symbol=sym, limit=min(limit, 20)))
 
 
 # ── yfinance news source ───────────────────────────────────────────────

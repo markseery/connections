@@ -13,7 +13,9 @@ from typing import Any, Iterator
 
 import httpx
 
-from .skill_lifecycle import find_live_worker
+def _find_live_worker(*args, **kwargs):
+    from .skill_lifecycle import find_live_worker
+    return find_live_worker(*args, **kwargs)
 
 STORED_SKILL_NAME = "stored_webscrape_skill"
 DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
@@ -92,7 +94,7 @@ class StoredSiteContent:
     def _get_worker_url(self) -> str:
         if self._worker_url:
             return self._worker_url
-        url = find_live_worker(self._registry_url)
+        url = _find_live_worker(self._registry_url)
         if not url:
             raise RuntimeError("No live worker found in registry")
         return url.rstrip("/")

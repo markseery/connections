@@ -49,13 +49,9 @@ This project is a small, local-first “agentic framework” built from multiple
 - Inputs: `prompt`, `profile`, optional `provider`
 - Provider/model mapping is driven by environment variables (see `docs/SETUP.md`)
 
-### Chat server (`servers/chatserver`)
-- Purpose: relay chat prompts to the AI server; assigns/returns a `namespace`
-- CORS enabled for browser UI use
-
 ### Connections UI (`servers/connections_ui`)
 - Purpose: serve simple HTML/CSS/JS pages (e.g. chat)
-- The browser discovers the chat server via `GET /api/chatserver-url` (registry lookup)
+- The browser discovers the chat server via `GET /api/chat-url` (registry lookup)
 
 ### Agent server (`servers/agent`)
 - Purpose: execute a user request by:

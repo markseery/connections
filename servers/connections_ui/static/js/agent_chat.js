@@ -15,11 +15,22 @@
     if (placeholderEl) placeholderEl.hidden = true;
   }
 
+  var renderer = (typeof marked !== "undefined") ? new marked.Renderer() : null;
+  if (renderer) {
+    renderer.link = function (token) {
+      var href = token.href || "";
+      var title = token.title || "";
+      var text = token.text || href;
+      return '<a href="' + href + '" target="_blank" rel="noopener noreferrer"'
+        + (title ? ' title="' + title + '"' : '') + '>' + text + '</a>';
+    };
+  }
+
   function renderMarkdown(text) {
     if (typeof marked !== "undefined" && marked.parse) {
-      var html = marked.parse(text, { breaks: true, gfm: true });
+      var html = marked.parse(text, { breaks: true, gfm: true, renderer: renderer });
       if (typeof DOMPurify !== "undefined") {
-        return DOMPurify.sanitize(html);
+        return DOMPurify.sanitize(html, { ADD_ATTR: ["target"] });
       }
       return html;
     }
@@ -69,7 +80,7 @@
 
   function getAgentChatUrl() {
     if (agentChatUrl) return Promise.resolve(agentChatUrl);
-    return fetch("/api/agent-chat-url")
+    return fetch("/api/chat-url")
       .then(function (r) {
         if (!r.ok) throw new Error("Could not get agent chat server URL");
         return r.json();
@@ -97,7 +108,7 @@
     getAgentChatUrl()
       .then(function (base) {
         if (!base) throw new Error("No agent chat server URL");
-        return fetch(base + "/chat", {
+        return fetch(base + "/agent-chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ namespace: namespace, prompt: text }),

@@ -18,6 +18,8 @@ import pandas as pd
 import yfinance as yf
 from fastapi import APIRouter, HTTPException, Response
 
+from common.skill_response import skill_result
+
 
 router = APIRouter()
 
@@ -92,22 +94,21 @@ def quote(symbol: str, response: Response) -> dict[str, Any]:
             change_pct = round((change / prev_close) * 100, 2)
 
         sym = symbol.strip().upper()
-        out = {
-            "symbol": sym,
-            "price": _safe_value(current_price),
-            "previous_close": _safe_value(prev_close),
-            "change": _safe_value(change),
-            "change_pct": _safe_value(change_pct),
-            "volume": _safe_value(info.get("regularMarketVolume") or info.get("volume")),
-            "market_cap": _safe_value(info.get("marketCap")),
-            "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-        }
-        p = out.get("price")
-        c = out.get("change_pct")
-        price_str = f"${p}" if p is not None else "N/A"
-        summary = f"**{sym}**: {price_str}" + (f" ({c:+.2f}%)" if c is not None else "") + "."
-        out["summary"] = summary
-        return out
+        price_val = _safe_value(current_price)
+        change_pct_val = _safe_value(change_pct)
+        price_str = f"${price_val}" if price_val is not None else "N/A"
+        summary = f"**{sym}**: {price_str}" + (f" ({change_pct_val:+.2f}%)" if change_pct_val is not None else "") + "."
+        return skill_result(
+            summary=summary,
+            symbol=sym,
+            price=price_val,
+            previous_close=_safe_value(prev_close),
+            change=_safe_value(change),
+            change_pct=change_pct_val,
+            volume=_safe_value(info.get("regularMarketVolume") or info.get("volume")),
+            market_cap=_safe_value(info.get("marketCap")),
+            timestamp=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        )
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 
@@ -155,9 +156,8 @@ def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
                 "net_margin": _num("profitMargins"),
             },
         }
-        result = {k: _safe_value(v) for k, v in out.items()}
-        result["summary"] = f"Fundamentals for **{symbol.strip().upper()}**."
-        return result
+        safe = {k: _safe_value(v) for k, v in out.items()}
+        return skill_result(summary=f"Fundamentals for **{symbol.strip().upper()}**.", **safe)
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 
@@ -171,12 +171,12 @@ def earnings(symbol: str, response: Response) -> dict[str, Any]:
         ed = getattr(t, "earnings_dates", None)
         qf = getattr(t, "quarterly_financials", None)
         sym = symbol.strip().upper()
-        return {
-            "summary": f"Earnings for **{sym}**.",
-            "symbol": sym,
-            "earnings_dates": _dataframe_to_records(ed)[:10],
-            "quarterly_financials": _dataframe_to_records(qf.T)[:8] if qf is not None else [],
-        }
+        return skill_result(
+            summary=f"Earnings for **{sym}**.",
+            symbol=sym,
+            earnings_dates=_dataframe_to_records(ed)[:10],
+            quarterly_financials=_dataframe_to_records(qf.T)[:8] if qf is not None else [],
+        )
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 

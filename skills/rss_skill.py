@@ -16,6 +16,8 @@ import feedparser
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
+from common.skill_response import skill_result
+
 router = APIRouter()
 
 FEED_TIMEOUT = 30.0
@@ -179,13 +181,13 @@ def fetch_and_parse(feed_url: str) -> dict[str, Any]:
     items = [_normalize_entry(e) for e in entries]
     n = len(items)
     summary = f"Feed: **{feed_url}**, **{n}** items."
-    return {
-        "summary": summary,
-        "feed": feed_obj,
-        "items": items,
-        "url": feed_url,
-        "item_count": n,
-    }
+    return skill_result(
+        summary=summary,
+        items=items,
+        feed=feed_obj,
+        url=feed_url,
+        item_count=n,
+    )
 
 
 class FeedRequest(BaseModel):

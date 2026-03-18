@@ -32,6 +32,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from common.skill_response import skill_result
+
 from common.google_news_decoder import GoogleNewsDecoder
 from common.skill_lifecycle import find_live_worker
 
@@ -649,23 +651,21 @@ def run(body: RunRequest) -> dict[str, Any]:
         }
         for e in all_entries
     ]
-    out = {
-        "ok": errors == 0,
-        "summary": summary,
-        "items": items,
-        "list_name": list_name,
-        "dry_run": dry_run,
-        "feeds_count": n_feeds,
-        "already_notified_count": len(seen),
-        "new_items_count": n_new,
-        "new_items": all_entries,
-        "new_item_ids": new_item_ids,
-        "errors": errors,
-    }
+    extra: dict[str, Any] = dict(
+        ok=errors == 0,
+        list_name=list_name,
+        dry_run=dry_run,
+        feeds_count=n_feeds,
+        already_notified_count=len(seen),
+        new_items_count=n_new,
+        new_items=all_entries,
+        new_item_ids=new_item_ids,
+        errors=errors,
+    )
     if _debug_log is not None:
-        out["fetch_debug"] = _debug_log
+        extra["fetch_debug"] = _debug_log
     _debug_log = None
-    return out
+    return skill_result(summary=summary, items=items, **extra)
 
 
 def get_router() -> APIRouter:

@@ -21,6 +21,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
+from common.skill_response import skill_result
+
 from decorations.monitor import monitor
 
 router = APIRouter()
@@ -231,7 +233,7 @@ async def start_scrape(body: ScrapeRequest) -> dict[str, Any]:
         "url_count": 0,
     }
     asyncio.create_task(_run_job(job_id, body))
-    return {"summary": f"Scrape job started for **{body.url}**.", "job_id": job_id, "status": "pending", "base_url": body.url}
+    return skill_result(summary=f"Scrape job started for **{body.url}**.", job_id=job_id, status="pending", base_url=body.url)
 
 
 @monitor
@@ -242,8 +244,7 @@ def get_scrape_job(job_id: str) -> dict[str, Any]:
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     out = dict(job)
-    out["summary"] = f"Job **{job_id}**: {job.get('status', 'unknown')} — {job.get('url', '')}"
-    return out
+    return skill_result(summary=f"Job **{job_id}**: {job.get('status', 'unknown')} — {job.get('url', '')}", **out)
 
 
 @monitor
@@ -254,7 +255,7 @@ def list_scrape_jobs(offset: int = 0, limit: int = 100) -> dict[str, Any]:
     page = all_jobs[offset : offset + limit]
     total = len(all_jobs)
     items = [{"title": j.get("job_id", ""), "link": j.get("url", ""), "summary": j.get("status", "")} for j in page]
-    return {"summary": f"**{total}** scrape jobs.", "items": items, "total": total, "offset": offset, "limit": limit, "jobs": page}
+    return skill_result(summary=f"**{total}** scrape jobs.", items=items, total=total, offset=offset, limit=limit, jobs=page)
 
 
 # Basic English stop words; removed before truncation to keep more meaningful content within max_chars.
@@ -344,12 +345,14 @@ def post_stored(body: StoredRequest) -> dict[str, Any]:
     """Get previously scraped site content by base URL. Body: base_url (required), max_chars (optional). Use when user asks for stored or cached site content."""
     out = _fetch_stored(body.base_url.strip())
     if body.max_chars is not None:
-        value = out.get("value")
+        data = out.get("data") or {}
+        value = data.get("value")
         if isinstance(value, dict):
             combined = _combined_text(value, body.max_chars)
-            out["combined_text"] = combined
-            out["combined_text_length"] = len(combined)
-            out["url_count"] = len(value.get("content_by_url") or value.get("urls") or [])
+            data["combined_text"] = combined
+            data["combined_text_length"] = len(combined)
+            data["url_count"] = len(value.get("content_by_url") or value.get("urls") or [])
+            out["data"] = data
     return out
 
 
@@ -365,7 +368,7 @@ def post_parse_combined(body: ParseCombinedRequest) -> dict[str, Any]:
     pages = parse_combined_text(body.combined_text or "")
     items = [{"title": u, "link": u, "summary": (c or "")[:200]} for u, c in pages]
     n = len(pages)
-    return {"summary": f"**{n}** pages parsed.", "items": items, "pages": [{"url": u, "content": c} for u, c in pages], "count": n}
+    return skill_result(summary=f"**{n}** pages parsed.", items=items, pages=[{"url": u, "content": c} for u, c in pages], count=n)
 
 
 @monitor
@@ -403,7 +406,7 @@ def _fetch_stored(base_url: str) -> dict[str, Any]:
             raise HTTPException(status_code=502, detail="Storage returned no value")
         urls = value.get("urls") if isinstance(value, dict) else []
         n = len(urls) if isinstance(urls, list) else 0
-        return {"summary": f"Stored scrape for **{key}**: **{n}** URLs.", "namespace": STORAGE_NAMESPACE, "key": key, "value": value}
+        return skill_result(summary=f"Stored scrape for **{key}**: **{n}** URLs.", namespace=STORAGE_NAMESPACE, key=key, value=value)
 
     raise HTTPException(status_code=404, detail=last_404_detail or "Stored scrape not found for this base URL")
 
@@ -430,4 +433,4 @@ def list_stored() -> dict[str, Any]:
     keys = data.get("keys") if isinstance(data.get("keys"), list) else []
     n = len(keys)
     items = [{"title": k, "link": k} for k in keys]
-    return {"summary": f"**{n}** stored scrapes.", "items": items, "namespace": STORAGE_NAMESPACE, "keys": keys, "count": n}
+    return skill_result(summary=f"**{n}** stored scrapes.", items=items, namespace=STORAGE_NAMESPACE, keys=keys, count=n)

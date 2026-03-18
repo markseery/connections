@@ -13,6 +13,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, model_validator
 from pydantic import field_validator
 
+from common.skill_response import skill_result
+
 
 router = APIRouter()
 
@@ -69,7 +71,7 @@ def mean(req: ValuesRequest) -> dict[str, Any]:
     """Arithmetic mean of numbers. Body: values (list of numbers). Use when user asks for average or mean."""
     values = _clean(req.values)
     v = statistics.fmean(values)
-    return {"summary": f"**Mean:** {v}", "mean": v}
+    return skill_result(summary=f"**Mean:** {v}", mean=v)
 
 
 @router.post("/average")
@@ -77,7 +79,7 @@ def average(req: ValuesRequest) -> dict[str, Any]:
     """Same as mean. Body: values (list of numbers). Use when user asks for average."""
     values = _clean(req.values)
     v = statistics.fmean(values)
-    return {"summary": f"**Average:** {v}", "average": v}
+    return skill_result(summary=f"**Average:** {v}", average=v)
 
 
 @router.post("/median")
@@ -85,7 +87,7 @@ def median(req: ValuesRequest) -> dict[str, Any]:
     """Median of numbers. Body: values (list of numbers). Use when user asks for median."""
     values = _clean(req.values)
     v = statistics.median(values)
-    return {"summary": f"**Median:** {v}", "median": v}
+    return skill_result(summary=f"**Median:** {v}", median=v)
 
 
 @router.post("/stddev")
@@ -93,7 +95,7 @@ def stddev(req: ValuesRequest) -> dict[str, Any]:
     """Standard deviation of numbers. Body: values (list of numbers). Use when user asks for std dev or spread."""
     values = _clean(req.values)
     v = statistics.pstdev(values)
-    return {"summary": f"**Standard deviation:** {v}", "stddev": v}
+    return skill_result(summary=f"**Standard deviation:** {v}", stddev=v)
 
 
 def get_router() -> APIRouter:

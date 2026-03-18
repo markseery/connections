@@ -24,6 +24,9 @@ from uuid import uuid4
 
 import httpx
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+from common.skill_response import skill_result
 
 router = APIRouter()
 
@@ -34,11 +37,28 @@ _TEMPLATE_DIR.mkdir(parents=True, exist_ok=True)
 _executions: dict[str, dict[str, Any]] = {}
 
 
+class CreateTemplateRequest(BaseModel):
+    """Body for POST /templates."""
+
+    name: str = Field(..., min_length=1, description="Unique template name")
+    description: str = ""
+    params: list[str] = Field(default_factory=list)
+    steps: list[dict[str, Any]] = Field(..., min_length=1)
+
+
+class ExecuteWorkflowRequest(BaseModel):
+    """Body for POST /execute."""
+
+    steps: list[dict[str, Any]] = Field(..., min_length=1)
+    name: str = "unnamed"
+    timeout: float = Field(default=120, ge=1, le=300)
+
+
 # ── Template CRUD ────────────────────────────────────────────────────────
 
 
 @router.post("/templates")
-def save_template(body: dict[str, Any]) -> dict[str, Any]:
+def save_template(body: CreateTemplateRequest) -> dict[str, Any]:
     """Save a workflow template. Body: name, steps, params (optional), optional_params (optional).
 
     Body:
@@ -47,14 +67,10 @@ def save_template(body: dict[str, Any]) -> dict[str, Any]:
         params:      list[str]  (parameter names, e.g. ["url", "max_pages"])
         steps:       list[step]  (step definitions with {{param}} placeholders)
     """
-    name = (body.get("name") or "").strip()
-    if not name:
-        raise HTTPException(status_code=400, detail="name is required")
-    description = body.get("description", "")
-    params = body.get("params") or []
-    steps = body.get("steps")
-    if not steps or not isinstance(steps, list):
-        raise HTTPException(status_code=400, detail="steps is required and must be a list")
+    name = body.name.strip()
+    description = body.description
+    params = body.params
+    steps = body.steps
 
     template = {
         "name": name,
@@ -66,7 +82,7 @@ def save_template(body: dict[str, Any]) -> dict[str, Any]:
 
     _save_template_to_disk(name, template)
     print(f"[workflow] template saved: {name} ({len(steps)} steps, params={params})", flush=True)
-    return {"summary": f"Saved workflow **{name}**.", "saved": True, "name": name, "params": params, "steps_count": len(steps)}
+    return skill_result(summary=f"Saved workflow **{name}**.", saved=True, name=name, params=params, steps_count=len(steps))
 
 
 @router.get("/templates")
@@ -83,7 +99,7 @@ def list_templates() -> dict[str, Any]:
         })
     count = len(summaries)
     items = [{"title": s["name"], "summary": s.get("description", "")} for s in summaries]
-    return {"summary": f"**{count}** workflow templates.", "items": items, "templates": summaries, "count": count}
+    return skill_result(summary=f"**{count}** workflow templates.", items=items, templates=summaries, count=count)
 
 
 @router.get("/templates/{name}")
@@ -92,8 +108,7 @@ def get_template(name: str) -> dict[str, Any]:
     template = _load_template(name)
     if not template:
         raise HTTPException(status_code=404, detail=f"template '{name}' not found")
-    template["summary"] = f"Workflow template: **{name}**."
-    return template
+    return skill_result(summary=f"Workflow template: **{name}**.", **template)
 
 
 @router.delete("/templates/{name}")
@@ -104,7 +119,7 @@ def delete_template(name: str) -> dict[str, Any]:
         raise HTTPException(status_code=404, detail=f"template '{name}' not found")
     path.unlink()
     print(f"[workflow] template deleted: {name}", flush=True)
-    return {"summary": f"Deleted workflow **{name}**.", "deleted": True, "name": name}
+    return skill_result(summary=f"Deleted workflow **{name}**.", deleted=True, name=name)
 
 
 # ── Execute by template name ────────────────────────────────────────────
@@ -132,7 +147,7 @@ def _apply_param_constraints(
 
 
 @router.post("/run/{name}")
-def run_template(name: str, body: dict[str, Any]) -> dict[str, Any]:
+def run_template(name: str, body: dict[str, Any] | None = None) -> dict[str, Any]:
     """Run a saved workflow template by name. Replace {name} with template name. Body: template parameters (e.g. url, pages, depth).
 
     Required params are in template.params; optional defaults in
@@ -171,18 +186,18 @@ def run_template(name: str, body: dict[str, Any]) -> dict[str, Any]:
         print(f"[workflow] param substitution produced invalid JSON: {exc}", flush=True)
         raise HTTPException(status_code=400, detail=f"param substitution failed: {exc}")
 
-    return execute_workflow({
-        "name": f"{name} ({', '.join(f'{k}={v}' for k, v in params.items() if k != 'timeout')})",
-        "steps": resolved_steps,
-        "timeout": params.get("timeout", 120),
-    })
+    return execute_workflow(ExecuteWorkflowRequest(
+        name=f"{name} ({', '.join(f'{k}={v}' for k, v in params.items() if k != 'timeout')})",
+        steps=resolved_steps,
+        timeout=params.get("timeout", 120),
+    ))
 
 
 # ── Execute ad-hoc ───────────────────────────────────────────────────────
 
 
 @router.post("/execute")
-def execute_workflow(body: dict[str, Any]) -> dict[str, Any]:
+def execute_workflow(body: ExecuteWorkflowRequest) -> dict[str, Any]:
     """Execute a multi-step workflow. Body: name (optional), steps (list of step dicts), timeout (optional).
 
     Body:
@@ -190,12 +205,9 @@ def execute_workflow(body: dict[str, Any]) -> dict[str, Any]:
         steps:   list of step dicts
         timeout: optional overall timeout in seconds (default 120)
     """
-    steps_raw = body.get("steps")
-    if not steps_raw or not isinstance(steps_raw, list):
-        raise HTTPException(status_code=400, detail="steps is required and must be a list")
-
-    name = body.get("name", "unnamed")
-    timeout = min(float(body.get("timeout", 120)), 300)
+    steps_raw = body.steps
+    name = body.name
+    timeout = body.timeout
     workflow_id = str(uuid4())
 
     steps = _parse_steps(steps_raw)
@@ -297,9 +309,9 @@ def execute_workflow(body: dict[str, Any]) -> dict[str, Any]:
     record["finished_at"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     record["step_results"] = all_results
     status = record["status"]
-    name = record.get("name", "workflow")
-    record["summary"] = f"Workflow **{name}**: **{status}** ({record['steps_completed']}/{record['steps_total']} steps)."
-    return record
+    wf_name = record.get("name", "workflow")
+    summary = f"Workflow **{wf_name}**: **{status}** ({record['steps_completed']}/{record['steps_total']} steps)."
+    return skill_result(summary=summary, **record)
 
 
 @router.get("/executions")
@@ -319,7 +331,7 @@ def list_executions() -> dict[str, Any]:
         })
     count = len(summaries)
     items = [{"title": s["workflow_id"], "summary": f"{s['name']} — {s['status']}"} for s in summaries]
-    return {"summary": f"**{count}** workflow executions.", "items": items, "executions": summaries, "count": count}
+    return skill_result(summary=f"**{count}** workflow executions.", items=items, executions=summaries, count=count)
 
 
 @router.get("/executions/{workflow_id}")
@@ -328,8 +340,7 @@ def get_execution(workflow_id: str) -> dict[str, Any]:
     wf = _executions.get(workflow_id)
     if not wf:
         raise HTTPException(status_code=404, detail=f"execution {workflow_id} not found")
-    wf["summary"] = f"Execution **{workflow_id}**: {wf.get('status', '')} — {wf.get('name', '')}"
-    return wf
+    return skill_result(summary=f"Execution **{workflow_id}**: {wf.get('status', '')} — {wf.get('name', '')}", **wf)
 
 
 # ── Template persistence ─────────────────────────────────────────────────

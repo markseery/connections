@@ -28,6 +28,8 @@ from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel, Field
 from pydantic import model_validator
 
+from common.skill_response import skill_result
+
 
 router = APIRouter()
 
@@ -223,7 +225,7 @@ def get_config() -> dict[str, Any]:
     masked = dict(cfg)
     if masked.get("password"):
         masked["password"] = "***"
-    return {"summary": "Notification config (sender, throttle).", **masked}
+    return skill_result(summary="Notification config (sender, throttle).", **masked)
 
 
 @router.get("/notifications")
@@ -236,7 +238,7 @@ def list_notifications(status: str | None = None, limit: int = 100, offset: int 
     records = sorted(records, key=lambda r: r.get("created_at", ""), reverse=True)
     page = records[offset : offset + limit]
     items = [{"title": r.get("notification_id", ""), "summary": f"{r.get('subject', '')} — {r.get('status', '')}"} for r in page]
-    return {"summary": f"**{total}** notifications.", "items": items, "total": total, "offset": offset, "limit": limit, "notifications": page}
+    return skill_result(summary=f"**{total}** notifications.", items=items, total=total, offset=offset, limit=limit, notifications=page)
 
 
 @router.get("/notifications/{notification_id}")
@@ -245,8 +247,10 @@ def get_notification(notification_id: str) -> dict[str, Any]:
     records = _load_notifications()
     for r in records:
         if r.get("notification_id") == notification_id:
-            r["summary"] = f"Notification **{notification_id}**: {r.get('subject', '')} — {r.get('status', '')}"
-            return r
+            return skill_result(
+                summary=f"Notification **{notification_id}**: {r.get('subject', '')} — {r.get('status', '')}",
+                **r,
+            )
     raise HTTPException(status_code=404, detail="Notification not found")
 
 
@@ -259,7 +263,7 @@ def stats() -> dict[str, Any]:
         s = str(r.get("status", "unknown"))
         by_status[s] = by_status.get(s, 0) + 1
     total = len(records)
-    return {"summary": f"**{total}** notifications (by status: {by_status}).", "total": total, "by_status": by_status}
+    return skill_result(summary=f"**{total}** notifications (by status: {by_status}).", total=total, by_status=by_status)
 
 
 @router.post("/send")
@@ -312,7 +316,7 @@ def send_email(body: SendEmailRequest, response: Response) -> dict[str, Any]:
     response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
     if not ok:
         raise HTTPException(status_code=502, detail=err or "Failed to send")
-    return {"summary": "Email sent.", "notification_id": nid, "status": "sent"}
+    return skill_result(summary="Email sent.", notification_id=nid, status="sent")
 
 
 @router.post("/send/test")
@@ -331,7 +335,7 @@ def send_test(body: TestEmailRequest) -> dict[str, Any]:
     ok, err = _send_smtp(cfg, req)
     if not ok:
         raise HTTPException(status_code=502, detail=err or "Failed to send")
-    return {"summary": "Test email sent.", "status": "sent"}
+    return skill_result(summary="Test email sent.", status="sent")
 
 
 def get_router() -> APIRouter:

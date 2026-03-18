@@ -17,11 +17,22 @@
     if (placeholderEl) placeholderEl.hidden = true;
   }
 
+  var renderer = (typeof marked !== "undefined") ? new marked.Renderer() : null;
+  if (renderer) {
+    renderer.link = function (token) {
+      var href = token.href || "";
+      var title = token.title || "";
+      var text = token.text || href;
+      return '<a href="' + href + '" target="_blank" rel="noopener noreferrer"'
+        + (title ? ' title="' + title + '"' : '') + '>' + text + '</a>';
+    };
+  }
+
   function renderMarkdown(text) {
     if (typeof marked !== "undefined" && marked.parse) {
-      var html = marked.parse(text, { breaks: true, gfm: true });
+      var html = marked.parse(text, { breaks: true, gfm: true, renderer: renderer });
       if (typeof DOMPurify !== "undefined") {
-        return DOMPurify.sanitize(html);
+        return DOMPurify.sanitize(html, { ADD_ATTR: ["target"] });
       }
       return html;
     }
@@ -71,7 +82,7 @@
 
   function getChatagentUrl() {
     if (chatagentUrl) return Promise.resolve(chatagentUrl);
-    return fetch("/api/chatagent-url")
+    return fetch("/api/chat-url")
       .then(function (r) {
         if (!r.ok) throw new Error("Could not get chat server URL");
         return r.json();
@@ -110,8 +121,10 @@
       .then(function (data) {
         removeThinking();
         if (data.namespace) namespace = data.namespace;
-        const output = data.output;
-        const assistantText = (output && output.text) ? output.text : "(No response text)";
+        var assistantText = data.text
+          || (data.output && data.output.text)
+          || (data.output && data.output.summary)
+          || "(No response text)";
         appendMessage("assistant", assistantText);
       })
       .catch(function (err) {
