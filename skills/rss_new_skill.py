@@ -20,6 +20,8 @@ import os
 import re
 import ssl
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
@@ -42,6 +44,36 @@ CONTENT_FETCH_TIMEOUT = 20.0
 CONTENT_MAX_CHARS = 100_000
 MIN_CONTENT_LENGTH = 250  # below this, try to follow canonical/outbound article link
 MAX_AGE_DAYS = 30
+# Cap parallel content fetches to avoid 429s (e.g. from Google News)
+CONTENT_FETCH_MAX_WORKERS = 6
+# When item count exceeds this, cap each item's content to CONTENT_CAP_WORDS to avoid overwhelming later steps
+CONTENT_CAP_LINKS_THRESHOLD = 100
+CONTENT_CAP_WORDS = 500
+
+
+def _truncate_to_words(text: str, max_words: int) -> str:
+    """Return text truncated to at most max_words (whitespace-separated)."""
+    if not text or max_words <= 0:
+        return text or ""
+    words = text.split()
+    if len(words) <= max_words:
+        return text
+    return " ".join(words[:max_words])
+
+
+# Max chars for per-item summary in display (title + link + this snippet)
+CONTENT_SNIPPET_CHARS = 220
+
+
+def _content_snippet(content: str) -> str:
+    """One-line snippet from article content for display (no newlines, truncated)."""
+    if not content:
+        return ""
+    s = " ".join((content or "").split())
+    if len(s) <= CONTENT_SNIPPET_CHARS:
+        return s.strip()
+    cut = s[: CONTENT_SNIPPET_CHARS + 1].rsplit(" ", 1)
+    return (cut[0] if cut else s[:CONTENT_SNIPPET_CHARS]).strip() + "…"
 
 
 def _ssl_verify_context() -> ssl.SSLContext:
@@ -88,6 +120,7 @@ class RunRequest(BaseModel):
     dry_run: bool = Field(default=False, description="If true, skip storage read; all items in range returned as new")
     worker_url: str | None = Field(default=None, description="Worker base URL; if omitted, discovered from registry")
     debug: bool = Field(default=False, description="If true, include fetch_debug list in response with per-URL log lines")
+    skip_content: bool = Field(default=False, description="If true, do not fetch article content; for warmup (save links only)")
 
 
 def _load_feed_list(list_name: str) -> list[str]:
@@ -230,6 +263,37 @@ def _unwrap_google_redirect_url(href: str) -> str | None:
     return None
 
 
+def _is_angular_license_stub(text: str) -> bool:
+    """True if content is the Angular framework license/footer (Google News often returns this instead of article)."""
+    if not text or len(text) < 200:
+        return False
+    t = text.strip()
+    return (
+        "The MIT License" in t
+        and "angular.dev" in t
+        and "Angular" in t
+    )
+
+
+def _is_static_resource_url(url: str) -> bool:
+    """Return True if url is clearly a static asset (CSS, fonts, etc.), not an article page."""
+    if not url or not url.startswith(("http://", "https://")):
+        return True
+    try:
+        p = urlparse(url)
+        netloc = (p.netloc or "").lower()
+        path = (p.path or "").lower()
+        if any(x in netloc for x in ("fonts.", "gstatic", "googleapis")):
+            return True
+        if path.endswith((".css", ".js", ".woff2", ".woff", ".ttf", ".otf")):
+            return True
+        if "/css" in path or "fonts.googleapis.com" in url:
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def _extract_article_url(html: str, current_url: str) -> str | None:
     """
     Extract the real article URL from an aggregator wrapper page (e.g. Google News).
@@ -253,6 +317,7 @@ def _extract_article_url(html: str, current_url: str) -> str | None:
         skip_domains = (
             "google.com", "googleusercontent.com", "gstatic.com",
             "google-analytics", "googletagmanager", "doubleclick", "googleadservices",
+            "fonts.googleapis", "fonts.gstatic", "googleapis.com",
             "facebook.com", "twitter.com", "youtube.com", "accounts.",
         )
         if any(skip in n for skip in skip_domains):
@@ -376,10 +441,14 @@ def _fetch_page_content(url: str) -> str:
             _log(f"fetch_page_content: html_len={len(html)} final_url={final_url[:80]}...")
             content = _sanitize_content(html)
             _log(f"fetch_page_content: sanitized content_len={len(content)} preview={repr(content[:150])}")
-            # If content is stub (e.g. "Google News" from aggregator), try to get real article URL (use final URL after redirects)
-            if len(content) < MIN_CONTENT_LENGTH:
-                _log(f"fetch_page_content: content short (< {MIN_CONTENT_LENGTH}), trying extract_article_url")
+            # If content is stub (short, "Google News", or Angular license boilerplate), try to get real article URL
+            if len(content) < MIN_CONTENT_LENGTH or _is_angular_license_stub(content):
+                reason = "Angular stub" if _is_angular_license_stub(content) else f"content short (< {MIN_CONTENT_LENGTH})"
+                _log(f"fetch_page_content: {reason}, trying extract_article_url")
                 article_url = _extract_article_url(html, final_url)
+                if article_url and _is_static_resource_url(article_url):
+                    _log(f"fetch_page_content: article_url looks like static resource, ignoring")
+                    article_url = None
                 _log(f"fetch_page_content: article_url={article_url[:100] + '...' if article_url else 'None'}")
                 if article_url and article_url != url:
                     _log(f"fetch_page_content: GET article_url")
@@ -418,10 +487,12 @@ def _process_feed(
 ) -> tuple[list[dict[str, str]], list[str], bool]:
     data = _fetch_feed(worker_url, feed_url)
     if not data:
+        _log(f"feed failed (no data): {feed_url[:80]}...")
         return [], [], False
     items = data.get("items") or []
     feed_title = (data.get("feed") or {}).get("title") or feed_url
     if not items:
+        _log(f"feed returned 0 items (may need auth for Google Alerts): {feed_url[:80]}...")
         return [], [], True
 
     entries = []
@@ -445,17 +516,23 @@ def _process_feed(
 
 @router.post("/run")
 def run(body: RunRequest) -> dict[str, Any]:
-    """
-    Return new RSS items for the given list (diff vs storage). Does not send email or persist.
-    list_name (required), dry_run (optional), worker_url (optional), debug (optional; if true, response includes fetch_debug).
-    """
+    """Get new items from a named RSS feed list (diff vs storage). Body: list_name (required, e.g. cloud-news), dry_run (optional), skip_content (optional). Use when user asks for new items from a feed list. Does not send email or persist."""
     global _debug_log
     list_name = body.list_name.strip()
     dry_run = body.dry_run
+    skip_content = body.skip_content
     _debug_log = [] if body.debug else None
+    if skip_content:
+        print("[rss_new_skill] skip_content=True: no article fetch, links only", file=sys.stderr, flush=True)
+        _log("skip_content=True: no article fetch")
 
     try:
+        t0 = time.perf_counter()
         feeds = _load_feed_list(list_name)
+        elapsed = time.perf_counter() - t0
+        msg = f"Loaded feed list in {elapsed:.2f}s: {len(feeds)} feeds"
+        print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+        _log(msg)
     except (ValueError, FileNotFoundError) as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 
@@ -478,14 +555,26 @@ def run(body: RunRequest) -> dict[str, Any]:
         if not r.is_success:
             raise HTTPException(status_code=503, detail=f"Failed to load rss_skill: {r.text}")
 
+    t0 = time.perf_counter()
     seen: set[str] = _list_notified_item_ids(storage_base) if not dry_run else set()
+    elapsed = time.perf_counter() - t0
+    msg = f"Storage fetch in {elapsed:.2f}s: {len(seen)} already notified"
+    print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+    _log(msg)
+
     all_entries: list[dict[str, str]] = []
     new_item_ids: list[str] = []
     errors = 0
 
-    for feed_url in feeds:
+    for i, feed_url in enumerate(feeds):
         try:
+            t0 = time.perf_counter()
             entries, ids_to_add, ok = _process_feed(worker_url, feed_url, seen)
+            elapsed = time.perf_counter() - t0
+            short_url = (feed_url[:56] + "...") if len(feed_url) > 56 else feed_url
+            msg = f"Feed {i + 1}/{len(feeds)} in {elapsed:.2f}s: {len(entries)} new entries ({short_url})"
+            print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+            _log(msg)
             if not ok:
                 errors += 1
                 continue
@@ -494,18 +583,81 @@ def run(body: RunRequest) -> dict[str, Any]:
         except Exception:
             errors += 1
 
-    # Fetch and sanitize page content for each new item
-    for entry in all_entries:
-        link = (entry.get("link") or "").strip()
-        entry["content"] = _fetch_page_content(link) if link else ""
+    if skip_content:
+        # Warmup: no content fetch, no content-based filtering. Just links.
+        for entry in all_entries:
+            entry["content"] = ""
+    else:
+        # Fetch and sanitize page content for each new item (parallel, capped concurrency)
+        def _fetch_content_for_link(link: str) -> str:
+            try:
+                return _fetch_page_content(link) if link else ""
+            except Exception:
+                return ""
 
+        links = [(entry.get("link") or "").strip() for entry in all_entries]
+        n_links = len(links)
+        msg = f"Fetching content for {n_links} items (workers={CONTENT_FETCH_MAX_WORKERS})..."
+        print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+        _log(msg)
+        t0 = time.perf_counter()
+        with ThreadPoolExecutor(max_workers=CONTENT_FETCH_MAX_WORKERS) as executor:
+            contents = list(executor.map(_fetch_content_for_link, links))
+        elapsed = time.perf_counter() - t0
+        msg = f"Content fetch done in {elapsed:.2f}s for {n_links} items"
+        print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+        _log(msg)
+        for entry, content in zip(all_entries, contents):
+            entry["content"] = content
+
+        # When many items, cap each item's content to avoid overwhelming summarization/later steps
+        if n_links > CONTENT_CAP_LINKS_THRESHOLD:
+            for entry in all_entries:
+                entry["content"] = _truncate_to_words(
+                    entry.get("content") or "", CONTENT_CAP_WORDS
+                )
+            msg = f"Capped content to {CONTENT_CAP_WORDS} words per item (>{CONTENT_CAP_LINKS_THRESHOLD} links)"
+            print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+            _log(msg)
+
+        # Drop Google News items that have no meaningful content (e.g. 429, or Angular wrapper stub)
+        decoder = _get_google_news_decoder()
+        filtered_entries = []
+        filtered_ids = []
+        for i, entry in enumerate(all_entries):
+            link = (entry.get("link") or "").strip()
+            content = (entry.get("content") or "").strip()
+            if decoder.is_google_news_article_url(link) and (
+                len(content) < MIN_CONTENT_LENGTH
+                or content == "Google News"
+                or _is_angular_license_stub(content)
+            ):
+                continue
+            filtered_entries.append(entry)
+            filtered_ids.append(new_item_ids[i])
+        all_entries = filtered_entries
+        new_item_ids = filtered_ids
+
+    n_feeds = len(feeds)
+    n_new = len(all_entries)
+    summary = f"**{list_name}**: {n_new} new items from {n_feeds} feeds."
+    items = [
+        {
+            "title": e.get("title") or "Untitled",
+            "link": e.get("link") or "",
+            "summary": _content_snippet(e.get("content") or ""),
+        }
+        for e in all_entries
+    ]
     out = {
         "ok": errors == 0,
+        "summary": summary,
+        "items": items,
         "list_name": list_name,
         "dry_run": dry_run,
-        "feeds_count": len(feeds),
+        "feeds_count": n_feeds,
         "already_notified_count": len(seen),
-        "new_items_count": len(all_entries),
+        "new_items_count": n_new,
         "new_items": all_entries,
         "new_item_ids": new_item_ids,
         "errors": errors,

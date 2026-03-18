@@ -8,6 +8,7 @@ per provider, and supports transport encryption for request and response bodies.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import httpx
@@ -17,6 +18,7 @@ from common.transport_encryption import get_transport_encryption
 from .config import SUPPORTED_PROFILES, SUPPORTED_PROVIDERS, get_provider_for_profile
 from .providers import generate
 
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["ai"])
 
@@ -73,8 +75,34 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
     try:
         result = generate(prompt=prompt, profile=profile, provider=provider)  # type: ignore[arg-type]
     except httpx.HTTPError as e:  # type: ignore[name-defined]
-        raise HTTPException(status_code=502, detail=str(e)) from e
+        detail = str(e)
+        response_snippet = ""
+        if getattr(e, "response", None) is not None:
+            try:
+                body = e.response.text
+                if body:
+                    response_snippet = body[:800].strip()
+                    if len(body) > 800:
+                        response_snippet += "..."
+            except Exception:
+                pass
+        if response_snippet:
+            detail = f"{detail}; upstream response: {response_snippet}"
+        logger.error(
+            "generate 502 (upstream error): %s | profile=%s provider=%s",
+            detail,
+            profile,
+            provider,
+            exc_info=True,
+        )
+        raise HTTPException(status_code=502, detail=detail) from e
     except Exception as e:
+        logger.exception(
+            "generate 500: %s | profile=%s provider=%s",
+            e,
+            profile,
+            provider,
+        )
         raise HTTPException(status_code=500, detail=str(e)) from e
 
     return _maybe_encrypt_response(request, result)

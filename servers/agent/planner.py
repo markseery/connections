@@ -41,12 +41,6 @@ Examples:
   Listed route: POST /skills/statistics/mean
   User asks for mean → "route_path_template": "/skills/statistics/mean"
 
-WORKFLOW ROUTING (MANDATORY):
-- If the user asks to "run workflow <name>" or "execute workflow <name>", you MUST select `workflow_skill`.
-- Use `POST /skills/workflow_skill/run/{name}` with `{name}` filled in from the user's text.
-- Put the workflow parameters in `arguments` (e.g. url/pages/depth/timeout).
-- Do NOT invent new routes and do NOT suggest CLI commands/scripts.
-
 RULES:
 - skill_name MUST exactly match a "skill_name=" value from the skills list.
 - route_path_template MUST exactly match a listed route path (with {param} replaced).
@@ -86,6 +80,8 @@ def create_plan(
         if failures:
             prompt_parts.append("\nFailed steps: " + "; ".join(failures))
 
+    if request.conversation_context and request.conversation_context.strip():
+        prompt_parts.append("\nRelevant conversation history:\n\n" + request.conversation_context.strip())
     prompt_parts.append(f"\nRequest: {request.prompt}")
     if request.system_prompt:
         prompt_parts.insert(1, f"\nSystem: {request.system_prompt}")

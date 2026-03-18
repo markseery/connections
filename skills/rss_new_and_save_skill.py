@@ -11,6 +11,8 @@ Requires: registry, storage, rss_new_skill (loaded on worker).
 from __future__ import annotations
 
 import os
+import sys
+import time
 from datetime import datetime, timezone
 from typing import Any
 from urllib.parse import quote
@@ -25,7 +27,8 @@ router = APIRouter()
 
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 STORAGE_NAMESPACE = "rss_notified"
-RSS_NEW_SKILL_TIMEOUT = 120.0
+# rss_new_skill fetches many feeds then fetches article content per item (Google News = 2–3 requests per item)
+RSS_NEW_SKILL_TIMEOUT = 600.0
 STORAGE_PUT_TIMEOUT = 10.0
 
 
@@ -34,6 +37,7 @@ class RunRequest(BaseModel):
     dry_run: bool = Field(default=False, description="If true, no storage writes (still calls rss_new_skill)")
     worker_url: str | None = Field(default=None, description="Worker base URL; if omitted, discovered from registry")
     debug: bool = Field(default=False, description="If true, pass to rss_new_skill for fetch_debug in response")
+    warmup: bool = Field(default=False, description="If true, skip content fetch; only save link IDs to storage")
 
 
 def _storage_url() -> str:
@@ -61,10 +65,7 @@ def _persist_item(storage_base: str, item_id: str) -> None:
 
 @router.post("/run")
 def run(body: RunRequest) -> dict[str, Any]:
-    """
-    Call rss_new_skill to get new items, then (unless dry_run) persist new_item_ids to storage.
-    Returns rss_new_skill response plus persisted_count and persist_errors (if any).
-    """
+    """Fetch new items from a feed list and persist to storage. Body: list_name (required), dry_run (optional), debug (optional). Use when user asks to fetch and save new RSS items for a list."""
     list_name = body.list_name.strip()
     dry_run = body.dry_run
 
@@ -76,16 +77,29 @@ def run(body: RunRequest) -> dict[str, Any]:
         worker_url = w.rstrip("/")
 
     # Single source of truth: call rss_new_skill
+    t0 = time.perf_counter()
     with httpx.Client(timeout=10.0) as client:
         r = client.post(f"{worker_url}/worker/skills/rss_new_skill/load")
         if not r.is_success:
             raise HTTPException(status_code=503, detail=f"Failed to load rss_new_skill: {r.text}")
+    elapsed = time.perf_counter() - t0
+    print(f"[rss_new_and_save_skill] Load rss_new_skill in {elapsed:.2f}s", file=sys.stderr, flush=True)
 
-    payload = {"list_name": list_name, "dry_run": dry_run, "worker_url": worker_url, "debug": body.debug}
+    payload = {
+        "list_name": list_name,
+        "dry_run": dry_run,
+        "worker_url": worker_url,
+        "debug": body.debug,
+        "skip_content": body.warmup,
+    }
+    t0 = time.perf_counter()
     with httpx.Client(timeout=RSS_NEW_SKILL_TIMEOUT) as client:
         r = client.post(f"{worker_url}/skills/rss_new_skill/run", json=payload)
         r.raise_for_status()
     data = r.json()
+    elapsed = time.perf_counter() - t0
+    n_new = data.get("new_items_count") or 0
+    print(f"[rss_new_and_save_skill] rss_new_skill run in {elapsed:.2f}s: {n_new} new items", file=sys.stderr, flush=True)
 
     # Update storage with new item IDs unless dry_run
     new_item_ids = data.get("new_item_ids") or []
@@ -97,17 +111,26 @@ def run(body: RunRequest) -> dict[str, Any]:
             storage_base = _storage_url()
         except Exception as e:
             raise HTTPException(status_code=503, detail=f"Storage: {e}") from e
-        for iid in new_item_ids:
+        n_total = len(new_item_ids)
+        print(f"[rss_new_and_save_skill] Persisting {n_total} IDs to storage...", file=sys.stderr, flush=True)
+        t0 = time.perf_counter()
+        for idx, iid in enumerate(new_item_ids):
             try:
                 _persist_item(storage_base, iid)
                 persisted_count += 1
             except Exception as e:
                 persist_errors.append(f"{iid!r}: {e}")
+            if (idx + 1) % 50 == 0 or (idx + 1) == n_total:
+                print(f"[rss_new_and_save_skill]   persisted {idx + 1}/{n_total}", file=sys.stderr, flush=True)
+        elapsed = time.perf_counter() - t0
+        print(f"[rss_new_and_save_skill] Persist done in {elapsed:.2f}s: {persisted_count} written", file=sys.stderr, flush=True)
 
     out = dict(data)
     out["persisted_count"] = persisted_count
     if persist_errors:
         out["persist_errors"] = persist_errors
+    if persisted_count and out.get("summary"):
+        out["summary"] = out["summary"].rstrip(". ") + f" Persisted **{persisted_count}** to storage."
     return out
 
 

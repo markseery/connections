@@ -12,6 +12,7 @@ from __future__ import annotations
 import base64
 import json
 import ssl
+import time
 from typing import Callable
 from urllib.parse import urlparse
 
@@ -129,19 +130,28 @@ class GoogleNewsDecoder:
         return decoded_str
 
     def _get_article_params(self, base64_id: str) -> dict[str, str] | None:
-        """GET article page and parse data-n-a-sg, data-n-a-ts. Return None on failure."""
+        """GET article page and parse data-n-a-sg, data-n-a-ts. Return None on failure. Retries on 429."""
         url = f"{self.ARTICLES_BASE}{base64_id}"
+        max_attempts = 3
+        retry_delay = 5.0
         try:
-            with httpx.Client(
-                timeout=self.timeout,
-                follow_redirects=True,
-                verify=self.ssl_verify,
-                headers={"User-Agent": self.user_agent, "Referer": "https://news.google.com/"},
-            ) as client:
-                r = client.get(url)
-            if not r.is_success:
-                self._log(f"get_article_params: GET {url} status={r.status_code}")
-                return None
+            for attempt in range(max_attempts):
+                with httpx.Client(
+                    timeout=self.timeout,
+                    follow_redirects=True,
+                    verify=self.ssl_verify,
+                    headers={"User-Agent": self.user_agent, "Referer": "https://news.google.com/"},
+                ) as client:
+                    r = client.get(url)
+                if r.status_code == 429 and attempt < max_attempts - 1:
+                    self._log(f"get_article_params: GET {url} status=429 (rate limited), retry in {retry_delay}s")
+                    time.sleep(retry_delay)
+                    retry_delay = min(retry_delay * 1.5, 15.0)
+                    continue
+                if not r.is_success:
+                    self._log(f"get_article_params: GET {url} status={r.status_code}")
+                    return None
+                break
             soup = BeautifulSoup(r.text, "lxml")
             div = soup.select_one("c-wiz > div")
             if not div:
@@ -230,6 +240,7 @@ class GoogleNewsDecoder:
 
     def _decode_via_batchexecute(self, base64_id: str) -> str | None:
         """Get params from article page then batchexecute; return URL or None."""
+        time.sleep(0.5)  # Throttle to reduce 429 when processing many items
         params = self._get_article_params(base64_id)
         if not params:
             self._log("batchexecute: no article params (signature/timestamp)")

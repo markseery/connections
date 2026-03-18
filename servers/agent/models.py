@@ -45,6 +45,7 @@ class AgentExecutionRequest(BaseModel):
     prompt: str
     timeout_seconds: float | None = None
     system_prompt: str | None = None
+    conversation_context: str | None = None
 
 
 class StepResult(BaseModel):

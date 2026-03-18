@@ -113,23 +113,51 @@ def _execute_step(
         payload = args
 
     start = time.monotonic()
-    try:
-        url = f"{skill.base_url.rstrip('/')}{path}"
-        with httpx.Client(timeout=timeout) as client:
-            r = client.request(
-                step.method.upper(),
-                url,
-                json=payload,
-                params=params,
-            )
-        duration_ms = (time.monotonic() - start) * 1000
-        try:
-            response_data = r.json()
-        except Exception as exc:
-            print(f"[executor] JSON decode failed for {step.skill_name}, using raw text: {exc}", flush=True)
-            response_data = r.text
+    base = skill.base_url.rstrip("/")
+    url = f"{base}{path}"
 
-        if r.status_code == 200:
+    def _ensure_skill_loaded(client: httpx.Client) -> None:
+        """Check worker's loaded list; load skill if not already loaded (same as scripts)."""
+        try:
+            r = client.get(f"{base}/worker/skills", timeout=min(10.0, timeout))
+            if r.status_code != 200:
+                return
+            data = r.json() or {}
+            loaded = data.get("loaded") or []
+            if any(str(s.get("skill_name")) == step.skill_name for s in loaded):
+                return
+            load_r = client.post(
+                f"{base}/worker/skills/{step.skill_name}/load",
+                timeout=min(15.0, timeout),
+            )
+            if load_r.status_code >= 400:
+                print(f"[executor] load {step.skill_name} returned {load_r.status_code}", flush=True)
+        except Exception as exc:
+            print(f"[executor] ensure_skill_loaded {step.skill_name} failed: {exc}", flush=True)
+
+    def _do_request(client: httpx.Client) -> tuple[int, Any, str]:
+        r = client.request(
+            step.method.upper(),
+            url,
+            json=payload,
+            params=params,
+        )
+        try:
+            data = r.json()
+        except Exception:
+            data = r.text
+        return r.status_code, data, r.text or str(r.status_code)
+
+    try:
+        with httpx.Client(timeout=timeout) as client:
+            _ensure_skill_loaded(client)
+            status_code, response_data, error_text = _do_request(client)
+
+        duration_ms = (time.monotonic() - start) * 1000
+        if isinstance(response_data, str) and status_code != 200:
+            response_data = None
+
+        if status_code == 200:
             context.store_step_result(step.step_id, response_data)
 
         return StepResult(
@@ -137,9 +165,9 @@ def _execute_step(
             skill_name=step.skill_name,
             method=step.method,
             path=path,
-            status_code=r.status_code,
-            response_data=response_data if r.status_code == 200 else None,
-            error=None if r.status_code == 200 else (r.text or str(r.status_code)),
+            status_code=status_code,
+            response_data=response_data if status_code == 200 else None,
+            error=None if status_code == 200 else error_text,
             duration_ms=duration_ms,
         )
     except Exception as e:

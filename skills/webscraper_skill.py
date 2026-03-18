@@ -284,6 +284,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
 
 @router.post("/scrape")
 async def start_scrape(body: ScrapeRequest, response: Response) -> dict[str, Any]:
+    """Crawl a website and optionally get AI summary. Body: url (required), max_pages, max_depth, summarize (optional). Returns job_id; poll GET /scrape/{job_id}. Use when user asks to scrape or summarize a site."""
     start = time.perf_counter()
     job_id = str(uuid.uuid4())
     job = {
@@ -306,27 +307,34 @@ async def start_scrape(body: ScrapeRequest, response: Response) -> dict[str, Any
     _jobs[job_id] = job
     asyncio.create_task(_run_job(job_id, body))
     response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
-    return {"job_id": job_id, "status": "pending", "url": body.url}
+    return {"summary": f"Scrape job started for **{body.url}**.", "job_id": job_id, "status": "pending", "url": body.url}
 
 
 @router.get("/scrape")
 def list_jobs(offset: int = 0, limit: int = 100) -> dict[str, Any]:
+    """List scrape jobs. Query: offset, limit. Use when user asks to list crawl jobs."""
     all_jobs = sorted(_jobs.values(), key=lambda j: j.get("created_at", ""), reverse=True)
     page = all_jobs[offset : offset + limit]
     safe = [{k: v for k, v in j.items() if k != "markdown_path"} for j in page]
-    return {"total": len(all_jobs), "offset": offset, "limit": limit, "jobs": safe}
+    total = len(all_jobs)
+    items = [{"title": j.get("job_id", ""), "link": j.get("url", ""), "summary": j.get("status", "")} for j in safe]
+    return {"summary": f"**{total}** scrape jobs.", "items": items, "total": total, "offset": offset, "limit": limit, "jobs": safe}
 
 
 @router.get("/scrape/{job_id}")
 def get_job(job_id: str) -> dict[str, Any]:
+    """Get scrape job status by job_id. Use after POST /scrape to poll until completed."""
     job = _jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    return {k: v for k, v in job.items() if k != "markdown_path"}
+    out = {k: v for k, v in job.items() if k != "markdown_path"}
+    out["summary"] = f"Job **{job_id}**: {out.get('status', 'unknown')} — {out.get('url', '')}"
+    return out
 
 
 @router.get("/scrape/{job_id}/markdown")
 def get_markdown(job_id: str) -> dict[str, Any]:
+    """Get full markdown content for a completed scrape job. Replace {job_id} with job_id."""
     job = _jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
@@ -336,7 +344,7 @@ def get_markdown(job_id: str) -> dict[str, Any]:
     path = Path(str(p))
     if not path.exists():
         raise HTTPException(status_code=404, detail="Markdown file missing")
-    return {"job_id": job_id, "url": job["url"], "markdown": path.read_text(encoding="utf-8")}
+    return {"summary": f"Markdown for **{job['url']}**.", "job_id": job_id, "url": job["url"], "markdown": path.read_text(encoding="utf-8")}
 
 
 def _summarize_by_topic_sync(text: str, topic: str) -> str:
@@ -360,7 +368,7 @@ def _summarize_by_topic_sync(text: str, topic: str) -> str:
 
 @router.post("/summarize_text")
 def summarize_text(body: dict[str, Any]) -> dict[str, Any]:
-    """Summarize arbitrary text focused on a topic (e.g. products, brand, positioning)."""
+    """Summarize text by topic. Body: text or markdown (required), topic (optional). Use when user asks to summarize content by theme or topic."""
     text = body.get("text") or body.get("markdown") or ""
     topic = (body.get("topic") or "").strip() or "key themes"
     if not text:
@@ -370,17 +378,19 @@ def summarize_text(body: dict[str, Any]) -> dict[str, Any]:
     except Exception as exc:
         print(f"[webscraper] summarize_text failed: {exc}", flush=True)
         raise HTTPException(status_code=502, detail=str(exc)) from exc
-    return {"topic": topic, "summary": summary}
+    return {"summary": f"Summary by topic **{topic}**.", "text": summary, "topic": topic}
 
 
 @router.get("/scrape/{job_id}/summary")
 def get_summary(job_id: str) -> dict[str, Any]:
+    """Get AI summary for a completed scrape job. Replace {job_id} with job_id from POST /scrape."""
     job = _jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
     if job.get("status") != "completed":
         raise HTTPException(status_code=400, detail=f"Job not completed (status={job.get('status')})")
-    return {"job_id": job_id, "url": job["url"], "summary": job.get("summary"), "top_words": job.get("top_words")}
+    summ = job.get("summary") or ""
+    return {"summary": f"AI summary for **{job['url']}**.", "text": summ, "job_id": job_id, "url": job["url"], "top_words": job.get("top_words")}
 
 
 def get_router() -> APIRouter:

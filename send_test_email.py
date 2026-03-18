@@ -83,7 +83,9 @@ def main() -> int:
     try:
         worker_url = get_worker_url(args.registry_url, args.worker_url)
         result = send_test_email(worker_url, email, include_html=not args.no_html)
-        print("Sent:", result.get("status", result))
+        # Common response shape: summary is canonical one-liner
+        msg = result.get("summary") or result.get("status") or result
+        print("Sent:", msg if isinstance(msg, str) else result.get("status", result))
         return 0
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)

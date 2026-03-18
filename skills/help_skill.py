@@ -178,48 +178,57 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
 
 @router.get("/skills")
 def list_skills() -> dict[str, Any]:
-    """List all available skills with descriptions and example prompts."""
+    """List all available skills with descriptions and examples. Use when user asks what skills or capabilities exist."""
     discovered = _discover_skill_names()
     skills: list[dict[str, Any]] = []
     for name in sorted(set(list(SKILL_CATALOG.keys()) + discovered)):
         entry = _skill_detail(name)
         skills.append(entry)
-    return {"skills": skills, "count": len(skills)}
+    count = len(skills)
+    items = [{"title": s.get("skill_name", ""), "summary": s.get("description", "")} for s in skills]
+    return {"summary": f"**{count}** skills available.", "items": items, "skills": skills, "count": count}
 
 
 @router.get("/skills/{skill_name}")
 def skill_detail(skill_name: str) -> dict[str, Any]:
-    """Detail for a single skill: description, routes, example prompts."""
+    """Detail for one skill: description, routes, examples. Replace {skill_name} with skill name. Use when user asks how a skill works."""
     name = skill_name.strip().lower()
     discovered = _discover_skill_names()
     if name not in SKILL_CATALOG and name not in discovered:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
-    return _skill_detail(name)
+    out = _skill_detail(name)
+    desc = out.get("description", "No description available.")
+    out["summary"] = f"Skill: **{name}**"
+    out["text"] = desc
+    return out
 
 
 @router.get("/examples")
 def examples() -> dict[str, Any]:
-    """Return example prompts grouped by skill."""
+    """Example prompts per skill. Use when user asks for examples or what they can ask."""
     discovered = _discover_skill_names()
     result: dict[str, list[str]] = {}
     for name in sorted(set(list(SKILL_CATALOG.keys()) + discovered)):
         catalog = SKILL_CATALOG.get(name, {})
         result[name] = catalog.get("examples", [])
-    return {"examples": result}
+    return {"summary": "Example prompts by skill.", "examples": result}
 
 
 @router.get("/about")
 def about() -> dict[str, Any]:
-    """Describe the system and how to interact with it."""
+    """System description and how to interact. Use when user asks what this is or how it works."""
+    description = (
+        "Connections is a microservice platform with an AI-powered chat agent. "
+        "When you send a message, the chat agent decides whether to use a "
+        "registered skill (like statistics or email) or answer directly via the "
+        "AI model. Skills are dynamically loaded into worker servers and can be "
+        "extended by adding new modules to the skills/ directory."
+    )
     return {
+        "summary": "Connections: AI-powered chat with skills.",
+        "text": description,
         "system": "Connections",
-        "description": (
-            "Connections is a microservice platform with an AI-powered chat agent. "
-            "When you send a message, the chat agent decides whether to use a "
-            "registered skill (like statistics or email) or answer directly via the "
-            "AI model. Skills are dynamically loaded into worker servers and can be "
-            "extended by adding new modules to the skills/ directory."
-        ),
+        "description": description,
         "tips": [
             "Ask 'help' or 'what skills are available' to see this listing.",
             "Include numbers directly in your prompt for statistics: 'mean of 1, 2, 3'.",

@@ -39,7 +39,7 @@ _executions: dict[str, dict[str, Any]] = {}
 
 @router.post("/templates")
 def save_template(body: dict[str, Any]) -> dict[str, Any]:
-    """Save a reusable workflow template.
+    """Save a workflow template. Body: name, steps, params (optional), optional_params (optional).
 
     Body:
         name:        str  (unique template name, e.g. "scrape_and_summarize")
@@ -66,12 +66,12 @@ def save_template(body: dict[str, Any]) -> dict[str, Any]:
 
     _save_template_to_disk(name, template)
     print(f"[workflow] template saved: {name} ({len(steps)} steps, params={params})", flush=True)
-    return {"saved": True, "name": name, "params": params, "steps_count": len(steps)}
+    return {"summary": f"Saved workflow **{name}**.", "saved": True, "name": name, "params": params, "steps_count": len(steps)}
 
 
 @router.get("/templates")
 def list_templates() -> dict[str, Any]:
-    """List all saved workflow templates."""
+    """List saved workflow template names. Use when user asks what workflows exist."""
     templates = _load_all_templates()
     summaries = []
     for t in templates.values():
@@ -81,27 +81,30 @@ def list_templates() -> dict[str, Any]:
             "params": t.get("params", []),
             "steps_count": len(t.get("steps", [])),
         })
-    return {"templates": summaries, "count": len(summaries)}
+    count = len(summaries)
+    items = [{"title": s["name"], "summary": s.get("description", "")} for s in summaries]
+    return {"summary": f"**{count}** workflow templates.", "items": items, "templates": summaries, "count": count}
 
 
 @router.get("/templates/{name}")
 def get_template(name: str) -> dict[str, Any]:
-    """Get a specific workflow template by name."""
+    """Get a workflow template by name. Use when user asks for template details."""
     template = _load_template(name)
     if not template:
         raise HTTPException(status_code=404, detail=f"template '{name}' not found")
+    template["summary"] = f"Workflow template: **{name}**."
     return template
 
 
 @router.delete("/templates/{name}")
 def delete_template(name: str) -> dict[str, Any]:
-    """Delete a workflow template."""
+    """Delete a saved workflow template by name."""
     path = _TEMPLATE_DIR / f"{name}.json"
     if not path.exists():
         raise HTTPException(status_code=404, detail=f"template '{name}' not found")
     path.unlink()
     print(f"[workflow] template deleted: {name}", flush=True)
-    return {"deleted": True, "name": name}
+    return {"summary": f"Deleted workflow **{name}**.", "deleted": True, "name": name}
 
 
 # ── Execute by template name ────────────────────────────────────────────
@@ -130,7 +133,7 @@ def _apply_param_constraints(
 
 @router.post("/run/{name}")
 def run_template(name: str, body: dict[str, Any]) -> dict[str, Any]:
-    """Execute a saved template by name, filling in parameters from the body.
+    """Run a saved workflow template by name. Replace {name} with template name. Body: template parameters (e.g. url, pages, depth).
 
     Required params are in template.params; optional defaults in
     template.optional_params; template.param_aliases maps body keys to param
@@ -180,7 +183,7 @@ def run_template(name: str, body: dict[str, Any]) -> dict[str, Any]:
 
 @router.post("/execute")
 def execute_workflow(body: dict[str, Any]) -> dict[str, Any]:
-    """Execute a multi-step workflow plan (ad-hoc or from a template).
+    """Execute a multi-step workflow. Body: name (optional), steps (list of step dicts), timeout (optional).
 
     Body:
         name:    optional workflow name
@@ -293,13 +296,15 @@ def execute_workflow(body: dict[str, Any]) -> dict[str, Any]:
 
     record["finished_at"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     record["step_results"] = all_results
-
+    status = record["status"]
+    name = record.get("name", "workflow")
+    record["summary"] = f"Workflow **{name}**: **{status}** ({record['steps_completed']}/{record['steps_total']} steps)."
     return record
 
 
 @router.get("/executions")
 def list_executions() -> dict[str, Any]:
-    """List all workflow executions."""
+    """List workflow execution history. Use when user asks for past runs."""
     summaries = []
     for wf in _executions.values():
         summaries.append({
@@ -312,15 +317,18 @@ def list_executions() -> dict[str, Any]:
             "started_at": wf["started_at"],
             "finished_at": wf["finished_at"],
         })
-    return {"executions": summaries, "count": len(summaries)}
+    count = len(summaries)
+    items = [{"title": s["workflow_id"], "summary": f"{s['name']} — {s['status']}"} for s in summaries]
+    return {"summary": f"**{count}** workflow executions.", "items": items, "executions": summaries, "count": count}
 
 
 @router.get("/executions/{workflow_id}")
 def get_execution(workflow_id: str) -> dict[str, Any]:
-    """Get full details for a specific workflow execution."""
+    """Get one workflow execution by ID. Use when user asks for details of a specific run."""
     wf = _executions.get(workflow_id)
     if not wf:
         raise HTTPException(status_code=404, detail=f"execution {workflow_id} not found")
+    wf["summary"] = f"Execution **{workflow_id}**: {wf.get('status', '')} — {wf.get('name', '')}"
     return wf
 
 

@@ -10,7 +10,7 @@ import statistics
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from pydantic import field_validator
 
 
@@ -18,7 +18,17 @@ router = APIRouter()
 
 
 class ValuesRequest(BaseModel):
+    """Accepts body with 'values' or 'numbers' (list or comma-separated string)."""
     values: list[float] | str = Field(min_length=1)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_values_or_numbers(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            # Planner/LLM often sends "numbers"; accept either key
+            if "values" not in data and "numbers" in data:
+                data = {"values": data["numbers"]}
+        return data
 
     @field_validator("values")
     @classmethod
@@ -56,29 +66,34 @@ def _clean(values: list[float]) -> list[float]:
 
 @router.post("/mean")
 def mean(req: ValuesRequest) -> dict[str, Any]:
+    """Arithmetic mean of numbers. Body: values (list of numbers). Use when user asks for average or mean."""
     values = _clean(req.values)
-    return {"mean": statistics.fmean(values)}
+    v = statistics.fmean(values)
+    return {"summary": f"**Mean:** {v}", "mean": v}
 
 
 @router.post("/average")
 def average(req: ValuesRequest) -> dict[str, Any]:
+    """Same as mean. Body: values (list of numbers). Use when user asks for average."""
     values = _clean(req.values)
-    return {"average": statistics.fmean(values)}
+    v = statistics.fmean(values)
+    return {"summary": f"**Average:** {v}", "average": v}
 
 
 @router.post("/median")
 def median(req: ValuesRequest) -> dict[str, Any]:
+    """Median of numbers. Body: values (list of numbers). Use when user asks for median."""
     values = _clean(req.values)
-    return {"median": statistics.median(values)}
+    v = statistics.median(values)
+    return {"summary": f"**Median:** {v}", "median": v}
 
 
 @router.post("/stddev")
 def stddev(req: ValuesRequest) -> dict[str, Any]:
-    """
-    Population standard deviation (pstdev), so it works for n=1 (returns 0.0).
-    """
+    """Standard deviation of numbers. Body: values (list of numbers). Use when user asks for std dev or spread."""
     values = _clean(req.values)
-    return {"stddev": statistics.pstdev(values)}
+    v = statistics.pstdev(values)
+    return {"summary": f"**Standard deviation:** {v}", "stddev": v}
 
 
 def get_router() -> APIRouter:

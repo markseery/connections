@@ -72,6 +72,7 @@ def _ticker(symbol: str) -> yf.Ticker:
 
 @router.get("/quote/{symbol}")
 def quote(symbol: str, response: Response) -> dict[str, Any]:
+    """Stock quote: price, change, volume. Replace {symbol} with ticker (e.g. AAPL). Use when user asks for stock price or quote."""
     start = time.perf_counter()
     t = _ticker(symbol)
     try:
@@ -90,8 +91,9 @@ def quote(symbol: str, response: Response) -> dict[str, Any]:
             change = round(float(current_price) - prev_close, 2)
             change_pct = round((change / prev_close) * 100, 2)
 
+        sym = symbol.strip().upper()
         out = {
-            "symbol": symbol.strip().upper(),
+            "symbol": sym,
             "price": _safe_value(current_price),
             "previous_close": _safe_value(prev_close),
             "change": _safe_value(change),
@@ -100,6 +102,11 @@ def quote(symbol: str, response: Response) -> dict[str, Any]:
             "market_cap": _safe_value(info.get("marketCap")),
             "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         }
+        p = out.get("price")
+        c = out.get("change_pct")
+        price_str = f"${p}" if p is not None else "N/A"
+        summary = f"**{sym}**: {price_str}" + (f" ({c:+.2f}%)" if c is not None else "") + "."
+        out["summary"] = summary
         return out
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
@@ -107,6 +114,7 @@ def quote(symbol: str, response: Response) -> dict[str, Any]:
 
 @router.get("/fundamentals/{symbol}")
 def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
+    """Stock fundamentals: PE, margins, growth. Replace {symbol} with ticker. Use when user asks for fundamentals or valuation."""
     start = time.perf_counter()
     t = _ticker(symbol)
     try:
@@ -147,20 +155,25 @@ def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
                 "net_margin": _num("profitMargins"),
             },
         }
-        return {k: _safe_value(v) for k, v in out.items()}
+        result = {k: _safe_value(v) for k, v in out.items()}
+        result["summary"] = f"Fundamentals for **{symbol.strip().upper()}**."
+        return result
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 
 
 @router.get("/earnings/{symbol}")
 def earnings(symbol: str, response: Response) -> dict[str, Any]:
+    """Stock earnings dates and quarterly financials. Replace {symbol} with ticker. Use when user asks for earnings."""
     start = time.perf_counter()
     t = _ticker(symbol)
     try:
         ed = getattr(t, "earnings_dates", None)
         qf = getattr(t, "quarterly_financials", None)
+        sym = symbol.strip().upper()
         return {
-            "symbol": symbol.strip().upper(),
+            "summary": f"Earnings for **{sym}**.",
+            "symbol": sym,
             "earnings_dates": _dataframe_to_records(ed)[:10],
             "quarterly_financials": _dataframe_to_records(qf.T)[:8] if qf is not None else [],
         }

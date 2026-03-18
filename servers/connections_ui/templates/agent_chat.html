@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Chat — Connections</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/agent_chat.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+</head>
+<body class="page-agent-chat">
+  <header class="agent-chat-header">
+    <a href="/" class="back-link" aria-label="Back to home">←</a>
+    <h1>Agent Chat</h1>
+    <div class="namespace-row">
+      <label for="agent-namespace" class="namespace-label">Namespace</label>
+      <input
+        type="text"
+        id="agent-namespace"
+        class="namespace-input"
+        placeholder="e.g. you@example.com"
+        autocomplete="off"
+      />
+    </div>
+  </header>
+
+  <section class="agent-chat-messages" id="agent-chat-messages" role="log" aria-live="polite">
+    <p class="agent-chat-placeholder" id="agent-chat-placeholder">Enter a namespace above and send a message. Conversation is remembered per namespace.</p>
+  </section>
+
+  <footer class="agent-chat-footer">
+    <div class="agent-chat-input-wrap">
+      <label for="agent-chat-prompt" class="sr-only">Message</label>
+      <input
+        type="text"
+        id="agent-chat-prompt"
+        class="agent-chat-prompt"
+        placeholder="Type a message…"
+        autocomplete="off"
+        enterkeyhint="send"
+      />
+    </div>
+    <button type="button" id="agent-chat-submit" class="agent-chat-submit" aria-label="Send">Send</button>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="/static/js/agent_chat.js"></script>
+</body>
+</html>

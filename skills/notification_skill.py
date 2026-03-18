@@ -218,44 +218,53 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
 
 @router.get("/config")
 def get_config() -> dict[str, Any]:
+    """View email/SMTP config (masked). Use only when user asks to check email configuration."""
     cfg = _smtp_config()
     masked = dict(cfg)
     if masked.get("password"):
         masked["password"] = "***"
-    return masked
+    return {"summary": "Notification config (sender, throttle).", **masked}
 
 
 @router.get("/notifications")
 def list_notifications(status: str | None = None, limit: int = 100, offset: int = 0) -> dict[str, Any]:
+    """List past email notifications. Use when user asks to list, show, or see sent emails. Query: status, limit, offset."""
     records = _load_notifications()
     if status:
         records = [r for r in records if r.get("status") == status]
     total = len(records)
     records = sorted(records, key=lambda r: r.get("created_at", ""), reverse=True)
-    return {"total": total, "offset": offset, "limit": limit, "notifications": records[offset : offset + limit]}
+    page = records[offset : offset + limit]
+    items = [{"title": r.get("notification_id", ""), "summary": f"{r.get('subject', '')} — {r.get('status', '')}"} for r in page]
+    return {"summary": f"**{total}** notifications.", "items": items, "total": total, "offset": offset, "limit": limit, "notifications": page}
 
 
 @router.get("/notifications/{notification_id}")
 def get_notification(notification_id: str) -> dict[str, Any]:
+    """Get one notification by ID. Use when user asks for details of a specific sent email."""
     records = _load_notifications()
     for r in records:
         if r.get("notification_id") == notification_id:
+            r["summary"] = f"Notification **{notification_id}**: {r.get('subject', '')} — {r.get('status', '')}"
             return r
     raise HTTPException(status_code=404, detail="Notification not found")
 
 
 @router.get("/stats")
 def stats() -> dict[str, Any]:
+    """Notification send statistics (total, by status). Use when user asks for email stats or counts."""
     records = _load_notifications()
     by_status: dict[str, int] = {}
     for r in records:
         s = str(r.get("status", "unknown"))
         by_status[s] = by_status.get(s, 0) + 1
-    return {"total": len(records), "by_status": by_status}
+    total = len(records)
+    return {"summary": f"**{total}** notifications (by status: {by_status}).", "total": total, "by_status": by_status}
 
 
 @router.post("/send")
 def send_email(body: SendEmailRequest, response: Response) -> dict[str, Any]:
+    """Send an email. Body: to (required, string or list of emails), subject (required), body (optional). Use when user asks to send or email someone."""
     start = time.perf_counter()
     cfg = _smtp_config()
     if not cfg["sender"] or not cfg["password"] or cfg["password"] == "your_app_password_here":
@@ -303,11 +312,12 @@ def send_email(body: SendEmailRequest, response: Response) -> dict[str, Any]:
     response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
     if not ok:
         raise HTTPException(status_code=502, detail=err or "Failed to send")
-    return {"notification_id": nid, "status": "sent"}
+    return {"summary": "Email sent.", "notification_id": nid, "status": "sent"}
 
 
 @router.post("/send/test")
 def send_test(body: TestEmailRequest) -> dict[str, Any]:
+    """Send a test email. Use only when user explicitly asks to send a test email."""
     req = SendEmailRequest(
         to=[body.to],
         subject="Test Email from notification_skill",
@@ -321,7 +331,7 @@ def send_test(body: TestEmailRequest) -> dict[str, Any]:
     ok, err = _send_smtp(cfg, req)
     if not ok:
         raise HTTPException(status_code=502, detail=err or "Failed to send")
-    return {"status": "sent"}
+    return {"summary": "Test email sent.", "status": "sent"}
 
 
 def get_router() -> APIRouter:

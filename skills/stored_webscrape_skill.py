@@ -209,11 +209,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
 @monitor
 @router.post("/scrape")
 async def start_scrape(body: ScrapeRequest) -> dict[str, Any]:
-    """
-    Start a background crawl of the given URL and same-domain links. Progress can be
-    polled via GET /scrape/{job_id}. On completion, URLs + content are stored in the
-    storage server under namespace \"webscrape\" with key = base URL.
-    """
+    """Crawl a website and store pages. Body: url (required), max_pages (optional), max_depth (optional). Returns job_id; poll GET /scrape/{job_id} for status. Use when user asks to scrape or crawl a site."""
     job_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     _jobs[job_id] = {
@@ -235,33 +231,147 @@ async def start_scrape(body: ScrapeRequest) -> dict[str, Any]:
         "url_count": 0,
     }
     asyncio.create_task(_run_job(job_id, body))
-    return {"job_id": job_id, "status": "pending", "base_url": body.url}
+    return {"summary": f"Scrape job started for **{body.url}**.", "job_id": job_id, "status": "pending", "base_url": body.url}
 
 
 @monitor
 @router.get("/scrape/{job_id}")
 def get_scrape_job(job_id: str) -> dict[str, Any]:
+    """Get scrape job status and result by job_id. Use after POST /scrape to poll until completed."""
     job = _jobs.get(job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    return dict(job)
+    out = dict(job)
+    out["summary"] = f"Job **{job_id}**: {job.get('status', 'unknown')} — {job.get('url', '')}"
+    return out
 
 
 @monitor
 @router.get("/scrape")
 def list_scrape_jobs(offset: int = 0, limit: int = 100) -> dict[str, Any]:
+    """List scrape jobs. Query: offset, limit. Use when user asks to list or see crawl jobs."""
     all_jobs = sorted(_jobs.values(), key=lambda j: j.get("created_at", ""), reverse=True)
     page = all_jobs[offset : offset + limit]
-    return {"total": len(all_jobs), "offset": offset, "limit": limit, "jobs": page}
+    total = len(all_jobs)
+    items = [{"title": j.get("job_id", ""), "link": j.get("url", ""), "summary": j.get("status", "")} for j in page]
+    return {"summary": f"**{total}** scrape jobs.", "items": items, "total": total, "offset": offset, "limit": limit, "jobs": page}
+
+
+# Basic English stop words; removed before truncation to keep more meaningful content within max_chars.
+_STOP_WORDS = frozenset(
+    "a an and are as at be by for from has he in is it its of on that the to was were will with".split()
+)
+
+
+def _remove_stopwords(text: str) -> str:
+    """Remove basic stop words and normalize whitespace. Runs before truncation to reduce character count.
+    Does not strip ':' so URLs (e.g. https:) are never altered."""
+    if not (text or "").strip():
+        return ""
+    words = text.split()
+    # Strip only punctuation that cannot be part of a URL (omit ':', '/', '.', '?', '&')
+    strip_for_check = ",;!\"'()[]"
+    kept = [
+        w for w in words
+        if w.lower().strip(strip_for_check) not in _STOP_WORDS
+    ]
+    return " ".join(kept).strip()
+
+
+# Format of combined_text: sections joined by PAGE_SEP; each section is "URL: {url}\n\n{content}".
+# Truncation may cut a block mid-way, so the last segment might be content-only (no "URL: " line).
+PAGE_SEP = "\n\n---\n\n"
+URL_LINE_PREFIX = "URL: "
+
+
+def parse_combined_text(combined_text: str) -> list[tuple[str, str]]:
+    """
+    Parse combined_text back into (url, content) pairs. Page boundaries are marked by PAGE_SEP
+    and each section starts with "URL: <url>" then newlines then content. Segments without
+    "URL: " (e.g. from truncation) are appended to the previous page's content.
+    """
+    if not (combined_text or "").strip():
+        return []
+    segments = combined_text.strip().split(PAGE_SEP)
+    pages: list[tuple[str, str]] = []
+    for seg in segments:
+        seg = seg.strip()
+        if not seg:
+            continue
+        if seg.startswith(URL_LINE_PREFIX):
+            first_newline = seg.find("\n")
+            if first_newline >= 0:
+                url = seg[len(URL_LINE_PREFIX):first_newline].strip()
+                content = seg[first_newline:].strip()
+            else:
+                url = seg[len(URL_LINE_PREFIX):].strip()
+                content = ""
+            pages.append((url, content))
+        elif pages:
+            # Truncation left content-only segment; append to last page
+            last_url, last_content = pages[-1]
+            pages[-1] = (last_url, (last_content + "\n\n" + seg).strip())
+    return pages
+
+
+def _combined_text(value: dict[str, Any], max_chars: int) -> str:
+    """Build one text block from content_by_url: each section starts with URL so the page is always identified."""
+    content_by_url = value.get("content_by_url") or {}
+    parts: list[str] = []
+    total = 0
+    for url, text in content_by_url.items():
+        if total >= max_chars:
+            break
+        # Remove stop words from body only; URL is never modified
+        reduced = _remove_stopwords(text or "")
+        block = f"{URL_LINE_PREFIX}{url}\n\n{reduced}"
+        chunk = block[: max_chars - total]
+        if chunk:
+            parts.append(chunk)
+            total += len(chunk)
+    return PAGE_SEP.join(parts) if parts else ""
+
+
+class StoredRequest(BaseModel):
+    """Body for POST /stored (e.g. from run_prompt_with_context skill steps)."""
+    base_url: str = Field(..., min_length=1, description="Base URL of the site (e.g. https://example.com)")
+    max_chars: int | None = Field(default=None, ge=1, le=2_000_000, description="If set, include combined_text truncated to this many chars (avoids exceeding AI context)")
+
+
+@monitor
+@router.post("/stored")
+def post_stored(body: StoredRequest) -> dict[str, Any]:
+    """Get previously scraped site content by base URL. Body: base_url (required), max_chars (optional). Use when user asks for stored or cached site content."""
+    out = _fetch_stored(body.base_url.strip())
+    if body.max_chars is not None:
+        value = out.get("value")
+        if isinstance(value, dict):
+            combined = _combined_text(value, body.max_chars)
+            out["combined_text"] = combined
+            out["combined_text_length"] = len(combined)
+            out["url_count"] = len(value.get("content_by_url") or value.get("urls") or [])
+    return out
+
+
+class ParseCombinedRequest(BaseModel):
+    """Body for POST /parse_combined: parse a combined_text block back into (url, content) pages."""
+    combined_text: str = Field(..., description="Single block from stored response combined_text field")
+
+
+@monitor
+@router.post("/parse_combined")
+def post_parse_combined(body: ParseCombinedRequest) -> dict[str, Any]:
+    """Parse combined_text from stored scrape into pages. Body: combined_text (required). Use when splitting stored content into url+content pairs."""
+    pages = parse_combined_text(body.combined_text or "")
+    items = [{"title": u, "link": u, "summary": (c or "")[:200]} for u, c in pages]
+    n = len(pages)
+    return {"summary": f"**{n}** pages parsed.", "items": items, "pages": [{"url": u, "content": c} for u, c in pages], "count": n}
 
 
 @monitor
 @router.get("/stored")
 def get_stored_by_query(base_url: str) -> dict[str, Any]:
-    """
-    Retrieve a stored scrape by base URL (query param). Use this when the URL
-    is provided by another skill/plan; no path-encoding needed.
-    """
+    """Get previously scraped site content by base URL. Query: base_url (required). Use when user asks for stored or cached site content."""
     if not base_url.strip():
         raise HTTPException(status_code=400, detail="base_url is required")
     return _fetch_stored(base_url.strip())
@@ -291,7 +401,9 @@ def _fetch_stored(base_url: str) -> dict[str, Any]:
         value = data.get("value")
         if value is None:
             raise HTTPException(status_code=502, detail="Storage returned no value")
-        return {"namespace": STORAGE_NAMESPACE, "key": key, "value": value}
+        urls = value.get("urls") if isinstance(value, dict) else []
+        n = len(urls) if isinstance(urls, list) else 0
+        return {"summary": f"Stored scrape for **{key}**: **{n}** URLs.", "namespace": STORAGE_NAMESPACE, "key": key, "value": value}
 
     raise HTTPException(status_code=404, detail=last_404_detail or "Stored scrape not found for this base URL")
 
@@ -299,17 +411,14 @@ def _fetch_stored(base_url: str) -> dict[str, Any]:
 @monitor
 @router.get("/stored/{key:path}")
 def get_stored_by_path(key: str) -> dict[str, Any]:
-    """
-    Retrieve a stored scrape by base URL (path-encoded). E.g. use key
-    https%3A%2F%2Fexample.com for https://example.com.
-    """
+    """Get stored scrape by base URL (path-encoded). Replace {key} with URL-encoded base URL."""
     return _fetch_stored(key)
 
 
 @monitor
 @router.get("/list")
 def list_stored() -> dict[str, Any]:
-    """List all stored scrape keys (base URLs) in namespace webscrape."""
+    """List all stored scrape base URLs. Use when user asks what sites have been scraped or cached."""
     storage_base = _storage_url()
     url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records"
 
@@ -319,4 +428,6 @@ def list_stored() -> dict[str, Any]:
 
     data = r.json()
     keys = data.get("keys") if isinstance(data.get("keys"), list) else []
-    return {"namespace": STORAGE_NAMESPACE, "keys": keys, "count": len(keys)}
+    n = len(keys)
+    items = [{"title": k, "link": k} for k in keys]
+    return {"summary": f"**{n}** stored scrapes.", "items": items, "namespace": STORAGE_NAMESPACE, "keys": keys, "count": n}

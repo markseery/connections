@@ -23,8 +23,7 @@ router = APIRouter()
 
 @router.post("/search")
 def news_search(body: dict[str, Any]) -> dict[str, Any]:
-    """Search for news on any topic. Combines web search results with
-    yfinance ticker news when a stock symbol is detected."""
+    """Search for news on a topic or stock. Body: query or q or topic (required), symbol (optional), limit (optional). Use for news, headlines, or stock news."""
     query = body.get("query") or body.get("q") or body.get("topic") or ""
     if isinstance(query, list):
         query = " ".join(str(x) for x in query)
@@ -72,14 +71,14 @@ def news_search(body: dict[str, Any]) -> dict[str, Any]:
 
 @router.get("/topic/{topic}")
 def news_by_topic(topic: str, limit: int = 10, prompt: str = "") -> dict[str, Any]:
-    """GET convenience route for topic-based news."""
+    """News for a topic. Replace {topic} with the topic. Query: limit, prompt. Use when user asks for news on a topic."""
     real_query = prompt.strip() or topic.strip()
     return news_search({"query": real_query, "limit": min(limit, 20)})
 
 
 @router.get("/stock/{symbol}")
 def news_by_stock(symbol: str, limit: int = 10, prompt: str = "") -> dict[str, Any]:
-    """GET convenience route for stock-specific news."""
+    """News for a stock symbol. Replace {symbol} with ticker (e.g. AAPL). Query: limit, prompt. Use when user asks for stock or company news."""
     sym = symbol.strip().upper()
     real_query = prompt.strip() or f"latest news for {sym}"
     return news_search({

@@ -47,6 +47,29 @@ def chat() -> str:
     return path.read_text(encoding="utf-8")
 
 
+@app.get("/agent-chat", response_class=HTMLResponse)
+def agent_chat() -> str:
+    path = _templates / "agent_chat.html"
+    return path.read_text(encoding="utf-8")
+
+
+@app.get("/api/agent-chat-url")
+def agent_chat_url() -> dict[str, str]:
+    """Return the agent_chat server base URL from the registry (for the agent-chat page)."""
+    registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
+    try:
+        with httpx.Client(timeout=5.0) as client:
+            r = client.get(f"{registry}/servers/agent_chat")
+            r.raise_for_status()
+            data = r.json()
+            url = data.get("url")
+            if not url:
+                raise HTTPException(status_code=502, detail="Registry missing agent_chat url")
+            return {"url": url.rstrip("/")}
+    except httpx.HTTPError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
+
+
 @app.get("/api/chatagent-url")
 def chatagent_url() -> dict[str, str]:
     """Return the chatagent base URL from the registry (for the chat page to call)."""

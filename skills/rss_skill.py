@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import urlparse, urlunparse
 
 import httpx
 import feedparser
@@ -19,6 +20,37 @@ router = APIRouter()
 
 FEED_TIMEOUT = 30.0
 USER_AGENT = "ConnectionsRSSSkill/1.0"
+# Request feed formats so servers (e.g. Google Alerts) return XML instead of HTML
+FEED_ACCEPT = "application/atom+xml, application/rss+xml, application/xml, text/xml, */*"
+
+
+def _normalize_google_news_feed_url(url: str) -> str:
+    """
+    Rewrite Google News web URLs to RSS feed URLs so feedparser gets XML, not HTML.
+    - /publications/<id> -> /rss/publications/<id>
+    - /topics/<id> -> /rss/topics/<id>
+    Leaves /rss/... and other hosts unchanged.
+    """
+    u = (url or "").strip()
+    if not u.startswith(("http://", "https://")):
+        return u
+    try:
+        parsed = urlparse(u)
+        netloc = (parsed.netloc or "").lower()
+        if "news.google.com" not in netloc:
+            return u
+        path = (parsed.path or "").strip("/")
+        if path.startswith("rss/"):
+            return u
+        if path.startswith("publications/"):
+            new_path = "/rss/" + path
+            return urlunparse((parsed.scheme, parsed.netloc, new_path, parsed.params, parsed.query, parsed.fragment))
+        if path.startswith("topics/"):
+            new_path = "/rss/" + path
+            return urlunparse((parsed.scheme, parsed.netloc, new_path, parsed.params, parsed.query, parsed.fragment))
+    except Exception:
+        pass
+    return u
 
 
 def _to_iso(parsed: Any) -> str | None:
@@ -120,8 +152,13 @@ def _normalize_entry(entry: Any) -> dict[str, Any]:
 
 def fetch_and_parse(feed_url: str) -> dict[str, Any]:
     """Fetch feed URL and return normalized JSON. Raises HTTPException on failure."""
+    feed_url = _normalize_google_news_feed_url(feed_url)
     try:
-        with httpx.Client(timeout=FEED_TIMEOUT, follow_redirects=True, headers={"User-Agent": USER_AGENT}) as client:
+        with httpx.Client(
+            timeout=FEED_TIMEOUT,
+            follow_redirects=True,
+            headers={"User-Agent": USER_AGENT, "Accept": FEED_ACCEPT},
+        ) as client:
             r = client.get(feed_url)
             r.raise_for_status()
             body = r.text
@@ -140,12 +177,14 @@ def fetch_and_parse(feed_url: str) -> dict[str, Any]:
     feed_obj = _normalize_feed(parsed, feed_url)
     entries = getattr(parsed, "entries", []) or []
     items = [_normalize_entry(e) for e in entries]
-
+    n = len(items)
+    summary = f"Feed: **{feed_url}**, **{n}** items."
     return {
+        "summary": summary,
         "feed": feed_obj,
         "items": items,
         "url": feed_url,
-        "item_count": len(items),
+        "item_count": n,
     }
 
 
@@ -163,7 +202,7 @@ class FeedRequest(BaseModel):
 
 @router.get("/feed")
 def get_feed(url: str) -> dict[str, Any]:
-    """Fetch and parse an RSS/Atom feed; return normalized JSON. Query param: url."""
+    """Fetch and parse an RSS or Atom feed. Query: url (required). Use when user asks to read or fetch a feed URL."""
     if not url.strip():
         raise HTTPException(status_code=400, detail="url is required")
     if not (url.startswith("http://") or url.startswith("https://")):
@@ -173,7 +212,7 @@ def get_feed(url: str) -> dict[str, Any]:
 
 @router.post("/feed")
 def post_feed(body: FeedRequest) -> dict[str, Any]:
-    """Fetch and parse an RSS/Atom feed; return normalized JSON. Body: { \"url\": \"...\" }."""
+    """Fetch and parse an RSS or Atom feed. Body: url (required). Use when user asks to read or fetch a feed."""
     return fetch_and_parse(body.url)
 
 

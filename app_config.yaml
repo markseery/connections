@@ -42,3 +42,7 @@ servers:
     host: 127.0.0.1
     port: 7030
     instances: 2
+  - name: agent_chat
+    app: servers.agent_chat.main:app
+    host: 127.0.0.1
+    port: 7025

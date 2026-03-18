@@ -8,6 +8,7 @@ is used. Set REGISTRY_SERVER_URL in .env or environment to point at the registry
 Usage:
   python ask_ai.py "hello"
   python ask_ai.py "hello" --profile fast --provider ollama
+  python ask_ai.py "Summarize the key points." --file report.md
   python ask_ai.py "hello" --url http://127.0.0.1:7012
   python ask_ai.py "hello" --inprocess
 """
@@ -18,6 +19,7 @@ import argparse
 import json
 import os
 import sys
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -82,9 +84,35 @@ def main() -> int:
         action="store_true",
         help="Call the AI server in-process (no HTTP server required).",
     )
+    ap.add_argument(
+        "--file",
+        "-f",
+        default=None,
+        metavar="PATH",
+        help="Path to a file whose contents are used as context for the prompt (prepended before the prompt).",
+    )
     args = ap.parse_args()
 
-    payload: dict[str, Any] = {"prompt": args.prompt, "profile": args.profile}
+    prompt_text = args.prompt
+    if args.file:
+        path = Path(args.file)
+        if not path.is_file():
+            print(f"Error: context file not found: {path}", file=sys.stderr)
+            return 1
+        try:
+            context = path.read_text(encoding="utf-8", errors="replace").strip()
+        except Exception as e:
+            print(f"Error reading context file: {e}", file=sys.stderr)
+            return 1
+        prompt_text = (
+            "Use the following context when answering.\n\n"
+            "--- Context ---\n"
+            f"{context}\n\n"
+            "--- End context ---\n\n"
+            f"{prompt_text}"
+        )
+
+    payload: dict[str, Any] = {"prompt": prompt_text, "profile": args.profile}
     if args.provider:
         payload["provider"] = args.provider
 
