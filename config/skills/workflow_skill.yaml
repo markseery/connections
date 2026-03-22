@@ -1,6 +1,6 @@
 # workflow_skill configuration
 default_timeout: 120
-max_timeout: 300
+max_timeout: 900
 min_remaining_timeout: 1.0
 default_poll_interval: 2
 default_poll_max_attempts: 60

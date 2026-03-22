@@ -46,6 +46,9 @@ class CreateTemplateRequest(BaseModel):
     name: str = Field(..., min_length=1, description="Unique template name")
     description: str = ""
     params: list[str] = Field(default_factory=list)
+    optional_params: dict[str, Any] = Field(default_factory=dict, description="Default values for optional params")
+    param_aliases: dict[str, str] = Field(default_factory=dict, description="Map body keys to param names")
+    param_constraints: dict[str, dict[str, Any]] = Field(default_factory=dict, description="Min/max for numeric params")
     steps: list[dict[str, Any]] = Field(..., min_length=1)
 
 
@@ -82,13 +85,19 @@ def save_template(body: CreateTemplateRequest) -> dict[str, Any]:
     params = body.params
     steps = body.steps
 
-    template = {
+    template: dict[str, Any] = {
         "name": name,
         "description": description,
         "params": params,
         "steps": steps,
         "created_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }
+    if body.optional_params:
+        template["optional_params"] = body.optional_params
+    if body.param_aliases:
+        template["param_aliases"] = body.param_aliases
+    if body.param_constraints:
+        template["param_constraints"] = body.param_constraints
 
     _save_template_to_disk(name, template)
     print(f"[workflow] template saved: {name} ({len(steps)} steps, params={params})", flush=True)
@@ -480,14 +489,30 @@ def _resolve_route(route: str, scratchpad: dict[int, Any]) -> str:
     return re.sub(r"\$step\.\d+\.[\w.]+", _replacer, route)
 
 
+def _resolve_string_refs(value: str, scratchpad: dict[int, Any]) -> Any:
+    """Resolve $step references in a string.
+
+    If the entire string is a single reference, return the resolved value (preserving type).
+    If the string contains embedded references, substitute them inline as strings.
+    """
+    if re.fullmatch(r"\$step\.\d+\.[\w.]+", value):
+        return _resolve_one(value, scratchpad)
+    if "$step." in value:
+        def _replacer(m: re.Match[str]) -> str:
+            val = _resolve_one(m.group(0), scratchpad)
+            return str(val) if val is not None else m.group(0)
+        return re.sub(r"\$step\.\d+\.[\w.]+", _replacer, value)
+    return value
+
+
 def _resolve_refs(args: dict[str, Any], scratchpad: dict[int, Any]) -> dict[str, Any]:
     resolved: dict[str, Any] = {}
     for key, value in args.items():
-        if isinstance(value, str) and value.startswith("$step."):
-            resolved[key] = _resolve_one(value, scratchpad)
+        if isinstance(value, str):
+            resolved[key] = _resolve_string_refs(value, scratchpad)
         elif isinstance(value, list):
             resolved[key] = [
-                _resolve_one(v, scratchpad) if isinstance(v, str) and v.startswith("$step.") else v
+                _resolve_string_refs(v, scratchpad) if isinstance(v, str) else v
                 for v in value
             ]
         elif isinstance(value, dict):

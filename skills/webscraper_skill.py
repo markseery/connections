@@ -892,11 +892,12 @@ def get_pages_content(
     if not sitename.strip():
         raise HTTPException(status_code=400, detail="sitename is required")
     ns = (namespace or "").strip() or STORAGE_NAMESPACE
-    sn = _canonical_sitename(sitename)
+    all_sites = sitename.strip() == "*"
+    sn = "" if all_sites else _canonical_sitename(sitename)
     storage_base = _storage_url()
 
     with httpx.Client(timeout=120.0) as client:
-        if url and url.strip():
+        if url and url.strip() and not all_sites:
             lookup = _strip_url_query(url.strip())
             val = _fetch_page_value(client, storage_base, ns, sn, lookup)
             if val is None:
@@ -917,14 +918,18 @@ def get_pages_content(
             )
 
         all_keys = _storage_list_keys(client, storage_base, ns)
-        site_keys = _keys_for_site(all_keys, sn)
+        if all_sites:
+            site_keys = [k for k in all_keys if PAGE_KEY_SEP in k]
+        else:
+            site_keys = _keys_for_site(all_keys, sn)
         pairs: list[tuple[str, str]] = []
         for sk in sorted(site_keys):
             try:
-                _, pu = _parse_page_storage_key(sk)
+                key_sn, pu = _parse_page_storage_key(sk)
             except ValueError:
                 continue
-            val = _fetch_page_value(client, storage_base, ns, sn, pu)
+            fetch_sn = key_sn if all_sites else sn
+            val = _fetch_page_value(client, storage_base, ns, fetch_sn, pu)
             if val is None:
                 continue
             pairs.append((str(val.get("url") or pu), str(val.get("content") or "")))
@@ -944,10 +949,11 @@ def get_pages_content(
                 total += len(block) + len(PAGE_SEP)
 
         combined = PAGE_SEP.join(parts) if parts else ""
+        label = "all sites" if all_sites else sn
         return skill_result(
-            summary=f"**{len(pairs)}** pages for **{sn}** in **{ns}**.",
+            summary=f"**{len(pairs)}** pages for **{label}** in **{ns}**.",
             namespace=ns,
-            sitename=sn,
+            sitename=label,
             combined_text=combined,
             combined_text_length=len(combined),
             url_count=len(pairs),
