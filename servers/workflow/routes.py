@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 import threading
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -51,12 +52,37 @@ _store = _JobStore()
 
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 
+_workflow_pool: ThreadPoolExecutor | None = None
+_workflow_pool_lock = threading.Lock()
+
+
+def get_workflow_thread_pool() -> ThreadPoolExecutor:
+    """Bounded pool for concurrent workflow runs (multi-threaded server)."""
+    global _workflow_pool
+    with _workflow_pool_lock:
+        if _workflow_pool is None:
+            n = max(1, int(os.environ.get("WORKFLOW_MAX_WORKERS", "8")))
+            _workflow_pool = ThreadPoolExecutor(max_workers=n, thread_name_prefix="workflow")
+        return _workflow_pool
+
+
+def shutdown_workflow_thread_pool() -> None:
+    global _workflow_pool
+    with _workflow_pool_lock:
+        if _workflow_pool is not None:
+            _workflow_pool.shutdown(wait=True, cancel_futures=False)
+            _workflow_pool = None
+
 
 class SubmitRequest(BaseModel):
     config: str = Field(..., description="Config file name or path (e.g. cloud_services_notify_multistep.yaml)")
     vars: dict[str, str] = Field(default_factory=dict, description="Variable overrides")
     skill_timeout: float = Field(default=300, ge=1)
     ai_timeout: float = Field(default=300, ge=1)
+    subprocess_timeout: float | None = Field(
+        default=None,
+        description="Max seconds per subprocess step; omit to use timeouts.workflow_subprocess from app_config",
+    )
     max_context_chars: int = Field(default=150_000, ge=0)
 
 
@@ -67,6 +93,7 @@ def submit(body: SubmitRequest) -> dict[str, Any]:
         registry_url=REGISTRY_URL,
         ai_timeout=body.ai_timeout,
         skill_timeout=body.skill_timeout,
+        subprocess_timeout=body.subprocess_timeout,
         max_context_chars=body.max_context_chars,
     )
 
@@ -165,8 +192,8 @@ def submit(body: SubmitRequest) -> dict[str, Any]:
                 error=str(e),
             )
 
-    thread = threading.Thread(target=_run, daemon=True, name=f"workflow-{job_id[:8]}")
-    thread.start()
+    pool = get_workflow_thread_pool()
+    pool.submit(_run)
 
     return {
         "job_id": job_id,
@@ -209,8 +236,11 @@ def list_jobs(limit: int = 20) -> dict[str, Any]:
 @router.get("/configs")
 def list_configs() -> dict[str, Any]:
     """List available workflow configuration files."""
-    from .executor import CONFIG_DIR
-    configs = sorted(CONFIG_DIR.glob("*.yaml"))
+    from .executor import CONFIG_DIR, WORKFLOWS_DATA_DIR
+    configs = sorted(
+        set(CONFIG_DIR.glob("*.yaml")) | set(WORKFLOWS_DATA_DIR.glob("*.yaml")),
+        key=lambda c: (c.name.lower(), str(c)),
+    )
     return {
         "configs": [
             {"name": c.name, "path": str(c)}

@@ -36,6 +36,7 @@ _PATTERNS = [
     "servers.connections_ui.main:app",
     "servers.agent.main:app",
     "servers.autonomous.main:app",
+    "servers.workflow.main:app",
     "servers.worker.main:app",
     "run_agent_mean_demo.py",
 ]

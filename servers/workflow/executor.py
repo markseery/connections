@@ -1,12 +1,17 @@
 """
 License: MIT
 Description: Workflow executor — runs multi-step YAML workflows with per-step progress.
+Step types: ai (aiserver /generate), skill (worker HTTP), subprocess (local argv, blocks until exit).
 Extracted from run_prompt_with_context.py for use by both the CLI and the workflow server.
 """
 
 from __future__ import annotations
 
 import json
+import os
+import re
+import shlex
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,9 +26,114 @@ from common.timeouts import get as _timeout
 
 REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "application" / "promptwithcontext" / "reports"
 CONFIG_DIR = Path(__file__).resolve().parent.parent.parent / "application" / "promptwithcontext" / "configuration"
+WORKFLOWS_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "workflows"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 DEFAULT_MAX_CONTEXT_CHARS = 150_000
+
+# $step.<step_id>.<dotted.json.path> — step_id is alphanumeric / hyphen (and numeric strings).
+_STEP_REF_FULL = re.compile(r"^\$step\.([^.\s]+)\.(.+)$")
+_STEP_REF_ANY = re.compile(r"\$step\.([^.\s]+)\.([\w.]+)")
+
+
+def _lookup_step_path(step_responses: dict[str, Any], sid: str, path: str) -> Any:
+    root = step_responses.get(sid)
+    if root is None:
+        return None
+    v = _get_path(root, path)
+    if v is None and isinstance(root, dict) and not path.startswith("data."):
+        v = _get_path(root, f"data.{path}")
+    return v
+
+
+def _substitute_step_refs_in_string(s: str, step_responses: dict[str, Any]) -> str:
+    def repl(m: re.Match[str]) -> str:
+        v = _lookup_step_path(step_responses, m.group(1), m.group(2))
+        return "" if v is None else str(v)
+
+    return _STEP_REF_ANY.sub(repl, s)
+
+
+def _resolve_value_refs(val: Any, placeholders: dict[str, str], step_responses: dict[str, Any]) -> Any:
+    if isinstance(val, str):
+        s0 = _apply_placeholders(val, placeholders)
+        fm = _STEP_REF_FULL.match(s0.strip())
+        if fm:
+            return _lookup_step_path(step_responses, fm.group(1), fm.group(2))
+        return _substitute_step_refs_in_string(s0, step_responses)
+    if isinstance(val, dict):
+        return {k: _resolve_value_refs(v, placeholders, step_responses) for k, v in val.items()}
+    if isinstance(val, list):
+        return [_resolve_value_refs(v, placeholders, step_responses) for v in val]
+    return val
+
+
+def _scratchpad_for_ai_text(text: str) -> dict[str, Any]:
+    t = (text or "").strip()
+    try:
+        parsed = json.loads(t)
+        if isinstance(parsed, dict):
+            return parsed
+    except (json.JSONDecodeError, TypeError):
+        pass
+    return {"text": t}
+
+
+def _order_steps_by_dependency(steps: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Topological order when depends_on is used; otherwise preserve YAML order."""
+    if not steps:
+        return steps
+    has_deps = any(isinstance(s.get("depends_on"), list) and len(s["depends_on"]) > 0 for s in steps)
+    if not has_deps:
+        return steps
+
+    ids: list[str] = []
+    for i, s in enumerate(steps):
+        sid = str(s.get("id") or (i + 1)).strip()
+        ids.append(sid)
+
+    if len(ids) != len(set(ids)):
+        raise ValueError("duplicate step id; each id must be unique when using depends_on")
+
+    id_set = set(ids)
+    prereq: dict[str, set[str]] = {}
+    orig_idx: dict[str, int] = {}
+    for i, s in enumerate(steps):
+        sid = ids[i]
+        orig_idx[sid] = i
+        deps: set[str] = set()
+        for d in s.get("depends_on") or []:
+            deps.add(str(d).strip())
+        unknown = deps - id_set
+        if unknown:
+            raise ValueError(f"Step {sid!r} depends_on unknown step ids: {sorted(unknown)}")
+        prereq[sid] = deps
+
+    children: dict[str, list[str]] = {sid: [] for sid in id_set}
+    in_degree: dict[str, int] = {}
+    for sid in id_set:
+        in_degree[sid] = len(prereq.get(sid, set()))
+        for d in prereq.get(sid, set()):
+            if d in children:
+                children[d].append(sid)
+
+    queue = [sid for sid in id_set if in_degree[sid] == 0]
+    queue.sort(key=lambda x: orig_idx[x])
+    ordered_ids: list[str] = []
+    while queue:
+        u = queue.pop(0)
+        ordered_ids.append(u)
+        for v in sorted(children[u], key=lambda x: orig_idx[x]):
+            in_degree[v] -= 1
+            if in_degree[v] == 0:
+                queue.append(v)
+                queue.sort(key=lambda x: orig_idx[x])
+
+    if len(ordered_ids) != len(id_set):
+        raise ValueError("Workflow steps contain a cyclic depends_on graph")
+
+    id_to_step = {ids[i]: steps[i] for i in range(len(steps))}
+    return [id_to_step[sid] for sid in ordered_ids]
 
 
 class WorkflowExecutor:
@@ -34,6 +144,7 @@ class WorkflowExecutor:
         registry_url: str = "http://127.0.0.1:7002",
         ai_timeout: float | None = None,
         skill_timeout: float | None = None,
+        subprocess_timeout: float | None = None,
         max_context_chars: int = DEFAULT_MAX_CONTEXT_CHARS,
         base_dir: Path | None = None,
         aiserver_url: str | None = None,
@@ -42,6 +153,9 @@ class WorkflowExecutor:
         self.registry_url = registry_url.rstrip("/")
         self.ai_timeout = ai_timeout if ai_timeout is not None else _timeout("ai_generate")
         self.skill_timeout = skill_timeout if skill_timeout is not None else _timeout("skill_call")
+        self.subprocess_timeout = (
+            subprocess_timeout if subprocess_timeout is not None else _timeout("workflow_subprocess")
+        )
         self.max_context_chars = max_context_chars
         self.base_dir = base_dir or PROJECT_ROOT
         self._aiserver_url = aiserver_url
@@ -85,6 +199,10 @@ class WorkflowExecutor:
             return (CONFIG_DIR / p).resolve()
         if (CONFIG_DIR / p.name).is_file():
             return (CONFIG_DIR / p.name).resolve()
+        if (WORKFLOWS_DATA_DIR / p).is_file():
+            return (WORKFLOWS_DATA_DIR / p).resolve()
+        if (WORKFLOWS_DATA_DIR / p.name).is_file():
+            return (WORKFLOWS_DATA_DIR / p.name).resolve()
         return Path(config).resolve()
 
     def normalize_steps(self, cfg: dict[str, Any]) -> list[dict[str, Any]]:
@@ -95,7 +213,7 @@ class WorkflowExecutor:
                 if not isinstance(s, dict):
                     continue
                 step = dict(s)
-                if step.get("type") not in ("ai", "skill"):
+                if step.get("type") not in ("ai", "skill", "subprocess"):
                     step["type"] = "ai"
                 out.append(step)
             return out
@@ -135,6 +253,11 @@ class WorkflowExecutor:
         steps = self.normalize_steps(cfg)
         if not steps:
             raise ValueError("Config must include 'prompt' or a non-empty 'steps' list")
+
+        try:
+            steps = _order_steps_by_dependency(steps)
+        except ValueError as e:
+            raise ValueError(f"Invalid workflow step ordering: {e}") from e
 
         run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -196,8 +319,11 @@ class WorkflowExecutor:
             try:
                 if step_type == "skill":
                     text = self._run_skill_step(step, step_id, placeholders, step_responses)
+                elif step_type == "subprocess":
+                    text = self._run_subprocess_step(step, step_id, placeholders, step_responses)
                 else:
-                    text = self._run_ai_step(step, placeholders)
+                    text = self._run_ai_step(step, placeholders, step_responses)
+                    step_responses[step_id] = _scratchpad_for_ai_text(text)
             except Exception as e:
                 error = str(e)
                 elapsed = (time.monotonic() - start) * 1000
@@ -206,6 +332,14 @@ class WorkflowExecutor:
                 so = StepOutput(step_num=step_num, step_id=step_id, status="failed",
                                 error=error, elapsed_ms=elapsed)
                 step_outputs.append(so)
+                if step.get("continue_on_error") is True:
+                    step_responses[step_id] = {"_workflow_error": error, "_failed": True}
+                    text = f"[step {step_id} failed; continuing]\n{error}"
+                    previous_output = text
+                    outputs[f"step_{step_num}_output"] = text
+                    outputs[f"{step_id}_output"] = text
+                    _write_step_report(config_path.stem, run_ts, step_num, step_id, text)
+                    continue
                 raise WorkflowStepError(step_num, step_id, error) from e
 
             elapsed = (time.monotonic() - start) * 1000
@@ -235,40 +369,128 @@ class WorkflowExecutor:
         self, step: dict[str, Any], step_id: str,
         placeholders: dict[str, str], step_responses: dict[str, Any],
     ) -> str:
+        wurl = self._get_worker_url().rstrip("/")
         skill_name = (step.get("skill") or "").strip()
-        if not skill_name:
-            raise ValueError("skill step missing 'skill'")
+        route_tmpl = (step.get("route") or "").strip()
         endpoint = (step.get("endpoint") or "").strip()
-        if not endpoint:
-            raise ValueError("skill step missing 'endpoint'")
 
-        params = step.get("params")
+        if route_tmpl:
+            resolved_route = _substitute_step_refs_in_string(
+                _apply_placeholders(route_tmpl, placeholders), step_responses
+            )
+            if not resolved_route.startswith("/"):
+                raise ValueError("skill step 'route' must start with / (path on worker)")
+            url = f"{wurl}{resolved_route}"
+        else:
+            if not skill_name:
+                raise ValueError("skill step missing 'skill' (or use full worker 'route')")
+            if not endpoint:
+                raise ValueError("skill step missing 'endpoint' (or use full worker 'route')")
+            ep = _substitute_step_refs_in_string(
+                _apply_placeholders(endpoint.strip().lstrip("/"), placeholders), step_responses
+            )
+            url = f"{wurl}/skills/{skill_name}/{ep}"
+
+        params = step.get("params") if isinstance(step.get("params"), dict) else step.get("args")
         if not isinstance(params, dict):
             params = {}
-        params = _apply_placeholders_to_value(params, placeholders)
+        params = _resolve_value_refs(params, placeholders, step_responses)
+
         output_path = step.get("output_path")
         if output_path is not None:
             output_path = str(output_path).strip() or None
-
-        wurl = self._get_worker_url()
 
         step_timeout = step.get("timeout")
         if isinstance(step_timeout, (int, float)) and step_timeout > 0:
             timeout = float(step_timeout)
         else:
             timeout = self.skill_timeout
-        timeout += 30.0
+        deadline = time.monotonic() + timeout + 30.0
+        per_req = min(timeout + 30.0, 600.0)
 
-        path = endpoint.strip().lstrip("/")
-        url = f"{wurl}/skills/{skill_name}/{path}"
-        with http_client("skill_call", timeout=timeout) as client:
-            r = client.post(url, json=params)
+        method = str(step.get("method", "POST")).upper()
+        with http_client("skill_call", timeout=per_req) as client:
+            if method == "GET":
+                r = client.get(url, params=params or None)
+            else:
+                r = client.request(method, url, json=params if params else None)
             r.raise_for_status()
-        response = r.json()
+        try:
+            response: Any = r.json()
+        except Exception as exc:
+            raise RuntimeError(f"skill step expected JSON from {url}: {exc}") from exc
+        if not isinstance(response, dict):
+            response = {"data": response}
+
         step_responses[step_id] = response
+
+        poll = step.get("poll")
+        if isinstance(poll, dict) and (poll.get("route") or "").strip():
+            poll_route = _substitute_step_refs_in_string(
+                _apply_placeholders(str(poll["route"]).strip(), placeholders), step_responses
+            )
+            if not poll_route.startswith("/"):
+                raise ValueError("skill poll.route must start with /")
+            poll_url = f"{wurl}{poll_route}"
+            poll_method = str(poll.get("method", "GET")).upper()
+            field = str(poll.get("field", "status"))
+            target = str(poll.get("target", "completed"))
+            interval = float(poll.get("interval", 2))
+            max_attempts = int(poll.get("max_attempts", 60))
+            poll_req_timeout = float(poll.get("request_timeout", 30))
+            response = self._poll_skill_until(
+                poll_url,
+                poll_method,
+                field,
+                target,
+                interval,
+                max_attempts,
+                deadline,
+                poll_req_timeout,
+            )
+            step_responses[step_id] = response
+
         return _extract_output_from_response(response, output_path)
 
-    def _run_ai_step(self, step: dict[str, Any], placeholders: dict[str, str]) -> str:
+    def _poll_skill_until(
+        self,
+        poll_url: str,
+        poll_method: str,
+        field: str,
+        target: str,
+        interval: float,
+        max_attempts: int,
+        deadline: float,
+        per_request_timeout: float,
+    ) -> dict[str, Any]:
+        last: dict[str, Any] = {}
+        for _ in range(1, max_attempts + 1):
+            if time.monotonic() >= deadline:
+                raise RuntimeError(
+                    f"skill poll exceeded step timeout before {field}=={target!r} ({poll_url})"
+                )
+            time.sleep(interval)
+            with http_client("skill_call", timeout=per_request_timeout + 10.0) as client:
+                r = client.request(poll_method, poll_url)
+            if r.status_code != 200:
+                continue
+            try:
+                data = r.json()
+            except Exception:
+                continue
+            last = data if isinstance(data, dict) else {"_raw": data}
+            cur = _get_path(last, field) if "." in field else last.get(field)
+            if str(cur) == target:
+                return last
+            if str(cur) == "failed":
+                raise RuntimeError(f"skill poll reported failed status ({poll_url})")
+        raise RuntimeError(
+            f"skill poll exhausted {max_attempts} attempts without {field}=={target!r} ({poll_url})"
+        )
+
+    def _run_ai_step(
+        self, step: dict[str, Any], placeholders: dict[str, str], step_responses: dict[str, Any],
+    ) -> str:
         prompt_cfg = (step.get("prompt") or "").strip()
         if not prompt_cfg:
             raise ValueError("AI step missing 'prompt'")
@@ -281,14 +503,23 @@ class WorkflowExecutor:
         if not isinstance(files, list):
             files = []
 
-        context = _build_context(files, self.base_dir)
+        files_resolved: list[str] = []
+        for f in files:
+            if not isinstance(f, str) or not f.strip():
+                continue
+            fr = _substitute_step_refs_in_string(_apply_placeholders(f.strip(), placeholders), step_responses)
+            files_resolved.append(fr)
+
+        context = _build_context(files_resolved, self.base_dir)
 
         if self.max_context_chars > 0 and len(placeholders.get("previous_output", "")) > self.max_context_chars:
             placeholders = dict(placeholders)
             prev = placeholders["previous_output"]
             placeholders["previous_output"] = prev[:self.max_context_chars] + "\n\n[... truncated ...]"
 
-        prompt_resolved = _apply_placeholders(prompt_cfg, placeholders)
+        prompt_resolved = _substitute_step_refs_in_string(
+            _apply_placeholders(prompt_cfg, placeholders), step_responses
+        )
         full_prompt = _build_prompt(prompt_resolved, context)
 
         ai_url = self._get_ai_url()
@@ -305,6 +536,117 @@ class WorkflowExecutor:
         if isinstance(out, str):
             return out.strip()
         return str(data.get("output", data)).strip()
+
+    def _run_subprocess_step(
+        self,
+        step: dict[str, Any],
+        step_id: str,
+        placeholders: dict[str, str],
+        step_responses: dict[str, Any],
+    ) -> str:
+        """Run argv until the process exits; stdout+stderr become step output (and previous_output)."""
+        raw_cmd = step.get("command")
+        if raw_cmd is None and isinstance(step.get("argv"), list):
+            raw_cmd = step["argv"]
+        if raw_cmd is None:
+            raise ValueError("subprocess step missing 'command' (or 'argv' list)")
+
+        argv = _parse_subprocess_command(raw_cmd)
+        if not argv:
+            raise ValueError("subprocess step: empty command after parsing")
+
+        argv_resolved: list[str] = []
+        for a in argv:
+            s = _apply_placeholders(str(a), placeholders)
+            m = _STEP_REF_FULL.match(s.strip())
+            if m:
+                v = _lookup_step_path(step_responses, m.group(1), m.group(2))
+                argv_resolved.append("" if v is None else str(v))
+            else:
+                argv_resolved.append(_substitute_step_refs_in_string(s, step_responses))
+        argv = argv_resolved
+
+        cwd_raw = step.get("cwd")
+        if cwd_raw is not None and str(cwd_raw).strip():
+            cwd_s = _substitute_step_refs_in_string(
+                _apply_placeholders(str(cwd_raw).strip(), placeholders), step_responses
+            )
+            cwd = (self.base_dir / cwd_s).resolve()
+            if not cwd.is_dir():
+                raise FileNotFoundError(f"subprocess cwd is not a directory: {cwd}")
+        else:
+            cwd = self.base_dir.resolve()
+
+        env: dict[str, str] | None = None
+        step_env = step.get("env")
+        if isinstance(step_env, dict) and step_env:
+            env = {str(k): str(v) for k, v in os.environ.items()}
+            for k, v in step_env.items():
+                if k is None:
+                    continue
+                key = _substitute_step_refs_in_string(_apply_placeholders(str(k), placeholders), step_responses)
+                if v is None:
+                    env.pop(key, None)
+                else:
+                    env[key] = _substitute_step_refs_in_string(
+                        _apply_placeholders(str(v), placeholders), step_responses
+                    )
+
+        step_timeout = step.get("timeout")
+        if isinstance(step_timeout, (int, float)) and step_timeout > 0:
+            timeout = float(step_timeout)
+        else:
+            timeout = float(self.subprocess_timeout)
+
+        merge_streams = step.get("merge_streams")
+        try:
+            if merge_streams is False:
+                proc = subprocess.run(
+                    argv,
+                    cwd=cwd,
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    check=False,
+                )
+                out_parts = [f"exit_code: {proc.returncode}"]
+                if (proc.stdout or "").strip():
+                    out_parts.append("--- stdout ---\n" + proc.stdout.rstrip())
+                if (proc.stderr or "").strip():
+                    out_parts.append("--- stderr ---\n" + proc.stderr.rstrip())
+                text = "\n\n".join(out_parts)
+            else:
+                proc = subprocess.run(
+                    argv,
+                    cwd=cwd,
+                    env=env,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    timeout=timeout,
+                    check=False,
+                )
+                text = f"exit_code: {proc.returncode}\n\n" + (proc.stdout or "")
+        except subprocess.TimeoutExpired as e:
+            raise RuntimeError(
+                f"subprocess timed out after {timeout}s (cmd: {argv[0]!r}, {len(argv)} args)"
+            ) from e
+
+        step_responses[step_id] = {
+            "exit_code": proc.returncode,
+            "stdout": proc.stdout or "",
+            "stderr": (proc.stderr or "") if merge_streams is False else "",
+        }
+
+        if proc.returncode != 0:
+            tail = (text[-4000:] if len(text) > 4000 else text).strip()
+            raise RuntimeError(
+                f"subprocess exited with code {proc.returncode}"
+                + (f"\n{tail}" if tail else "")
+            )
+
+        return text.strip()
 
 
 class StepOutput:
@@ -336,6 +678,18 @@ class WorkflowStepError(Exception):
         self.step_num = step_num
         self.step_id = step_id
         super().__init__(f"Step {step_num} ({step_id}) failed: {message}")
+
+
+def _parse_subprocess_command(raw: Any) -> list[str]:
+    """Build argv from YAML: list of strings, or one string split with shlex (POSIX-aware on Unix)."""
+    if isinstance(raw, list):
+        return [str(x).strip() for x in raw if str(x).strip()]
+    if isinstance(raw, str):
+        s = raw.strip()
+        if not s:
+            return []
+        return shlex.split(s, posix=os.name != "nt")
+    raise ValueError("subprocess 'command' must be a string or list of strings")
 
 
 def _write_step_report(config_stem: str, run_ts: str, step_num: int, step_id: str, text: str) -> None:

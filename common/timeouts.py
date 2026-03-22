@@ -15,6 +15,7 @@ _CONFIG_PATH = Path(__file__).resolve().parent.parent / "app_config.yaml"
 
 _DEFAULTS: dict[str, float] = {
     "skill_call": 3600,
+    "workflow_subprocess": 3600,
     "ai_generate": 600,
     "inter_service": 30,
     "storage": 15,

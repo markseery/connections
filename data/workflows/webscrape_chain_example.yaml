@@ -1,0 +1,43 @@
+# Example: scrape → fetch markdown → summarize via text_skill (not webscraper_skill).
+# skill_result nests job_id/status under `data` on scrape/poll responses.
+
+id: webscrape_chain_example
+description: Scrape a URL, read markdown, summarize with text_skill /summarize.
+
+vars:
+  url: https://example.com
+  topic: products
+
+steps:
+  - id: scrape
+    type: skill
+    method: POST
+    route: /skills/webscraper_skill/scrape
+    params:
+      url: "{url}"
+      max_pages: 30
+      max_depth: 2
+      summarize: false
+    poll:
+      route: /skills/webscraper_skill/scrape/$step.scrape.data.job_id
+      field: data.status
+      target: completed
+      interval: 2
+      max_attempts: 120
+
+  - id: md
+    type: skill
+    method: GET
+    route: /skills/webscraper_skill/scrape/$step.scrape.data.job_id/markdown
+    depends_on: [scrape]
+
+  - id: summarize
+    type: skill
+    method: POST
+    route: /skills/text_skill/summarize
+    params:
+      text: $step.md.text
+      topic: "{topic}"
+      style: bullets
+    depends_on: [md]
+    output_path: text

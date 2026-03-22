@@ -37,6 +37,10 @@ servers:
     app: servers.autonomous.main:app
     host: 127.0.0.1
     port: 7027
+  - name: workflow
+    app: servers.workflow.main:app
+    host: 127.0.0.1
+    port: 7026
   - name: worker
     app: servers.worker.main:app
     host: 127.0.0.1
