@@ -8,3 +8,8 @@ title_dedup_chars: 80
 summary_snippet_chars: 200
 ai_summary_timeout: 30.0
 registry_timeout: 2.0
+
+route_risk:
+  "POST /skills/news_skill/search": safe
+  "GET /skills/news_skill/topic/{topic}": safe
+  "GET /skills/news_skill/stock/{symbol}": safe

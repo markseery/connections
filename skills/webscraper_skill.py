@@ -8,7 +8,7 @@ Description: Unified web scraper — **one** crawl implementation, multiple pers
 - **Optional** aiserver summary for the whole crawl (body flag `summarize`).
 
 Routes include crawl jobs, markdown/summary retrieval, storage CRUD (/pages, /sites, /stored),
-parse_combined, and summarize_text.
+and parse_combined. Text summarization is delegated to text_skill.
 """
 
 from __future__ import annotations
@@ -263,12 +263,6 @@ def _record_url(storage_base: str, namespace: str, storage_key: str) -> str:
     return f"{storage_base}/namespaces/{quote(namespace, safe='')}/records/{quote(storage_key, safe='')}"
 
 
-def _aiserver_url() -> str:
-    reg = _registry_url()
-    with httpx.Client(timeout=3.0) as client:
-        r = client.get(f"{reg}/servers/aiserver")
-        r.raise_for_status()
-        return str(r.json().get("url")).rstrip("/")
 
 
 # ── HTML extraction + crawl (single implementation) ──────────────────────
@@ -384,6 +378,7 @@ class ScrapeRequest(BaseModel):
     exclude_patterns: list[str] = Field(default_factory=list)
     summarize: bool = True
     namespace: str = Field(default=STORAGE_NAMESPACE, description="Storage namespace for per-page records.")
+    wait: bool = Field(default=False, description="Block until the scrape completes and return full results.")
 
     @field_validator("url")
     @classmethod
@@ -489,43 +484,44 @@ def _build_markdown(root_url: str, pages: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-async def _summarize(markdown: str) -> str:
-    aiserver = _aiserver_url()
-    trunc = int(_conf.get("summary_max_chars", 15000))
-    prompt = (
-        "Summarize the following website content. Be concise, bullet points, and list key themes.\n\n"
-        f"{markdown[:trunc]}"
-    )
-    async with httpx.AsyncClient(timeout=120.0) as client:
-        r = await client.post(f"{aiserver}/generate", json={"prompt": prompt, "profile": "fast"})
+def _text_skill_summarize(text: str, topic: str, style: str = "bullets") -> str:
+    """Call text_skill /summarize via the worker. Loads the skill if needed."""
+    worker_url = find_live_worker(_registry_url())
+    if not worker_url:
+        raise RuntimeError("No live worker available for text_skill summarization")
+    worker_url = worker_url.rstrip("/")
+    with httpx.Client(timeout=120.0) as client:
+        client.post(f"{worker_url}/worker/skills/text_skill/load", timeout=10.0)
+        r = client.post(
+            f"{worker_url}/skills/text_skill/summarize",
+            json={"text": text, "topic": topic, "style": style},
+        )
         r.raise_for_status()
-        out = r.json().get("output") or {}
-        if isinstance(out, dict):
-            return str(out.get("text") or "")
-        return str(out)
+        data = r.json() or {}
+        return str(data.get("text") or data.get("summary") or "")
+
+
+async def _summarize(markdown: str) -> str:
+    trunc = int(_conf.get("summary_max_chars", 15000))
+    return _text_skill_summarize(
+        text=markdown[:trunc],
+        topic="website content, key themes, products, and offerings",
+        style="bullets",
+    )
 
 
 async def _summarize_page_terse_bullets(
     client: httpx.AsyncClient, aiserver: str, page_text: str
 ) -> str:
-    """AIServer: a few succinct bullet points for one page's text (notification body)."""
+    """Summarize a single page's text into terse bullet points for notifications."""
     text = (page_text or "")[:int(_conf.get("page_summary_max_chars", 12000))]
     if len(text) < int(_conf.get("page_summary_min_text", 40)):
         return "(insufficient text for summary)"
-    prompt = (
-        "Summarize the following web page text in a few terse, succinct bullet points only. "
-        "No introduction or conclusion. Use a short bullet list (about 3–5 bullets).\n\n"
-        f"{text}"
+    return _text_skill_summarize(
+        text=text,
+        topic="page content highlights",
+        style="bullets",
     )
-    r = await client.post(
-        f"{aiserver}/generate",
-        json={"prompt": prompt, "profile": "fast"},
-    )
-    r.raise_for_status()
-    out = r.json().get("output") or {}
-    if isinstance(out, dict):
-        return str(out.get("text") or "").strip()
-    return str(out).strip()
 
 
 async def _run_job(job_id: str, req: ScrapeRequest) -> None:
@@ -611,19 +607,17 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
                 }
                 per_url_summaries = {}
                 try:
-                    aiserver = _aiserver_url()
-                    async with httpx.AsyncClient(timeout=120.0) as ai_client:
-                        for u in new_urls:
-                            try:
-                                per_url_summaries[u] = await _summarize_page_terse_bullets(
-                                    ai_client, aiserver, page_text_by_url.get(u, "")
-                                )
-                            except Exception as sum_exc:
-                                print(
-                                    f"[webscraper_skill] per-URL notify summary failed for {u}: {sum_exc}",
-                                    flush=True,
-                                )
-                                per_url_summaries[u] = f"(summary failed: {sum_exc})"
+                    for u in new_urls:
+                        try:
+                            per_url_summaries[u] = await _summarize_page_terse_bullets(
+                                None, "", page_text_by_url.get(u, "")
+                            )
+                        except Exception as sum_exc:
+                            print(
+                                f"[webscraper_skill] per-URL notify summary failed for {u}: {sum_exc}",
+                                flush=True,
+                            )
+                            per_url_summaries[u] = f"(summary failed: {sum_exc})"
                 except Exception as exc:
                     print(
                         f"[webscraper_skill] new-URL summary batch failed: {exc}",
@@ -665,7 +659,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
 @monitor
 @router.post("/scrape")
 async def start_scrape(body: ScrapeRequest, response: Response) -> dict[str, Any]:
-    """Crawl, write per-page storage records, save markdown, optional AI summary. Body: url; optional max_pages, max_depth, summarize, namespace, patterns."""
+    """Crawl a website, store all page content, and return a summary. This single step handles everything — do NOT add follow-up steps. Body: url (required), wait=true (recommended — blocks until done), optional max_pages, max_depth, summarize, namespace, patterns."""
     start = time.perf_counter()
     job_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -695,7 +689,23 @@ async def start_scrape(body: ScrapeRequest, response: Response) -> dict[str, Any
         "new_urls": [],
     }
     _jobs[job_id] = job
-    asyncio.create_task(_run_job(job_id, body))
+    task = asyncio.create_task(_run_job(job_id, body))
+
+    if body.wait:
+        await task
+        job = _jobs[job_id]
+        response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
+        return skill_result(
+            summary=job.get("summary") or f"Scraped **{body.url}** — {job.get('pages_crawled', 0)} pages.",
+            text=job.get("summary") or "",
+            job_id=job_id,
+            status=job.get("status", "completed"),
+            url=body.url,
+            pages_crawled=job.get("pages_crawled", 0),
+            pages_failed=job.get("pages_failed", 0),
+            url_count=job.get("url_count", 0),
+        )
+
     response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.1f}"
     return skill_result(summary=f"Scrape job started for **{body.url}**.", job_id=job_id, status="pending", url=body.url)
 
@@ -760,50 +770,6 @@ def get_summary(job_id: str) -> dict[str, Any]:
         top_words=job.get("top_words"),
     )
 
-
-def _summarize_by_topic_sync(text: str, topic: str) -> str:
-    aiserver = _aiserver_url()
-    truncated = (text or "")[:int(_conf.get("summary_max_chars", 15000))]
-    prompt = (
-        f"Summarize ONLY content related to: {topic}. "
-        "Focus on products, offerings, brand/positioning phrases, and concrete claims. "
-        "Use terse bullet points. If nothing relevant, say so.\n\n"
-        f"{truncated}"
-    )
-    with httpx.Client(timeout=120.0) as client:
-        r = client.post(f"{aiserver}/generate", json={"prompt": prompt, "profile": "fast"})
-        r.raise_for_status()
-        out = r.json().get("output") or {}
-        if isinstance(out, dict):
-            return str(out.get("text") or "")
-        return str(out)
-
-
-class SummarizeTextRequest(BaseModel):
-    text: str = ""
-    markdown: str = ""
-    topic: str = ""
-
-    @model_validator(mode="after")
-    def _resolve_text(self) -> SummarizeTextRequest:
-        if not self.text and self.markdown:
-            self.text = self.markdown
-        return self
-
-
-@monitor
-@router.post("/summarize_text")
-def summarize_text(body: SummarizeTextRequest) -> dict[str, Any]:
-    text = body.text
-    topic = body.topic.strip() or "key themes"
-    if not text:
-        raise HTTPException(status_code=400, detail="text or markdown is required")
-    try:
-        summary = _summarize_by_topic_sync(text, topic)
-    except Exception as exc:
-        print(f"[webscraper_skill] summarize_text failed: {exc}", flush=True)
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
-    return skill_result(summary=f"Summary by topic **{topic}**.", text=summary, topic=topic)
 
 
 # ── combined text helpers (storage-backed pages) ───────────────────────────

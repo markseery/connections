@@ -4,3 +4,6 @@ storage_put_timeout: 10.0
 registry_timeout: 5.0
 worker_load_timeout: 10.0
 persist_log_interval: 50
+
+route_risk:
+  "POST /skills/rss_new_and_save_skill/run": reversible

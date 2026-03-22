@@ -6,3 +6,10 @@ default_poll_interval: 2
 default_poll_max_attempts: 60
 poll_request_timeout: 10.0
 registry_timeout: 2.0
+
+route_risk:
+  "POST /skills/workflow_skill/templates": reversible
+  "DELETE /skills/workflow_skill/templates/{name}": irreversible
+  "POST /skills/workflow_skill/run/{name}": reversible
+  "POST /skills/workflow_skill/execute": reversible
+  "GET *": safe

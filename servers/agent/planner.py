@@ -44,7 +44,11 @@ Examples:
 RULES:
 - skill_name MUST exactly match a "skill_name=" value from the skills list.
 - route_path_template MUST exactly match a listed route path (with {param} replaced).
-- If NO skill in the list can handle the request, return {"objective":"...","steps":[]}.
+- If NO skill is a STRONG match for the request, return {"objective":"...","steps":[]}.
+  A "strong match" means the skill's route is clearly designed for the task.
+  Do NOT force-fit a skill that only vaguely relates. An empty plan is better than a wrong plan.
+- Do NOT use webscraper_skill to search the web. It crawls a specific URL. It is NOT a search engine.
+- When using webscraper_skill/scrape, ALWAYS include "wait": true in arguments. One step is enough — do NOT chain follow-up steps for markdown, summary, or job status.
 - depends_on MUST be a list of integer step_id values, e.g. [1] or [].
 - Return ONLY JSON, no markdown, no explanation.
 - Arguments MUST be valid JSON types (arrays not comma-separated strings).

@@ -1,2 +1,6 @@
 # rss_skill configuration
 feed_timeout: 30.0
+
+route_risk:
+  "GET /skills/rss_skill/feed": safe
+  "POST /skills/rss_skill/feed": safe

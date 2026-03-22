@@ -7,6 +7,8 @@ stored as resource_type=skill, resource_name=<name>; value can include server_na
 
 from __future__ import annotations
 
+import threading
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -29,11 +31,24 @@ class SkillDefinition:
     routes: list[SkillRoute]
 
 
+_cache_lock = threading.Lock()
+_cached_skills: list[SkillDefinition] | None = None
+_cache_time: float = 0.0
+_CACHE_TTL: float = 60.0
+
+
 def discover_skills(config_url: str | None = None, registry_url: str | None = None) -> list[SkillDefinition]:
     """
     List config keys, filter skill:*, fetch each config, resolve base_url via registry.
-    Config value: { "server_name": "..." } or { "base_url": "..." }, and "routes": [{ "method", "path", "description" }].
+    Results are cached for _CACHE_TTL seconds to avoid redundant HTTP calls when
+    multiple subagents discover skills within a short window.
     """
+    global _cached_skills, _cache_time
+
+    with _cache_lock:
+        if _cached_skills is not None and (time.monotonic() - _cache_time) < _CACHE_TTL:
+            return list(_cached_skills)
+
     config_url = config_url or get_config_server_url()
     registry_url = registry_url or get_registry_url()
 
@@ -93,4 +108,9 @@ def discover_skills(config_url: str | None = None, registry_url: str | None = No
                 routes=routes,
             )
         )
+
+    with _cache_lock:
+        _cached_skills = skills
+        _cache_time = time.monotonic()
+
     return skills

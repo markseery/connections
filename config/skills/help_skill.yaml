@@ -1,2 +1,5 @@
 # help_skill configuration
 registry_timeout: 2.0
+
+route_risk:
+  "GET *": safe

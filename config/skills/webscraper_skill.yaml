@@ -5,8 +5,8 @@
 # crawl defaults (overridable per request)
 default_max_pages: 30
 default_max_depth: 2
-max_pages_limit: 10000
-max_depth_limit: 100
+max_pages_limit: 100000
+max_depth_limit: 1000
 
 # per-page fetch during crawl
 page_fetch_timeout: 20
@@ -14,7 +14,7 @@ min_text_length: 80
 max_content_chars: 8000
 crawl_delay: 0.1
 
-# AI summarization
+# Summarization (delegated to text_skill; these control input truncation)
 summary_max_chars: 15000
 page_summary_max_chars: 12000
 page_summary_min_text: 40
@@ -28,3 +28,12 @@ notify_summary_max_urls: 10
 
 # stored/combined text
 max_combined_text_chars: 2000000
+
+route_risk:
+  "POST /skills/webscraper_skill/scrape": reversible
+  "POST /skills/webscraper_skill/pages": reversible
+  "PUT /skills/webscraper_skill/pages": reversible
+  "DELETE /skills/webscraper_skill/pages": irreversible
+  "POST /skills/webscraper_skill/parse_combined": safe
+  "POST /skills/webscraper_skill/stored": safe
+  "GET *": safe

@@ -129,22 +129,34 @@ def _perplexity_generate(prompt: str, model: str, profile: Profile) -> dict[str,
     text = response.output_text or ""
     print(f"[perplexity] response OK: {len(text)} chars", flush=True)
 
-    citations: list[dict[str, Any]] = []
-    for item in getattr(response, "citations", None) or []:
-        if isinstance(item, str):
-            citations.append({"url": item})
-        elif isinstance(item, dict):
-            citations.append(item)
-        else:
-            entry: dict[str, Any] = {}
-            for attr in ("url", "title", "snippet", "date"):
-                val = getattr(item, attr, None)
-                if val:
-                    entry[attr] = str(val)
-            if entry:
-                citations.append(entry)
+    results: list[dict[str, Any]] = []
+    for output_item in getattr(response, "output", None) or []:
+        if getattr(output_item, "type", None) == "search_results":
+            for r in getattr(output_item, "results", None) or []:
+                entry: dict[str, Any] = {}
+                for attr in ("url", "title", "snippet", "date"):
+                    val = getattr(r, attr, None)
+                    if val is not None:
+                        entry[attr] = str(val)
+                if entry.get("title") or entry.get("url"):
+                    results.append(entry)
 
-    return {"type": "search", "text": text, "results": citations}
+    if not results:
+        for item in getattr(response, "citations", None) or []:
+            if isinstance(item, str):
+                results.append({"url": item})
+            elif isinstance(item, dict):
+                results.append(item)
+            else:
+                entry = {}
+                for attr in ("url", "title", "snippet", "date"):
+                    val = getattr(item, attr, None)
+                    if val:
+                        entry[attr] = str(val)
+                if entry:
+                    results.append(entry)
+
+    return {"type": "search", "text": text, "results": results}
 
 
 def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any]:

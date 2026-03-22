@@ -33,6 +33,10 @@ servers:
     app: servers.agent.main:app
     host: 127.0.0.1
     port: 7024
+  - name: autonomous
+    app: servers.autonomous.main:app
+    host: 127.0.0.1
+    port: 7027
   - name: worker
     app: servers.worker.main:app
     host: 127.0.0.1

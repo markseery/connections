@@ -1,0 +1,88 @@
+# text_skill configuration
+server_name: worker-1
+
+# AI settings
+default_ai_profile: fast
+ai_timeout: 120.0
+
+# Per-route input limits (chars)
+summarize_max_chars: 30000
+translate_max_chars: 30000
+extract_max_chars: 30000
+rewrite_max_chars: 30000
+
+routes:
+  - method: POST
+    path: /skills/text_skill/summarize
+    description: summarize_text
+  - method: POST
+    path: /skills/text_skill/find
+    description: find_in_text
+  - method: POST
+    path: /skills/text_skill/replace
+    description: replace_in_text
+  - method: POST
+    path: /skills/text_skill/touppercase
+    description: to_uppercase
+  - method: POST
+    path: /skills/text_skill/tolowercase
+    description: to_lowercase
+  - method: POST
+    path: /skills/text_skill/tocamelcase
+    description: to_camel_case
+  - method: POST
+    path: /skills/text_skill/totitlecase
+    description: to_title_case
+  - method: POST
+    path: /skills/text_skill/tosnakecase
+    description: to_snake_case
+  - method: POST
+    path: /skills/text_skill/tokebabcase
+    description: to_kebab_case
+  - method: POST
+    path: /skills/text_skill/reverse
+    description: reverse_text
+  - method: POST
+    path: /skills/text_skill/wordcount
+    description: word_count
+  - method: POST
+    path: /skills/text_skill/truncate
+    description: truncate_text
+  - method: POST
+    path: /skills/text_skill/wrap
+    description: wrap_text
+  - method: POST
+    path: /skills/text_skill/slugify
+    description: slugify_text
+  - method: POST
+    path: /skills/text_skill/split
+    description: split_text
+  - method: POST
+    path: /skills/text_skill/translate
+    description: translate_text
+  - method: POST
+    path: /skills/text_skill/extract
+    description: extract_from_text
+  - method: POST
+    path: /skills/text_skill/rewrite
+    description: rewrite_text
+
+route_risk:
+  "POST /skills/text_skill/summarize": safe
+  "POST /skills/text_skill/find": safe
+  "POST /skills/text_skill/replace": safe
+  "POST /skills/text_skill/touppercase": safe
+  "POST /skills/text_skill/tolowercase": safe
+  "POST /skills/text_skill/tocamelcase": safe
+  "POST /skills/text_skill/totitlecase": safe
+  "POST /skills/text_skill/tosnakecase": safe
+  "POST /skills/text_skill/tokebabcase": safe
+  "POST /skills/text_skill/reverse": safe
+  "POST /skills/text_skill/wordcount": safe
+  "POST /skills/text_skill/truncate": safe
+  "POST /skills/text_skill/wrap": safe
+  "POST /skills/text_skill/slugify": safe
+  "POST /skills/text_skill/split": safe
+  "POST /skills/text_skill/translate": safe
+  "POST /skills/text_skill/extract": safe
+  "POST /skills/text_skill/rewrite": safe

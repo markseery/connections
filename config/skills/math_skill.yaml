@@ -2,3 +2,6 @@
 default_root_degree: 2
 default_log_base: 10.0
 factorial_max: 1000
+
+route_risk:
+  "POST *": safe

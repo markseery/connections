@@ -47,7 +47,7 @@ class SearchRequest(BaseModel):
 
 @router.post("/search")
 def news_search(body: SearchRequest) -> dict[str, Any]:
-    """Search for news on a topic or stock. Body: query or q or topic (required), symbol (optional), limit (optional). Use for news, headlines, or stock news."""
+    """Web search for information, news, or research on any topic. Use for finding companies, stock symbols, industry research, news, headlines, or any factual query. Body: query (required), symbol (optional), limit (optional)."""
     query = body.query
     if not query:
         raise HTTPException(status_code=400, detail="query is required")

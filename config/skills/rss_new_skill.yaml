@@ -13,3 +13,6 @@ storage_fetch_timeout: 15.0
 angular_stub_min_chars: 200
 worker_load_timeout: 10.0
 persist_log_interval: 50
+
+route_risk:
+  "POST /skills/rss_new_skill/run": safe

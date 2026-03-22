@@ -4,3 +4,10 @@ default_throttle_per_min: 60
 throttle_window_minutes: 1
 smtp_timeout: 20
 default_notification_limit: 100
+
+route_risk:
+  "POST /skills/notification_skill/send": irreversible
+  "POST /skills/notification_skill/send/test": irreversible
+  "GET /skills/notification_skill/notifications": safe
+  "GET /skills/notification_skill/config": safe
+  "GET /skills/notification_skill/stats": safe

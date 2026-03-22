@@ -2,3 +2,8 @@
 history_days: 2
 earnings_dates_limit: 10
 quarterly_financials_limit: 8
+
+route_risk:
+  "GET /skills/stock_skill/quote/{symbol}": safe
+  "GET /skills/stock_skill/fundamentals/{symbol}": safe
+  "GET /skills/stock_skill/earnings/{symbol}": safe
