@@ -2,7 +2,7 @@
 """
 Process each page of a stored site through the AI server with a given prompt.
 
-Gets pages via StoredSiteContent (worker + stored_webscrape_skill), sends each page
+Gets pages via StoredSiteContent (worker + webscraper_skill), sends each page
 to the aiserver /generate with the provided prompt and profile=agent, prints each response.
 
 Usage:
@@ -11,7 +11,7 @@ Usage:
   python scripts/site_pages_ai.py https://example.com "Extract facts." --taxonomy fact_taxonomy.yaml
   python scripts/site_pages_ai.py https://example.com "Extract product names." --registry-url http://127.0.0.1:7002
 
-Requires: registry, worker (stored_webscrape_skill), aiserver. Site must already be scraped and stored.
+Requires: registry, worker (webscraper_skill), aiserver. Site must already be scraped and stored.
 """
 
 from __future__ import annotations

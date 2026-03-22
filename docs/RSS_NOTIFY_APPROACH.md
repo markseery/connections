@@ -9,7 +9,7 @@
 ## 1. Storage server: what to store
 
 - **Namespace:** e.g. `rss_notified` (dedicated namespace for “already notified” state).
-- **Key:** One record **per feed URL** (URL-encoded, same pattern as `stored_webscrape_skill` with `webscrape` namespace).
+- **Key:** One record **per feed URL** (URL-encoded, same pattern as `webscraper_skill` per-page keys in the `webscrape` namespace).
 - **Value (JSON):** A single object per feed that lists which items have been notified, so we can diff against new fetches.
 
 **Option A – One record per feed, set of item IDs (recommended)**

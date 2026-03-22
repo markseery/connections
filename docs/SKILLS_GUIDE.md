@@ -171,8 +171,7 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 | **rss_new_skill** | Fetch new items from a feed list, fetch article content, diff vs storage | `rss_new_and_save_skill`, warmup script |
 | **rss_new_and_save_skill** | Run rss_new_skill and persist new item IDs to storage | `rss_notify_new.py`, warmup script, `cloud_services_notify_multistep.yaml` |
 | **notification_skill** | Send email (SMTP), list/stats | `rss_notify_new.py`, `send_test_email.py`, notify configs |
-| **stored_webscrape_skill** | Crawl a site, store URLs + content in storage; retrieve by base URL; parse combined_text | `website_marketing_analysis.py`, `StoredSiteContent` (common), `site_pages_ai.py`, `site_summarize.yaml` |
-| **webscraper_skill** | Scrape and summarize (markdown, AI summary) | help_skill docs, chatagent |
+| **webscraper_skill** | Single crawler: per-page storage (`webscrape` namespace), job markdown + optional summary, `/pages` CRUD, `/stored` aggregate for tools | `website_marketing_analysis.py`, `StoredSiteContent`, `site_pages_ai.py`, help_skill, chatagent |
 | **help_skill** | List skills, examples, about | Chat/agent UIs |
 | **stock_skill** | Quote, fundamentals, earnings | help_skill, agent |
 | **news_skill** | Search news, topic/stock | help_skill, agent |
@@ -183,9 +182,9 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 Scripts that call skills:
 
 - **scripts/warmup_rss_list.py** – loads `rss_new_and_save_skill`, calls `run` with `list_name`, `warmup=True`.
-- **scripts/site_pages_ai.py** – uses `StoredSiteContent`, which loads `stored_webscrape_skill` and calls `POST /stored` with `base_url` (and optional `max_chars`).
+- **scripts/site_pages_ai.py** – uses `StoredSiteContent`, which loads `webscraper_skill` and calls `POST /stored` with `base_url` (and optional `max_chars`).
 - **rss_notify_new.py** – loads `rss_new_and_save_skill` and `notification_skill`, calls run then send.
-- **website_marketing_analysis.py** – loads `stored_webscrape_skill`, calls `/scrape`, polls `/scrape/{job_id}`, then GET `/stored?base_url=...`.
+- **website_marketing_analysis.py** – loads `webscraper_skill`, calls `/scrape`, polls `/scrape/{job_id}`, then GET `/stored?base_url=...`.
 - **process_rss_feeds.py** – loads `rss_skill`, POST `/feed` with `{"url": ...}`.
 - **scripts/run_agent.py** – loads `agent_skill`, POST `/respond` with `{"prompt": "...", "profile": "agent"}`.
 - **application/run_prompt_with_context.py** – for each skill step: load skill by name, then POST to `/{endpoint}` with `params` as JSON body; optional `output_path` to take a subset of the response.

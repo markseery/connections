@@ -1,7 +1,7 @@
 """
 Retrieve full site content from stored webscrape and iterate over each page.
 
-Uses the worker's stored_webscrape_skill to fetch the stored scrape for a base URL,
+Uses the worker's webscraper_skill (/stored) to fetch stored pages for a base URL,
 then exposes (url, content) pairs one by one. Also supports building from an existing
 combined_text block (e.g. from a prior step that used max_chars).
 """
@@ -17,18 +17,27 @@ def _find_live_worker(*args, **kwargs):
     from .skill_lifecycle import find_live_worker
     return find_live_worker(*args, **kwargs)
 
-STORED_SKILL_NAME = "stored_webscrape_skill"
+STORED_SKILL_NAME = "webscraper_skill"
 DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 FETCH_TIMEOUT = 30.0
 LOAD_SKILL_TIMEOUT = 10.0
 
-# Same format as stored_webscrape_skill combined_text output
+
+def _strip_url_query(url: str) -> str:
+    """Match webscraper_skill: no ?query on sitename lookups."""
+    u = (url or "").strip()
+    q = u.find("?")
+    if q >= 0:
+        u = u[:q]
+    return u
+
+# Same format as webscraper_skill combined_text output
 _PAGE_SEP = "\n\n---\n\n"
 _URL_PREFIX = "URL: "
 
 
 def _parse_combined_text(combined_text: str) -> list[tuple[str, str]]:
-    """Parse combined_text block into (url, content) pairs. Matches stored_webscrape_skill format."""
+    """Parse combined_text block into (url, content) pairs. Matches webscraper_skill format."""
     if not (combined_text or "").strip():
         return []
     segments = combined_text.strip().split(_PAGE_SEP)
@@ -74,7 +83,8 @@ class StoredSiteContent:
         *,
         registry_url: str | None = None,
     ) -> None:
-        self.base_url = (base_url or "").strip().rstrip("/")
+        u = _strip_url_query((base_url or "").strip())
+        self.base_url = u.rstrip("/")
         self._worker_url = (worker_url or "").strip().rstrip("/") if worker_url else None
         self._registry_url = (registry_url or DEFAULT_REGISTRY_URL).rstrip("/")
         self._value: dict[str, Any] | None = None
@@ -100,7 +110,7 @@ class StoredSiteContent:
         return url.rstrip("/")
 
     def _ensure_skill_loaded(self, worker_url: str) -> None:
-        """POST to worker to load stored_webscrape_skill so /skills/.../stored is available."""
+        """POST to worker to load webscraper_skill so /skills/.../stored is available."""
         with httpx.Client(timeout=LOAD_SKILL_TIMEOUT) as client:
             r = client.post(
                 f"{worker_url}/worker/skills/{STORED_SKILL_NAME}/load",
@@ -128,11 +138,13 @@ class StoredSiteContent:
             if r.status_code == 404:
                 raise ValueError(
                     f"No stored scrape found for {self.base_url!r}. "
-                    "Scrape the site first (e.g. stored_webscrape_skill /scrape or website_marketing_analysis.py)."
+                    "Scrape the site first (e.g. webscraper_skill POST /scrape or website_marketing_analysis.py)."
                 )
             r.raise_for_status()
             data = r.json()
         value = data.get("value")
+        if value is None and isinstance(data.get("data"), dict):
+            value = data["data"].get("value")
         if not isinstance(value, dict):
             raise ValueError("Stored scrape response has no value")
         self._value = value

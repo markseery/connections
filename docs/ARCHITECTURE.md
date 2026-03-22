@@ -93,7 +93,7 @@ Examples included:
 - `statistics` (mean/median/stddev)
 - `notification_skill` (SMTP email send, history)
 - `stock_skill` (Yahoo Finance via `yfinance`)
-- `webscraper_skill` (crawl + optional summarize via AI server)
+- `webscraper_skill` (crawl; per-page storage + job markdown + optional summarize via AI server)
 
 ### Skill discovery (agent)
 The agent discovers skills through the configuration server:

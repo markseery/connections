@@ -24,6 +24,10 @@ from servers.agent.skill_discovery import SkillDefinition, SkillRoute, discover_
 WORKER_NAMES = ["worker-1", "worker-2", "worker"]
 _SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"
 
+# Removed from the codebase; delete stale configuration keys so agent/planner
+# do not keep resolving a dead skill module.
+_OBSOLETE_SKILL_CONFIG_NAMES = ("stored_webscrape_skill",)
+
 
 @dataclass
 class SkillLifecycle:
@@ -53,6 +57,7 @@ class SkillLifecycle:
         """
         self._resolve_urls()
         self._find_worker()
+        self._retire_obsolete_skill_configs()
         self._seed_new_skills()
         self._load_and_register()
         return list(self._skills)
@@ -80,6 +85,25 @@ class SkillLifecycle:
         if not url:
             raise RuntimeError("No live worker found in registry")
         self.worker_url = url
+
+    # ── Retire removed skills (config cleanup) ───────────────────────────
+
+    def _retire_obsolete_skill_configs(self) -> None:
+        """DELETE obsolete skill:* records from configuration (best-effort)."""
+        with httpx.Client(timeout=5.0) as client:
+            for name in _OBSOLETE_SKILL_CONFIG_NAMES:
+                try:
+                    r = client.delete(f"{self.config_url}/configs/skill/{name}")
+                    if r.status_code == 200:
+                        print(
+                            f"[skill_lifecycle] removed obsolete config skill:{name}",
+                            flush=True,
+                        )
+                except Exception as exc:
+                    print(
+                        f"[skill_lifecycle] retire skill:{name} failed: {exc}",
+                        flush=True,
+                    )
 
     # ── Auto-seed new skills ────────────────────────────────────────────
 
