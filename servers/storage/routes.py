@@ -46,10 +46,33 @@ def _maybe_encrypt_response(request: Request, payload: Any) -> Any:
 
 
 @router.get("")
-def list_records(request: Request, namespace: str, backend: BackendDep) -> Any:
-    """List all record keys in the namespace."""
+def list_records(
+    request: Request,
+    namespace: str,
+    backend: BackendDep,
+    prefix: str | None = None,
+    include_values: bool = False,
+) -> Any:
+    """List record keys, optionally filtered by prefix and optionally with values.
+
+    Query params:
+      prefix  – only return keys starting with this string
+      include_values – if true, return full record values alongside keys
+    """
     keys = backend.list_keys(namespace)
-    return _maybe_encrypt_response(request, {"namespace": namespace, "keys": keys})
+    if prefix:
+        keys = [k for k in keys if k.startswith(prefix)]
+    if not include_values:
+        return _maybe_encrypt_response(request, {"namespace": namespace, "keys": keys})
+    records: dict[str, Any] = {}
+    for k in keys:
+        val = get_json(backend, namespace, k)
+        if val is not None:
+            records[k] = val
+    return _maybe_encrypt_response(
+        request,
+        {"namespace": namespace, "keys": keys, "records": records},
+    )
 
 
 @router.get("/{key:path}")

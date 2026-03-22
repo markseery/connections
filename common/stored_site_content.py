@@ -20,7 +20,6 @@ def _find_live_worker(*args, **kwargs):
 STORED_SKILL_NAME = "webscraper_skill"
 DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 FETCH_TIMEOUT = 30.0
-LOAD_SKILL_TIMEOUT = 10.0
 
 
 def _strip_url_query(url: str) -> str:
@@ -109,45 +108,31 @@ class StoredSiteContent:
             raise RuntimeError("No live worker found in registry")
         return url.rstrip("/")
 
-    def _ensure_skill_loaded(self, worker_url: str) -> None:
-        """POST to worker to load webscraper_skill so /skills/.../stored is available."""
-        with httpx.Client(timeout=LOAD_SKILL_TIMEOUT) as client:
-            r = client.post(
-                f"{worker_url}/worker/skills/{STORED_SKILL_NAME}/load",
-            )
-            r.raise_for_status()
-
     def load(self) -> None:
-        """Fetch stored scrape for base_url from the worker. Idempotent."""
+        """Fetch stored pages for base_url via webscraper_skill GET /pages/content. Idempotent."""
         if self._pages is not None:
             return  # from_combined_text; nothing to load
         worker_url = self._get_worker_url()
-        self._ensure_skill_loaded(worker_url)
         with httpx.Client(timeout=FETCH_TIMEOUT) as client:
-            r = client.post(
-                f"{worker_url}/skills/{STORED_SKILL_NAME}/stored",
-                json={"base_url": self.base_url},
+            r = client.get(
+                f"{worker_url}/skills/{STORED_SKILL_NAME}/pages/content",
+                params={"sitename": self.base_url},
             )
-            if r.status_code == 404:
-                # Retry once after loading: worker may have multiple processes and load hit another process
-                self._ensure_skill_loaded(worker_url)
-                r = client.post(
-                    f"{worker_url}/skills/{STORED_SKILL_NAME}/stored",
-                    json={"base_url": self.base_url},
-                )
             if r.status_code == 404:
                 raise ValueError(
                     f"No stored scrape found for {self.base_url!r}. "
-                    "Scrape the site first (e.g. webscraper_skill POST /scrape or website_marketing_analysis.py)."
+                    "Scrape the site first (e.g. webscraper_skill POST /scrape)."
                 )
             r.raise_for_status()
             data = r.json()
-        value = data.get("value")
-        if value is None and isinstance(data.get("data"), dict):
-            value = data["data"].get("value")
-        if not isinstance(value, dict):
-            raise ValueError("Stored scrape response has no value")
-        self._value = value
+
+        combined = data.get("data", {}).get("combined_text") or data.get("combined_text") or ""
+        self._pages = _parse_combined_text(combined)
+        if not self._pages:
+            raise ValueError(
+                f"No stored pages found for {self.base_url!r}. "
+                "Scrape the site first (e.g. webscraper_skill POST /scrape)."
+            )
 
     def _content_by_url(self) -> dict[str, str]:
         if self._pages is not None:

@@ -220,13 +220,6 @@ def _send_new_urls_notification(
     )
     try:
         with httpx.Client(timeout=25.0) as client:
-            load_r = client.post(f"{worker_url}/worker/skills/notification_skill/load")
-            if not load_r.is_success:
-                print(
-                    f"[webscraper_skill] notification_skill load failed: {load_r.status_code} {load_r.text}",
-                    flush=True,
-                )
-                return
             r = client.post(
                 f"{worker_url}/skills/notification_skill/send",
                 json={
@@ -491,7 +484,6 @@ def _text_skill_summarize(text: str, topic: str, style: str = "bullets") -> str:
         raise RuntimeError("No live worker available for text_skill summarization")
     worker_url = worker_url.rstrip("/")
     with httpx.Client(timeout=120.0) as client:
-        client.post(f"{worker_url}/worker/skills/text_skill/load", timeout=10.0)
         r = client.post(
             f"{worker_url}/skills/text_skill/summarize",
             json={"text": text, "topic": topic, "style": style},

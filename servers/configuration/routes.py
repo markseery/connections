@@ -54,6 +54,18 @@ def list_configs(request: Request) -> Any:
     return _maybe_encrypt_response(request, {"keys": keys})
 
 
+@router.get("/{resource_type}")
+def list_configs_by_type(request: Request, resource_type: str) -> Any:
+    """Return all config records for a resource type in a single call (e.g. GET /configs/skill)."""
+    prefix = f"{resource_type}:"
+    raw_records = _client(request).list_records(prefix=prefix)
+    records: dict[str, Any] = {}
+    for k, val in raw_records.items():
+        name = k.split(":", 1)[1] if ":" in k else k
+        records[name] = val
+    return _maybe_encrypt_response(request, {"records": records})
+
+
 @router.get("/{resource_type}/{resource_name}")
 def get_config(request: Request, resource_type: str, resource_name: str) -> Any:
     k = _key(resource_type, resource_name)

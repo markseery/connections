@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Process each page of a stored site through the AI server with a given prompt.
+Process pages of a stored site through the AI server with a given prompt.
 
-Gets pages via StoredSiteContent (worker + webscraper_skill), sends each page
-to the aiserver /generate with the provided prompt and profile=agent, prints each response.
+Gets pages via StoredSiteContent (worker + webscraper_skill), batches them,
+sends each batch to the aiserver /generate with the provided prompt, prints each response.
 
 Usage:
   python scripts/site_pages_ai.py https://example.com "Summarize this page in one paragraph."
   python scripts/site_pages_ai.py https://example.com "List key facts." --max-pages 5
   python scripts/site_pages_ai.py https://example.com "Extract facts." --taxonomy fact_taxonomy.yaml
-  python scripts/site_pages_ai.py https://example.com "Extract product names." --registry-url http://127.0.0.1:7002
+  python scripts/site_pages_ai.py https://example.com "Extract facts." --batch-size 10
+  python scripts/site_pages_ai.py https://example.com "Extract facts." --batch-size 20 --max-context-chars 60000
 
 Requires: registry, worker (webscraper_skill), aiserver. Site must already be scraped and stored.
 """
@@ -41,6 +42,8 @@ TAXONOMY_DIR = ROOT / "data" / "taxonomy"
 FACTS_OUTPUT_DIR = ROOT / "data" / "facts"
 AI_TIMEOUT = 300.0
 PROFILE = "agent"
+DEFAULT_BATCH_SIZE = 1
+DEFAULT_MAX_CONTEXT_CHARS = 80_000
 
 
 def load_taxonomy(path: Path) -> dict[str, Any]:
@@ -81,6 +84,23 @@ def taxonomy_to_prompt_instruction(taxonomy: dict[str, Any]) -> str:
         return ""
     lines.append("")
     return "\n".join(lines)
+
+
+def _list_available_sites(worker_or_registry_url: str, registry_url: str) -> list[str]:
+    """Best-effort fetch of stored site names from webscraper_skill."""
+    try:
+        from common.skill_lifecycle import find_live_worker
+        wurl = find_live_worker(registry_url)
+        if not wurl:
+            return []
+        with httpx.Client(timeout=5.0) as client:
+            r = client.get(f"{wurl.rstrip('/')}/skills/webscraper_skill/sites")
+            if r.status_code != 200:
+                return []
+            items = r.json().get("items") or []
+            return [it.get("title") or it.get("link") or "" for it in items if isinstance(it, dict)]
+    except Exception:
+        return []
 
 
 def get_aiserver_url(registry_url: str) -> str:
@@ -208,6 +228,28 @@ def parse_facts_json(raw: str) -> list[dict[str, Any]]:
     return facts
 
 
+def _build_batches(
+    pages: list[tuple[str, str]],
+    batch_size: int,
+    max_context_chars: int,
+) -> list[list[tuple[str, str]]]:
+    """Group pages into batches respecting both batch_size and max_context_chars."""
+    batches: list[list[tuple[str, str]]] = []
+    current: list[tuple[str, str]] = []
+    current_chars = 0
+    for url, content in pages:
+        page_chars = len(url) + len(content) + 30
+        if current and (len(current) >= batch_size or current_chars + page_chars > max_context_chars):
+            batches.append(current)
+            current = []
+            current_chars = 0
+        current.append((url, content))
+        current_chars += page_chars
+    if current:
+        batches.append(current)
+    return batches
+
+
 def _fact_canonical(fact: dict[str, Any]) -> str:
     """Canonical string for deduplication (sorted keys, stable repr)."""
     return json.dumps(fact, sort_keys=True, ensure_ascii=False)
@@ -248,6 +290,20 @@ def main() -> int:
         metavar="FILE",
         help="Write deduplicated facts to this JSON file (default: data/facts/<site>_facts_<timestamp>.json)",
     )
+    ap.add_argument(
+        "--batch-size",
+        type=int,
+        default=DEFAULT_BATCH_SIZE,
+        metavar="N",
+        help=f"Pages per AI call (default: {DEFAULT_BATCH_SIZE}). Higher = fewer calls, but larger context.",
+    )
+    ap.add_argument(
+        "--max-context-chars",
+        type=int,
+        default=DEFAULT_MAX_CONTEXT_CHARS,
+        metavar="CHARS",
+        help=f"Max context chars per batch (default: {DEFAULT_MAX_CONTEXT_CHARS}). Batch is sent early if exceeded.",
+    )
     args = ap.parse_args()
 
     taxonomy_instruction = ""
@@ -286,7 +342,12 @@ def main() -> int:
     try:
         content.load()
     except Exception as e:
-        print(f"Load stored site: {e}", file=sys.stderr)
+        available = _list_available_sites(worker_url or registry_url, registry_url)
+        print(f"Error: {e}", file=sys.stderr)
+        if available:
+            print(f"Available sites: {', '.join(available)}", file=sys.stderr)
+        else:
+            print("No stored sites found. Scrape a site first (webscraper_skill POST /scrape).", file=sys.stderr)
         return 1
 
     total = len(content)
@@ -298,33 +359,53 @@ def main() -> int:
     if max_pages is not None and max_pages < 1:
         max_pages = None
     limit = max_pages if max_pages is not None else total
+    batch_size = max(1, args.batch_size)
+    max_context = max(1000, args.max_context_chars)
+
+    pages: list[tuple[str, str]] = []
+    for i, (url, page_content) in enumerate(content):
+        if i >= limit:
+            break
+        pages.append((url, page_content or ""))
+
+    batches = _build_batches(pages, batch_size, max_context)
+    print(f"[site_pages_ai] {len(pages)} pages → {len(batches)} batch(es) (batch_size={batch_size}, max_context={max_context})", flush=True)
 
     all_facts: list[dict[str, Any]] = []
     seen_canonical: set[str] = set()
 
-    for i, (url, page_content) in enumerate(content):
-        if i >= limit:
-            break
+    page_offset = 0
+    for bi, batch in enumerate(batches):
+        context_blocks: list[str] = []
+        for url, page_content in batch:
+            context_blocks.append(f"URL: {url}\n\n{page_content}")
+        context_text = "\n\n--- Next Page ---\n\n".join(context_blocks)
+        page_start = page_offset + 1
+        page_end = page_offset + len(batch)
+        page_offset = page_end
+
         full_prompt = (
-            "Use the following context when answering.\n\n"
+            "Use the following context when answering. "
+            f"The context contains {len(batch)} page(s) from {site}.\n\n"
             "--- Context ---\n"
-            f"URL: {url}\n\n{page_content or ''}\n\n"
+            f"{context_text}\n\n"
             "--- End context ---\n\n"
             f"{prompt_text}"
             f"{taxonomy_instruction}"
         )
+        label = f"Batch {bi + 1}/{len(batches)} (pages {page_start}-{page_end})"
         try:
             response = call_ai(aiserver_url, full_prompt, PROFILE)
             text = extract_text(response)
         except Exception as e:
-            print(f"[{url}] Error: {e}", file=sys.stderr)
+            urls = [u for u, _ in batch]
+            print(f"[{label}] Error: {e} — urls: {urls}", file=sys.stderr)
             print()
             continue
-        print(f"--- Page {i + 1}/{limit}: {url} ---")
+        print(f"--- {label} ---")
         print(text)
         print()
 
-        # Extract facts and merge into all_facts (deduplicate)
         facts = parse_facts_json(text)
         for fact in facts:
             canonical = _fact_canonical(fact)

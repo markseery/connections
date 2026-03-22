@@ -251,7 +251,6 @@ class WorkflowExecutor:
             output_path = str(output_path).strip() or None
 
         wurl = self._get_worker_url()
-        _ensure_skill_loaded(wurl, skill_name)
 
         step_timeout = step.get("timeout")
         if isinstance(step_timeout, (int, float)) and step_timeout > 0:
@@ -343,12 +342,6 @@ def _write_step_report(config_stem: str, run_ts: str, step_num: int, step_id: st
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     path = REPORTS_DIR / f"{config_stem}_{run_ts}_step{step_num}_{step_id}.txt"
     path.write_text(text, encoding="utf-8")
-
-
-def _ensure_skill_loaded(worker_url: str, skill_name: str) -> None:
-    with http_client("inter_service") as client:
-        r = client.post(f"{worker_url.rstrip('/')}/worker/skills/{skill_name}/load")
-        r.raise_for_status()
 
 
 def _build_context(files: list[str], base_dir: Path) -> str:

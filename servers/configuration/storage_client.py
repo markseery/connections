@@ -36,13 +36,28 @@ class StorageClient:
             return self._enc.decrypt_json(payload["_enc"])
         return payload
 
-    def list_keys(self) -> list[str]:
+    def list_keys(self, prefix: str | None = None) -> list[str]:
         url = f"{self._base_url}/namespaces/{SYSTEM_NAMESPACE}/records"
+        params: dict[str, str] = {}
+        if prefix:
+            params["prefix"] = prefix
         with httpx.Client(timeout=10.0) as client:
-            r = client.get(url, headers=self._headers())
+            r = client.get(url, headers=self._headers(), params=params)
             r.raise_for_status()
             data = self._decrypt_payload(r.json())
             return list(data.get("keys", []))
+
+    def list_records(self, prefix: str | None = None) -> dict[str, Any]:
+        """Fetch all records (keys + values) in a single request, optionally filtered by prefix."""
+        url = f"{self._base_url}/namespaces/{SYSTEM_NAMESPACE}/records"
+        params: dict[str, str] = {"include_values": "true"}
+        if prefix:
+            params["prefix"] = prefix
+        with httpx.Client(timeout=15.0) as client:
+            r = client.get(url, headers=self._headers(), params=params)
+            r.raise_for_status()
+            data = self._decrypt_payload(r.json())
+            return dict(data.get("records") or {})
 
     def get_record(self, key: str) -> dict[str, Any] | None:
         url = f"{self._base_url}/namespaces/{SYSTEM_NAMESPACE}/records/{key}"

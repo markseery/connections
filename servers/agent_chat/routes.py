@@ -144,6 +144,9 @@ def _build_output_from_result(result: dict[str, Any]) -> SkillOutput:
                 all_items.extend(rd["items"])
             combined_data[sr.get("skill_name", "step")] = rd
 
+    if len(summaries) == 1 and len(summaries[0]) >= 300 and summaries[0].count("\n") >= 3:
+        return SkillOutput(summary=summaries[0], data=combined_data)
+
     summary = objective
     if summaries:
         summary = (objective + " — " if objective else "") + " | ".join(summaries)

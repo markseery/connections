@@ -78,15 +78,6 @@ def run(body: RunRequest) -> dict[str, Any]:
             raise HTTPException(status_code=503, detail="No live worker in registry")
         worker_url = w.rstrip("/")
 
-    # Single source of truth: call rss_new_skill
-    t0 = time.perf_counter()
-    with httpx.Client(timeout=_conf.get("worker_load_timeout", 10.0)) as client:
-        r = client.post(f"{worker_url}/worker/skills/rss_new_skill/load")
-        if not r.is_success:
-            raise HTTPException(status_code=503, detail=f"Failed to load rss_new_skill: {r.text}")
-    elapsed = time.perf_counter() - t0
-    print(f"[rss_new_and_save_skill] Load rss_new_skill in {elapsed:.2f}s", file=sys.stderr, flush=True)
-
     payload = {
         "list_name": list_name,
         "dry_run": dry_run,

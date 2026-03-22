@@ -37,10 +37,14 @@ def list_loaded_skills(request: Request) -> dict[str, Any]:
 
 @router.get("/skills/{skill_name}/routes")
 def skill_routes(request: Request, skill_name: str) -> dict[str, Any]:
-    """Return route metadata for a loaded skill."""
+    """Return route metadata for a loaded skill (auto-loads if needed)."""
     name = skill_name.strip()
-    if not _mgr(request).is_loaded(name):
-        raise HTTPException(status_code=404, detail=f"Skill '{name}' is not loaded")
+    mgr = _mgr(request)
+    if not mgr.is_loaded(name):
+        try:
+            mgr.load(name)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Failed to load skill '{name}': {exc}") from exc
     prefix = f"/skills/{name}"
     routes: list[dict[str, str]] = []
     for route in request.app.routes:

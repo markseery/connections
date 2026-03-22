@@ -116,25 +116,6 @@ def _execute_step(
     base = skill.base_url.rstrip("/")
     url = f"{base}{path}"
 
-    def _ensure_skill_loaded(client: httpx.Client) -> None:
-        """Check worker's loaded list; load skill if not already loaded (same as scripts)."""
-        try:
-            r = client.get(f"{base}/worker/skills", timeout=min(10.0, timeout))
-            if r.status_code != 200:
-                return
-            data = r.json() or {}
-            loaded = data.get("loaded") or []
-            if any(str(s.get("skill_name")) == step.skill_name for s in loaded):
-                return
-            load_r = client.post(
-                f"{base}/worker/skills/{step.skill_name}/load",
-                timeout=min(15.0, timeout),
-            )
-            if load_r.status_code >= 400:
-                print(f"[executor] load {step.skill_name} returned {load_r.status_code}", flush=True)
-        except Exception as exc:
-            print(f"[executor] ensure_skill_loaded {step.skill_name} failed: {exc}", flush=True)
-
     def _do_request(client: httpx.Client) -> tuple[int, Any, str]:
         r = client.request(
             step.method.upper(),
@@ -150,7 +131,6 @@ def _execute_step(
 
     try:
         with httpx.Client(timeout=timeout) as client:
-            _ensure_skill_loaded(client)
             status_code, response_data, error_text = _do_request(client)
 
         duration_ms = (time.monotonic() - start) * 1000

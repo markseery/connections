@@ -55,12 +55,6 @@ def get_aiserver_url(registry_url: str) -> str:
         return str(url).rstrip("/")
 
 
-def ensure_skill_loaded(client: httpx.Client, worker_url: str) -> None:
-    r = client.post(f"{worker_url}/worker/skills/{SKILL}/load")
-    if not r.is_success:
-        raise RuntimeError(f"Failed to load {SKILL}: {r.status_code} {r.text}")
-
-
 def combined_text_from_skill_response(payload: dict) -> str:
     data = payload.get("data") if isinstance(payload.get("data"), dict) else {}
     return str(data.get("combined_text") or "").strip()
@@ -169,7 +163,6 @@ def main() -> int:
     try:
         aiserver_url = get_aiserver_url(args.registry_url)
         with httpx.Client(timeout=120.0) as client:
-            ensure_skill_loaded(client, worker_url)
             context, label = fetch_content(
                 client,
                 worker_url,

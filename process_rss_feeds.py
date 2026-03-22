@@ -57,12 +57,6 @@ def _worker_url() -> str:
     return url.rstrip("/")
 
 
-def _ensure_skill_loaded(worker_url: str) -> None:
-    with httpx.Client(timeout=10.0) as client:
-        r = client.post(f"{worker_url}/worker/skills/rss_skill/load")
-        r.raise_for_status()
-
-
 def fetch_feed(worker_url: str, feed_url: str) -> dict[str, Any]:
     """Call rss_skill to fetch and parse one feed. Returns normalized JSON or error payload."""
     with httpx.Client(timeout=FEED_TIMEOUT) as client:
@@ -107,7 +101,6 @@ def main() -> int:
         print(f"Error: {e}", file=sys.stderr)
         return 1
 
-    _ensure_skill_loaded(worker_url)
     feeds = args.feeds if args.feeds else DEFAULT_FEEDS
     print(f"Processing {len(feeds)} feed(s) via {worker_url} ...", flush=True)
 

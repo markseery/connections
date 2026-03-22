@@ -128,8 +128,6 @@ class SkillLifecycle:
 
         with httpx.Client(timeout=10.0) as client:
             for name in new_names:
-                if not _load_skill(client, self.worker_url, name):
-                    continue
                 routes = _worker_skill_routes(client, self.worker_url, name)
                 if not routes:
                     continue
@@ -146,8 +144,6 @@ class SkillLifecycle:
         live: list[SkillDefinition] = []
         with httpx.Client(timeout=5.0) as client:
             for sk in raw:
-                if not _load_skill(client, self.worker_url, sk.skill_name):
-                    continue
                 fresh_routes = _worker_skill_routes(
                     client, self.worker_url, sk.skill_name
                 )
@@ -193,9 +189,8 @@ def find_live_worker(
 
 
 def load_skill(worker_url: str, skill_name: str) -> bool:
-    """POST /worker/skills/{skill_name}/load on the given worker. Returns success."""
-    with httpx.Client(timeout=5.0) as client:
-        return _load_skill(client, worker_url, skill_name)
+    """Kept for backward compatibility; with auto-load middleware this is a no-op."""
+    return True
 
 
 def register_skill(

@@ -58,12 +58,6 @@ def _urls_from_pages_response(payload: dict) -> list[str]:
     return sorted({str(u).strip() for u in raw if str(u).strip()})
 
 
-def ensure_skill_loaded(client: httpx.Client, worker_url: str) -> None:
-    r = client.post(f"{worker_url}/worker/skills/{SKILL}/load")
-    if not r.is_success:
-        raise RuntimeError(f"Failed to load {SKILL}: {r.status_code} {r.text}")
-
-
 def fetch_stored_urls(client: httpx.Client, worker_url: str, namespace: str, sitename: str) -> list[str]:
     q = urlencode({"sitename": sitename, "namespace": namespace})
     r = client.get(f"{worker_url}/skills/{SKILL}/pages/urls?{q}")
@@ -125,8 +119,6 @@ def main() -> int:
 
     try:
         with httpx.Client(timeout=120.0) as client:
-            ensure_skill_loaded(client, worker_url)
-
             if url_arg == ALL_URLS_SENTINEL:
                 urls = fetch_stored_urls(client, worker_url, namespace, sitename)
                 if not urls:

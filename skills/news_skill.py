@@ -75,10 +75,10 @@ def news_search(body: SearchRequest) -> dict[str, Any]:
     )
 
     summary = _summarize_articles(query, merged)
+    formatted = _format_response(query, summary, merged)
 
     return skill_result(
-        summary=summary,
-        items=merged,
+        summary=formatted,
         query=query,
         symbol=symbol or None,
         sources={
@@ -305,6 +305,56 @@ def _summarize_articles(query: str, articles: list[dict[str, Any]]) -> str:
     text = (data.get("output") or {}).get("text", "").strip()
     print(f"[news_skill] summary OK: {len(text)} chars", flush=True)
     return text
+
+
+def _format_response(query: str, summary: str, articles: list[dict[str, Any]]) -> str:
+    """Send the aggregated summary + articles through AI for structured markdown formatting."""
+    if not summary and not articles:
+        return ""
+    aiserver_url = _get_aiserver_url()
+    if not aiserver_url:
+        return summary
+
+    citations = []
+    for a in articles:
+        title = a.get("title", "")
+        link = a.get("link", "")
+        publisher = a.get("publisher", "")
+        if title and link:
+            label = f"{title} ({publisher})" if publisher else title
+            citations.append(f"- [{label}]({link})")
+        elif title:
+            citations.append(f"- {title}")
+
+    content = summary
+    if citations:
+        content += "\n\nSources:\n" + "\n".join(citations)
+
+    prompt = (
+        f"For your information, this was the requestor's original prompt: {query}\n\n"
+        "Summarize and format this content for structured and attractive "
+        "presentation in markdown format. At the end of the content add a "
+        "list of hyperlinked citations that were originally in the content.\n\n"
+        + content
+    )
+
+    try:
+        with httpx.Client(timeout=_conf.get("ai_format_timeout", 30.0)) as client:
+            r = client.post(
+                f"{aiserver_url}/generate",
+                json={"prompt": prompt, "profile": "fast"},
+            )
+            if r.status_code != 200:
+                print(f"[news_skill] format FAIL: status {r.status_code}", flush=True)
+                return summary
+            data = r.json()
+    except Exception as exc:
+        print(f"[news_skill] format ERROR: {exc}", flush=True)
+        return summary
+
+    text = (data.get("output") or {}).get("text", "").strip()
+    print(f"[news_skill] format OK: {len(text)} chars", flush=True)
+    return text or summary
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────

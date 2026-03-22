@@ -32,7 +32,6 @@ from common.skill_lifecycle import find_live_worker
 
 SKILL_NAME = "rss_new_and_save_skill"
 SKILL_TIMEOUT = 600.0
-LOAD_TIMEOUT = 10.0
 
 
 def get_worker_url(registry_url: str) -> str:
@@ -40,12 +39,6 @@ def get_worker_url(registry_url: str) -> str:
     if not url:
         raise SystemExit("No live worker found in registry")
     return url.rstrip("/")
-
-
-def ensure_skill_loaded(worker_url: str) -> None:
-    with httpx.Client(timeout=LOAD_TIMEOUT) as client:
-        r = client.post(f"{worker_url}/worker/skills/{SKILL_NAME}/load")
-        r.raise_for_status()
 
 
 def run_fetch_and_save(worker_url: str, list_name: str, debug: bool = True) -> dict:
@@ -105,13 +98,6 @@ def main() -> int:
         print(f"Using worker: {worker_url}", file=sys.stderr)
 
     print(f"[warmup] List: {list_name}", file=sys.stderr, flush=True)
-    t0 = time.perf_counter()
-    try:
-        ensure_skill_loaded(worker_url)
-    except Exception as e:
-        print(f"[warmup] Failed to load {SKILL_NAME}: {e}", file=sys.stderr)
-        return 1
-    print(f"[warmup] Skill load in {time.perf_counter() - t0:.2f}s", file=sys.stderr, flush=True)
 
     round_num = 0
     total_saved = 0

@@ -39,14 +39,7 @@ def get_worker_url(registry_url: str, worker_url: str | None) -> str:
     return url.rstrip("/")
 
 
-def ensure_notification_skill_loaded(worker_url: str) -> None:
-    with httpx.Client(timeout=10.0) as client:
-        r = client.post(f"{worker_url}/worker/skills/notification_skill/load")
-        r.raise_for_status()
-
-
 def send_test_email(worker_url: str, to_email: str, include_html: bool = True) -> dict:
-    ensure_notification_skill_loaded(worker_url)
     with httpx.Client(timeout=TIMEOUT) as client:
         r = client.post(
             f"{worker_url}/skills/notification_skill/send/test",

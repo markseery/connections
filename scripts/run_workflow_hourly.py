@@ -53,20 +53,8 @@ def main() -> None:
 
     template = httpx.get(f"{worker}/skills/workflow_skill/templates/{args.name}", timeout=10)
     if template.status_code == 404:
-        httpx.post(f"{worker}/worker/skills/workflow_skill/load", timeout=10)
-        template = httpx.get(f"{worker}/skills/workflow_skill/templates/{args.name}", timeout=10)
-    if template.status_code == 404:
         print(f"Workflow template '{args.name}' not found", file=sys.stderr)
         sys.exit(1)
-
-    skills_needed = {s.get("skill", "") for s in (template.json() or {}).get("data", {}).get("steps", [])}
-    skills_needed.add("workflow_skill")
-    skills_needed.discard("")
-    for skill in sorted(skills_needed):
-        try:
-            httpx.post(f"{worker}/worker/skills/{skill}/load", timeout=10)
-        except Exception as exc:
-            print(f"  Warning: failed to load {skill}: {exc}", flush=True)
 
     if args.once:
         print(f"Running '{args.name}' once ...", flush=True)

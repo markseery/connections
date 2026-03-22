@@ -72,9 +72,11 @@ This project is a small, local-first “agentic framework” built from multiple
 
 ### Worker server (`servers/worker`)
 - Purpose: dynamically load skill modules from `./skills` and expose them under `/skills/<skill_name>/...`
-- Skill management routes:
-  - `POST /worker/skills/{skill_name}/load`
-  - `GET /worker/skills` (loaded skills)
+- Skills are **auto-loaded on first request** via middleware — no explicit load call needed
+- Skill management routes (mostly for introspection):
+  - `GET /worker/skills` (list loaded skills)
+  - `GET /worker/skills/{skill_name}/routes` (auto-loads if needed)
+  - `POST /worker/skills/{skill_name}/load` (explicit load, rarely needed)
 - Workers load `.env` at startup so skills can read configuration like SMTP credentials.
 
 ---

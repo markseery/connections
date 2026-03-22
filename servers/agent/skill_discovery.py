@@ -1,8 +1,11 @@
 """
 License: MIT
 Description: Discover agent skills from the configuration server. Skill configs are
-stored as resource_type=skill, resource_name=<name>; value can include server_name
-(resolve URL via registry) or base_url, plus routes.
+stored as resource_type=skill, resource_name=<name>; value includes routes.
+
+The base_url for every skill is resolved from the registry (live worker) rather
+than trusting the value stored in config, which can go stale when workers restart
+on different ports.
 """
 
 from __future__ import annotations
@@ -15,6 +18,8 @@ from typing import Any
 import httpx
 
 from .config import get_config_server_url, get_registry_url
+
+WORKER_NAMES = ["worker-1", "worker-2", "worker"]
 
 
 @dataclass
@@ -37,9 +42,30 @@ _cache_time: float = 0.0
 _CACHE_TTL: float = 60.0
 
 
+def _find_live_worker(registry_url: str) -> str | None:
+    """Return the URL of the first healthy worker found in the registry."""
+    with httpx.Client(timeout=3.0) as client:
+        for name in WORKER_NAMES:
+            try:
+                r = client.get(f"{registry_url}/servers/{name}")
+                if r.status_code != 200:
+                    continue
+                url = ((r.json() or {}).get("url") or "").rstrip("/")
+                if not url:
+                    continue
+                h = client.get(f"{url}/health")
+                if h.status_code == 200:
+                    return url
+            except Exception:
+                continue
+    return None
+
+
 def discover_skills(config_url: str | None = None, registry_url: str | None = None) -> list[SkillDefinition]:
     """
-    List config keys, filter skill:*, fetch each config, resolve base_url via registry.
+    List config keys, filter skill:*, fetch each config, resolve base_url from
+    the live worker in the registry.
+
     Results are cached for _CACHE_TTL seconds to avoid redundant HTTP calls when
     multiple subagents discover skills within a short window.
     """
@@ -52,43 +78,24 @@ def discover_skills(config_url: str | None = None, registry_url: str | None = No
     config_url = config_url or get_config_server_url()
     registry_url = registry_url or get_registry_url()
 
+    worker_url = _find_live_worker(registry_url)
+    if not worker_url:
+        print("[skill_discovery] no live worker found in registry", flush=True)
+        return []
+
     with httpx.Client(timeout=10.0) as client:
-        r = client.get(f"{config_url}/configs")
+        r = client.get(f"{config_url}/configs/skill")
         r.raise_for_status()
         data = r.json()
-        keys = data.get("keys") or []
+        all_records: dict[str, Any] = data.get("records") or {}
 
     skills: list[SkillDefinition] = []
-    for key in keys:
-        if not isinstance(key, str) or not key.startswith("skill:"):
+    for skill_name, rec in all_records.items():
+        if not skill_name:
             continue
-        parts = key.split(":", 1)
-        resource_type = parts[0]
-        resource_name = parts[1] if len(parts) > 1 else ""
-        if not resource_name:
-            continue
-
-        with httpx.Client(timeout=5.0) as client:
-            r = client.get(f"{config_url}/configs/{resource_type}/{resource_name}")
-            if r.status_code == 404:
-                continue
-            r.raise_for_status()
-            rec = r.json()
 
         value = rec.get("value") if isinstance(rec.get("value"), dict) else rec
         if not value:
-            continue
-
-        base_url = value.get("base_url", "").strip()
-        if not base_url and value.get("server_name"):
-            server_name = value.get("server_name", "").strip()
-            if server_name:
-                with httpx.Client(timeout=5.0) as client:
-                    rr = client.get(f"{registry_url}/servers/{server_name}")
-                    if rr.status_code != 200:
-                        continue
-                    base_url = (rr.json().get("url") or "").rstrip("/")
-        if not base_url:
             continue
 
         routes: list[SkillRoute] = []
@@ -103,8 +110,8 @@ def discover_skills(config_url: str | None = None, registry_url: str | None = No
                 )
         skills.append(
             SkillDefinition(
-                skill_name=resource_name,
-                base_url=base_url,
+                skill_name=skill_name,
+                base_url=worker_url,
                 routes=routes,
             )
         )

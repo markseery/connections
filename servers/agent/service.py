@@ -334,13 +334,22 @@ def _build_answer(
     step_results: list[StepResult],
     partial: bool,
 ) -> str:
-    """Build a concise natural-language summary from step results.
+    """Build a human-readable answer from step results.
 
-    The full structured data is available in AgentExecutionResult.step_results;
-    this text is only for human-readable context (e.g. memory, direct display).
+    If a single step returned a rich formatted summary (multi-line markdown),
+    use it directly as the answer — no prefixes, no item detail appended.
+    Otherwise, assemble objective + per-step summaries + item detail.
     """
     ok = [r for r in step_results if not r.error]
     failed = [r for r in step_results if r.error]
+
+    if len(ok) == 1 and not failed:
+        summary = ""
+        if isinstance(ok[0].response_data, dict):
+            summary = ok[0].response_data.get("summary", "")
+        if _is_rich_summary(summary):
+            return summary
+
     parts: list[str] = []
     if plan.objective:
         parts.append(plan.objective)
@@ -352,9 +361,48 @@ def _build_answer(
             parts.append(f"{r.skill_name}: {summary}")
         else:
             parts.append(f"{r.skill_name} ({r.method} {r.path}): completed.")
+        if isinstance(r.response_data, dict):
+            detail = _extract_detail(r.response_data)
+            if detail:
+                parts.append(detail)
     if failed:
         for r in failed:
             parts.append(f"{r.skill_name}: failed — {r.error}")
     if partial:
         parts.append("(Partial result — some steps failed.)")
     return "\n".join(parts)
+
+
+_RICH_SUMMARY_MIN_LENGTH = 300
+_RICH_SUMMARY_MIN_LINES = 3
+
+
+def _is_rich_summary(summary: str) -> bool:
+    """True when the summary is a substantive, multi-line formatted response
+    that should be used as the complete answer without extra decoration."""
+    return (
+        bool(summary)
+        and len(summary) >= _RICH_SUMMARY_MIN_LENGTH
+        and summary.count("\n") >= _RICH_SUMMARY_MIN_LINES
+    )
+
+
+def _extract_detail(data: dict) -> str:
+    """Pull human-readable detail from items, text, or data fields."""
+    lines: list[str] = []
+    items = data.get("items")
+    if isinstance(items, list) and items:
+        for item in items:
+            if isinstance(item, dict):
+                title = item.get("title") or item.get("name") or ""
+                desc = item.get("summary") or item.get("description") or ""
+                if title and desc:
+                    lines.append(f"  - {title}: {desc}")
+                elif title:
+                    lines.append(f"  - {title}")
+            elif isinstance(item, str):
+                lines.append(f"  - {item}")
+    text = data.get("text")
+    if isinstance(text, str) and text.strip():
+        lines.append(text.strip())
+    return "\n".join(lines)

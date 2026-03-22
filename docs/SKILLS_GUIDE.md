@@ -10,7 +10,7 @@ A **skill** is a Python module in the `skills/` directory that the **worker serv
 
 - **Base path:** `{worker_url}/skills/{skill_name}/...`
 
-For example, the `rss_skill` module exposes `/skills/rss_skill/feed` (GET and POST). The worker does not start with any skills loaded; callers must **load** a skill first, then call its endpoints. After a worker restart, all skills are unloaded again (404 until load is called).
+For example, the `rss_skill` module exposes `/skills/rss_skill/feed` (GET and POST). Skills are **auto-loaded on first request** — the worker middleware detects the skill name from the URL path and loads the module before routing the request. No explicit load call is needed.
 
 ---
 
@@ -21,9 +21,9 @@ The worker exposes these routes under the `/worker` prefix:
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/worker/skills` | List currently loaded skills |
-| GET | `/worker/skills/{skill_name}/routes` | List routes for a loaded skill (404 if not loaded) |
-| POST | `/worker/skills/{skill_name}/load` | Load a skill by name (idempotent if already loaded) |
-| POST | `/worker/skills/load` | Load a skill from JSON body `{"skill_name": "..."}` |
+| GET | `/worker/skills/{skill_name}/routes` | List routes for a skill (auto-loads if needed) |
+| POST | `/worker/skills/{skill_name}/load` | Explicitly load a skill by name (idempotent; rarely needed since auto-load handles this) |
+| POST | `/worker/skills/load` | Load a skill from JSON body `{"skill_name": "..."}` (rarely needed) |
 
 **Skill name** is the module name under `skills/` (e.g. `rss_skill` for `skills/rss_skill.py`).
 
@@ -86,7 +86,7 @@ Requires: registry, storage (optional), worker (for other skills).
 
 ### 5. No need to register the skill elsewhere
 
-The worker **discovers** skills by importing `skills.<skill_name>`. As long as the module lives under `skills/` and exports a router, it can be loaded via `POST /worker/skills/<skill_name>/load`.
+The worker **discovers** skills by importing `skills.<skill_name>`. As long as the module lives under `skills/` and exports a router, it will be **auto-loaded on first request** to any `/skills/<skill_name>/...` path.
 
 ---
 
@@ -97,11 +97,7 @@ Typical pattern:
 1. **Resolve the worker URL**  
    From the registry (e.g. `find_live_worker(registry_url)`) or from a CLI flag like `--worker-url`.
 
-2. **Load the skill** (required after worker restart)  
-   `POST {worker_url}/worker/skills/{skill_name}/load`  
-   No body required for `load` by name. Raise for status or check response.
-
-3. **Call the skill endpoint**  
+2. **Call the skill endpoint** — skills are auto-loaded on first request, so no explicit load step is needed.  
    - **POST** (most common): `POST {worker_url}/skills/{skill_name}/{endpoint}` with `json=payload`.  
    - **GET**: `GET {worker_url}/skills/{skill_name}/{endpoint}?query=params` or path params.
 
@@ -113,16 +109,11 @@ from common.skill_lifecycle import find_live_worker
 
 worker_url = find_live_worker("http://127.0.0.1:7002").rstrip("/")
 
-# Load so the route exists
-httpx.post(f"{worker_url}/worker/skills/rss_skill/load").raise_for_status()
-
-# Call the skill
+# Just call the skill — it auto-loads on first request
 r = httpx.post(f"{worker_url}/skills/rss_skill/feed", json={"url": "https://example.com/feed.xml"})
 r.raise_for_status()
 data = r.json()
 ```
-
-If you skip the load step and the skill was not loaded (e.g. after a restart), the request to the skill endpoint will return **404**.
 
 ---
 
@@ -133,8 +124,7 @@ The `run_prompt_with_context.py` runner can run a **skill step** as part of a mu
 1. In the YAML config, add a step with `type: skill`, and specify `skill`, `endpoint`, and `params`.
 2. The runner will:
    - Resolve the worker URL (registry).
-   - Load the skill (`POST /worker/skills/{skill_name}/load`).
-   - Call **POST** `{worker_url}/skills/{skill_name}/{endpoint}` with **JSON body** = `params` (after placeholder substitution).
+   - Call **POST** `{worker_url}/skills/{skill_name}/{endpoint}` with **JSON body** = `params` (after placeholder substitution). The skill auto-loads on first request.
    - Use the response (or a subset via `output_path`) as `previous_output` for the next step.
 
 So for a skill to be usable from a **skill step** in the runner, the target route must accept **POST** with a **JSON body**. GET-only routes are fine for direct script use but cannot be used as a runner skill step unless you add a POST variant.
@@ -179,15 +169,15 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 | **workflow_skill** | Templates, run/execute workflows | help_skill, agent |
 | **agent_skill** | Send a prompt to the AI server and return the response | `scripts/run_agent.py`, prompt-with-context skill steps |
 
-Scripts that call skills:
+Scripts that call skills (all auto-loaded on first request):
 
-- **scripts/warmup_rss_list.py** – loads `rss_new_and_save_skill`, calls `run` with `list_name`, `warmup=True`.
-- **scripts/site_pages_ai.py** – uses `StoredSiteContent`, which loads `webscraper_skill` and calls `POST /stored` with `base_url` (and optional `max_chars`).
-- **rss_notify_new.py** – loads `rss_new_and_save_skill` and `notification_skill`, calls run then send.
-- **website_marketing_analysis.py** – loads `webscraper_skill`, calls `/scrape`, polls `/scrape/{job_id}`, then GET `/stored?base_url=...`.
-- **process_rss_feeds.py** – loads `rss_skill`, POST `/feed` with `{"url": ...}`.
-- **scripts/run_agent.py** – loads `agent_skill`, POST `/respond` with `{"prompt": "...", "profile": "agent"}`.
-- **application/run_prompt_with_context.py** – for each skill step: load skill by name, then POST to `/{endpoint}` with `params` as JSON body; optional `output_path` to take a subset of the response.
+- **scripts/warmup_rss_list.py** – calls `rss_new_and_save_skill/run` with `list_name`, `warmup=True`.
+- **scripts/site_pages_ai.py** – uses `StoredSiteContent`, calls `webscraper_skill POST /stored` with `base_url`.
+- **rss_notify_new.py** – calls `rss_new_and_save_skill/run` then `notification_skill/send`.
+- **website_marketing_analysis.py** – calls `webscraper_skill/scrape`, polls `/scrape/{job_id}`, then GET `/stored?base_url=...`.
+- **process_rss_feeds.py** – POST `rss_skill/feed` with `{"url": ...}`.
+- **scripts/run_agent.py** – POST `agent_skill/respond` with `{"prompt": "...", "profile": "agent"}`.
+- **application/run_prompt_with_context.py** – for each skill step: POST to `/{endpoint}` with `params` as JSON body; optional `output_path` to take a subset of the response.
 
 ---
 
@@ -220,8 +210,8 @@ Skills that return this shape get consistent markdown (headings, lists, links) i
 
 ## Summary
 
-- **Skills** = FastAPI routers in `skills/`, mounted at `/skills/<skill_name>/...` after load.
-- **Load** = `POST /worker/skills/<skill_name>/load` (required after worker restart).
+- **Skills** = FastAPI routers in `skills/`, auto-loaded and mounted at `/skills/<skill_name>/...` on first request.
+- **Auto-load** = Middleware intercepts `/skills/{name}/...` requests and loads the skill module if not yet mounted. No explicit load call needed.
 - **Call** = HTTP GET or POST to `{worker_url}/skills/{skill_name}/{path}`; scripts often POST with JSON.
 - **Runner** = skill steps in YAML use POST only; endpoint must accept JSON body; placeholders can be used in `params`.
 - **Discovery** = worker imports `skills.<skill_name>`; no separate registration file needed.

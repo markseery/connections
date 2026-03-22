@@ -95,12 +95,6 @@ def main() -> int:
         return 1
     worker_url = worker_url.rstrip("/")
 
-    with httpx.Client(timeout=10.0) as client:
-        r = client.post(f"{worker_url}/worker/skills/rss_new_and_save_skill/load")
-        if not r.is_success:
-            print(f"Error: Failed to load rss_new_and_save_skill: {r.text}", file=sys.stderr)
-            return 1
-
     payload = {"list_name": args.list_name.strip(), "dry_run": args.dry_run, "worker_url": worker_url}
     with httpx.Client(timeout=SKILL_TIMEOUT) as client:
         r = client.post(f"{worker_url}/skills/rss_new_and_save_skill/run", json=payload)
@@ -128,12 +122,6 @@ def main() -> int:
     if not to_email:
         print("Error: EMAIL_RECEIVER_DEFAULT not set", file=sys.stderr)
         return 1
-
-    with httpx.Client(timeout=10.0) as client:
-        load_r = client.post(f"{worker_url}/worker/skills/notification_skill/load")
-        if not load_r.is_success:
-            print(f"Error: Failed to load notification_skill: {load_r.text}", file=sys.stderr)
-            return 1
 
     subject, plain_body, html_body = _build_email(new_items)
     ok, status, err_text = _send_email(worker_url, to_email, subject, plain_body, html_body)

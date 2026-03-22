@@ -2,7 +2,7 @@
 """
 Exercise webscraper_skill: list stored URLs, run a scrape, list again, print diff.
 
-Requires: registry, worker with webscraper_skill loaded (this script loads it).
+Requires: registry, worker (webscraper_skill auto-loads on first request).
 
 Usage:
   python scripts/webscrape_test.py https://example.com --namespace webscrape --max-pages 20 --max-depth 2
@@ -62,12 +62,6 @@ def fetch_stored_urls(client: httpx.Client, worker_url: str, namespace: str, sit
     r = client.get(f"{worker_url}/skills/{SKILL}/pages/urls?{q}")
     r.raise_for_status()
     return _urls_from_pages_response(r.json())
-
-
-def ensure_skill_loaded(client: httpx.Client, worker_url: str) -> None:
-    r = client.post(f"{worker_url}/worker/skills/{SKILL}/load")
-    if not r.is_success:
-        raise RuntimeError(f"Failed to load {SKILL}: {r.status_code} {r.text}")
 
 
 def start_scrape(
@@ -147,8 +141,6 @@ def main() -> int:
 
     try:
         with httpx.Client(timeout=120.0) as client:
-            ensure_skill_loaded(client, worker_url)
-
             before = fetch_stored_urls(client, worker_url, namespace, sitename)
             _print_url_block(f"=== Stored URLs before scrape (namespace={namespace!r}, sitename={sitename!r}) ===", before)
 

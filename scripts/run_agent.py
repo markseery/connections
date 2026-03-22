@@ -36,7 +36,6 @@ if str(ROOT) not in sys.path:
 from common.skill_lifecycle import find_live_worker
 
 SKILL_NAME = "agent_skill"
-LOAD_TIMEOUT = 10.0
 RESPOND_TIMEOUT = 120.0
 STORAGE_TIMEOUT = 15.0
 CURRENT_MEMORY_KEY = "current_memory"
@@ -58,12 +57,6 @@ def get_storage_url(registry_url: str) -> str:
         if not u:
             raise SystemExit("Registry has no storage server URL")
         return u
-
-
-def ensure_skill_loaded(worker_url: str) -> None:
-    with httpx.Client(timeout=LOAD_TIMEOUT) as client:
-        r = client.post(f"{worker_url}/worker/skills/{SKILL_NAME}/load")
-        r.raise_for_status()
 
 
 def call_agent(worker_url: str, prompt: str, profile: str, context: str | None = None) -> dict:
@@ -240,12 +233,6 @@ def main() -> int:
         except Exception as e:
             print(f"Storage/memory error: {e}", file=sys.stderr)
             return 1
-
-    try:
-        ensure_skill_loaded(worker_url)
-    except Exception as e:
-        print(f"Failed to load {SKILL_NAME}: {e}", file=sys.stderr)
-        return 1
 
     try:
         data = call_agent(worker_url, prompt, args.profile, context=context)
