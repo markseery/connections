@@ -161,7 +161,7 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 | **rss_new_skill** | Fetch new items from a feed list, fetch article content, diff vs storage | `rss_new_and_save_skill`, warmup script |
 | **rss_new_and_save_skill** | Run rss_new_skill and persist new item IDs to storage | `rss_notify_new.py`, warmup script, `cloud_services_notify_multistep.yaml` |
 | **notification_skill** | Send email (SMTP), list/stats | `rss_notify_new.py`, `send_test_email.py`, notify configs |
-| **webscraper_skill** | Single crawler: per-page storage (`webscrape` namespace), job markdown + optional summary, `/pages` CRUD, `/stored` aggregate for tools | `website_marketing_analysis.py`, `StoredSiteContent`, `site_pages_ai.py`, help_skill, chatagent |
+| **webscraper_skill** | Single crawler: per-page storage (`webscrape` namespace), job markdown + optional summary, `/pages` CRUD, `/stored` aggregate for tools | `website_marketing_analysis.py`, `StoredSiteContent`, `webscrape_save.py`, `webscrape_site_facts.py`, help_skill, chatagent |
 | **help_skill** | List skills, examples, about | Chat/agent UIs |
 | **stock_skill** | Quote, fundamentals, earnings | help_skill, agent |
 | **news_skill** | Search news, topic/stock | help_skill, agent |
@@ -172,7 +172,8 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 Scripts that call skills (all auto-loaded on first request):
 
 - **scripts/warmup_rss_list.py** – calls `rss_new_and_save_skill/run` with `list_name`, `warmup=True`.
-- **scripts/site_pages_ai.py** – uses `StoredSiteContent`, calls `webscraper_skill POST /stored` with `base_url`.
+- **scripts/webscrape_save.py** – exports stored scrape to `data/webscrape/sites/*.md` via worker `webscraper_skill`.
+- **scripts/webscrape_site_facts.py** – reads markdown from `data/webscrape/sites/`, runs aiserver on batched pages, writes JSON facts to `data/webscrape/facts/`.
 - **rss_notify_new.py** – calls `rss_new_and_save_skill/run` then `notification_skill/send`.
 - **website_marketing_analysis.py** – calls `webscraper_skill/scrape`, polls `/scrape/{job_id}`, then GET `/stored?base_url=...`.
 - **process_rss_feeds.py** – POST `rss_skill/feed` with `{"url": ...}`.

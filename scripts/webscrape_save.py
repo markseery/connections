@@ -5,6 +5,7 @@ Save all stored webscrape content for a site to a markdown file, page by page.
 Usage:
   python scripts/webscrape_save.py https://iren.com
   python scripts/webscrape_save.py https://iren.com --out iren_content.md
+    # writes data/webscrape/sites/iren_content.md when --out is relative
   python scripts/webscrape_save.py https://iren.com --max-pages 20
 
 Requires: registry, worker (webscraper_skill). Site must already be scraped.
@@ -27,7 +28,7 @@ if str(ROOT) not in sys.path:
 from common.stored_site_content import StoredSiteContent
 
 DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
-OUTPUT_DIR = ROOT / "data" / "exports"
+OUTPUT_DIR = ROOT / "data" / "webscrape" / "sites"
 
 
 def _list_available_sites(registry_url: str) -> list[str]:
@@ -52,7 +53,8 @@ def main() -> int:
     ap.add_argument("site", help="Site URL (must already be scraped and stored)")
     ap.add_argument(
         "--out", default=None, metavar="FILE",
-        help="Output file path (default: data/exports/<host>_<timestamp>.md)",
+        help="Output file path. Relative paths go under data/webscrape/sites/. "
+        "Default: data/webscrape/sites/<host>_<timestamp>.md",
     )
     ap.add_argument(
         "--max-pages", type=int, default=None, metavar="N",
@@ -122,15 +124,18 @@ def main() -> int:
     if args.out:
         out_path = Path(args.out)
         if not out_path.is_absolute():
-            out_path = ROOT / out_path
+            out_path = OUTPUT_DIR / out_path
     else:
-        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         out_path = OUTPUT_DIR / f"{host}_{ts}.md"
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(md, encoding="utf-8")
-    print(f"Saved {limit} pages ({len(md):,} chars) → {out_path}")
+    try:
+        display_path = str(out_path.relative_to(ROOT))
+    except ValueError:
+        display_path = str(out_path)
+    print(f"Saved {limit} pages ({len(md):,} chars) → {display_path}")
     return 0
 
 

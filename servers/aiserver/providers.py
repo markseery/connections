@@ -12,7 +12,14 @@ from typing import Any, Literal
 
 import httpx
 
-from .config import Profile, Provider, get_model, get_provider_base_url, get_provider_key
+from .config import (
+    Profile,
+    Provider,
+    get_model,
+    get_provider_base_url,
+    get_provider_key,
+    get_wandb_http_timeout_seconds,
+)
 
 
 def _require_key(provider: Provider) -> str:
@@ -83,10 +90,6 @@ def _google_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
         return {"type": "text", "text": text}
 
 
-# W&B inference can be slow for long prompts (e.g. agent profile); use a longer read timeout.
-WANDB_TIMEOUT = 300.0
-
-
 def _wandb_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     """W&B Inference (OpenAI-compatible); uses WANDB_API_KEY only."""
     base = (get_provider_base_url("wandb") or "https://api.inference.wandb.ai/v1").rstrip("/")
@@ -94,7 +97,8 @@ def _wandb_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]
     url = f"{base}/chat/completions"
     messages = [{"role": "user", "content": prompt}]
     payload = {"model": model, "messages": messages}
-    with httpx.Client(timeout=WANDB_TIMEOUT) as client:
+    timeout = get_wandb_http_timeout_seconds()
+    with httpx.Client(timeout=timeout) as client:
         r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
         r.raise_for_status()
         j = r.json()

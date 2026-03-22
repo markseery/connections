@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 """
-Process pages of a stored site through the AI server with a given prompt.
+Run AI on pages from a webscrape markdown export and collect JSON facts.
 
-Gets pages via StoredSiteContent (worker + webscraper_skill), batches them,
-sends each batch to the aiserver /generate with the provided prompt, prints each response.
+Input markdown is read from data/webscrape/sites/ (see webscrape_save.py). Output JSON
+is written under data/webscrape/facts/. Use --ai-strength to set the aiserver profile
+(fast / chat / reason / agent).
 
 Usage:
-  python scripts/site_pages_ai.py https://example.com "Summarize this page in one paragraph."
-  python scripts/site_pages_ai.py https://example.com "List key facts." --max-pages 5
-  python scripts/site_pages_ai.py https://example.com "Extract facts." --taxonomy fact_taxonomy.yaml
-  python scripts/site_pages_ai.py https://example.com "Extract facts." --batch-size 10
-  python scripts/site_pages_ai.py https://example.com "Extract facts." --batch-size 20 --max-context-chars 60000
+  python scripts/webscrape_site_facts.py nebius.md "Extract structured facts as JSON."
+  python scripts/webscrape_site_facts.py nebius.md "Extract facts." --ai-strength reason
+  python scripts/webscrape_site_facts.py nebius.md "Extract facts." -b 10
+  python scripts/webscrape_site_facts.py data/webscrape/sites/export.md "Summarize." --ai-strength fast
 
-Requires: registry, worker (webscraper_skill), aiserver. Site must already be scraped and stored.
+Each AI request includes up to `--batch-size` pages (one combined context); batches also
+split early if `--max-context-chars` would be exceeded.
+
+Requires: aiserver (registry for discovery). No worker needed if input file exists.
 """
 
 from __future__ import annotations
@@ -35,14 +38,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from common.json_repair import extract_brace_block, repair_json
-from common.stored_site_content import StoredSiteContent
 
-DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
+SCRAPES_SITES_DIR = ROOT / "data" / "webscrape" / "sites"
+FACTS_OUTPUT_DIR = ROOT / "data" / "webscrape" / "facts"
 TAXONOMY_DIR = ROOT / "data" / "taxonomy"
-FACTS_OUTPUT_DIR = ROOT / "data" / "facts"
+DEFAULT_REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 AI_TIMEOUT = 300.0
-PROFILE = "agent"
-DEFAULT_BATCH_SIZE = 1
+DEFAULT_AI_STRENGTH = "agent"
+AI_STRENGTH_CHOICES = ("fast", "chat", "reason", "agent")
+# Pages combined into a single /generate call until batch_size or max_context_chars is hit.
+DEFAULT_BATCH_SIZE = 5
 DEFAULT_MAX_CONTEXT_CHARS = 80_000
 
 
@@ -86,21 +91,64 @@ def taxonomy_to_prompt_instruction(taxonomy: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _list_available_sites(worker_or_registry_url: str, registry_url: str) -> list[str]:
-    """Best-effort fetch of stored site names from webscraper_skill."""
-    try:
-        from common.skill_lifecycle import find_live_worker
-        wurl = find_live_worker(registry_url)
-        if not wurl:
-            return []
-        with httpx.Client(timeout=5.0) as client:
-            r = client.get(f"{wurl.rstrip('/')}/skills/webscraper_skill/sites")
-            if r.status_code != 200:
-                return []
-            items = r.json().get("items") or []
-            return [it.get("title") or it.get("link") or "" for it in items if isinstance(it, dict)]
-    except Exception:
-        return []
+def parse_scrape_export_markdown(md: str) -> tuple[str, list[tuple[str, str]]]:
+    """
+    Parse markdown written by webscrape_save.py: header # site, then --- / ## url / body blocks.
+    """
+    parts = re.split(r"\n---\n", md)
+    site = ""
+    pages: list[tuple[str, str]] = []
+    if parts:
+        first = parts[0].strip()
+        first_line = first.split("\n", 1)[0] if first else ""
+        if first_line.startswith("# "):
+            site = first_line[2:].strip()
+    for seg in parts[1:]:
+        seg = seg.strip()
+        if not seg.startswith("## "):
+            continue
+        nl = seg.find("\n")
+        if nl == -1:
+            url = seg[3:].strip()
+            content = ""
+        else:
+            url = seg[3:nl].strip()
+            content = seg[nl:].strip()
+        pages.append((url, content))
+    return site, pages
+
+
+def resolve_input_path(arg: str) -> Path:
+    """Resolve input file: absolute path, cwd-relative, or under data/webscrape/sites/."""
+    raw = (arg or "").strip()
+    if not raw:
+        raise FileNotFoundError("input path is empty")
+
+    p = Path(raw)
+    if p.is_absolute():
+        if p.is_file():
+            return p
+        raise FileNotFoundError(f"Input file not found: {p}")
+
+    if p.is_file():
+        return p.resolve()
+
+    cand = SCRAPES_SITES_DIR / raw
+    if cand.is_file():
+        return cand
+
+    if not raw.endswith(".md"):
+        cand_md = SCRAPES_SITES_DIR / f"{raw}.md"
+        if cand_md.is_file():
+            return cand_md
+
+    rel = ROOT / raw
+    if rel.is_file():
+        return rel.resolve()
+
+    raise FileNotFoundError(
+        f"Input file not found: {raw!r}. Looked under {SCRAPES_SITES_DIR} and project root."
+    )
 
 
 def get_aiserver_url(registry_url: str) -> str:
@@ -113,7 +161,8 @@ def get_aiserver_url(registry_url: str) -> str:
         return str(url).rstrip("/")
 
 
-def call_ai(aiserver_url: str, prompt: str, profile: str) -> dict:
+def call_ai(aiserver_url: str, prompt: str, *, profile: str) -> dict:
+    """POST /generate with aiserver profile (maps from --ai-strength)."""
     with httpx.Client(timeout=AI_TIMEOUT) as client:
         r = client.post(
             f"{aiserver_url}/generate",
@@ -135,11 +184,9 @@ def extract_text(response: dict) -> str:
 def _strip_json_like(text: str) -> str:
     """Remove markdown/code fences (``` or ''') and trim."""
     t = text.strip()
-    # ```json ... ``` or ``` ... ```
     if t.startswith("```"):
         t = re.sub(r"^```[a-zA-Z0-9]*\s*\n?", "", t)
         t = re.sub(r"\n?```\s*$", "", t).strip()
-    # ''' ... '''
     if t.startswith("'''"):
         t = re.sub(r"^'''\s*\n?", "", t)
         t = re.sub(r"\n?'''\s*$", "", t).strip()
@@ -147,7 +194,6 @@ def _strip_json_like(text: str) -> str:
 
 
 def _extract_array_block(text: str) -> str | None:
-    """Return first top-level [...] block (brace-depth and string-aware)."""
     start = text.find("[")
     if start == -1:
         return None
@@ -179,15 +225,12 @@ def _extract_array_block(text: str) -> str | None:
 
 
 def _extract_json_block(text: str) -> str | None:
-    """Return first top-level {...} or [...] block. Prefer array when text starts with '['."""
     t = _strip_json_like(text)
     t_trim = t.lstrip()
-    # Prefer array when response is a top-level array (e.g. list of facts)
     if t_trim.startswith("["):
         block = _extract_array_block(t)
         if block is not None:
             return block
-    # Otherwise try object first, then array
     block = extract_brace_block(t)
     if block is not None:
         return block
@@ -195,15 +238,9 @@ def _extract_json_block(text: str) -> str | None:
 
 
 def parse_facts_json(raw: str) -> list[dict[str, Any]]:
-    """
-    Parse raw AI response into a list of fact dicts. Handles malformed JSON:
-    strips ```/''', extracts {...} or [...], repairs and normalizes.
-    Returns empty list on parse failure.
-    """
     block = _extract_json_block(raw)
     if not block:
         return []
-    # Try parse
     try:
         data = json.loads(block)
     except json.JSONDecodeError:
@@ -214,14 +251,12 @@ def parse_facts_json(raw: str) -> list[dict[str, Any]]:
                 return []
         else:
             return []
-    # Normalize to list of fact objects
     if isinstance(data, list):
         facts = [f for f in data if isinstance(f, dict)]
     elif isinstance(data, dict):
         if "facts" in data and isinstance(data["facts"], list):
             facts = [f for f in data["facts"] if isinstance(f, dict)]
         else:
-            # Single fact object
             facts = [data] if data else []
     else:
         facts = []
@@ -233,7 +268,6 @@ def _build_batches(
     batch_size: int,
     max_context_chars: int,
 ) -> list[list[tuple[str, str]]]:
-    """Group pages into batches respecting both batch_size and max_context_chars."""
     batches: list[list[tuple[str, str]]] = []
     current: list[tuple[str, str]] = []
     current_chars = 0
@@ -251,16 +285,28 @@ def _build_batches(
 
 
 def _fact_canonical(fact: dict[str, Any]) -> str:
-    """Canonical string for deduplication (sorted keys, stable repr)."""
     return json.dumps(fact, sort_keys=True, ensure_ascii=False)
+
+
+def _path_display(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Run AI (agent profile) on each page of a stored site with a given prompt."
+        description=(
+            "Run AI on a webscrape markdown export (data/webscrape/sites) and save facts JSON. "
+            "Use --batch-size to send multiple pages in one AI request (same prompt, shared context)."
+        )
     )
-    ap.add_argument("site", help="Base URL of the site (must already be scraped and stored)")
-    ap.add_argument("prompt", help="Prompt to send for each page (page content is appended as context)")
+    ap.add_argument(
+        "input",
+        help="Markdown file: name under data/webscrape/sites/, or path",
+    )
+    ap.add_argument("prompt", help="Prompt (page content from file is appended as context)")
     ap.add_argument(
         "--max-pages",
         type=int,
@@ -274,37 +320,49 @@ def main() -> int:
         help="Registry URL (default: REGISTRY_SERVER_URL or 127.0.0.1:7002)",
     )
     ap.add_argument(
-        "--worker-url",
-        default=None,
-        help="Worker base URL (default: from registry)",
-    )
-    ap.add_argument(
         "--taxonomy",
         default=None,
         metavar="FILE",
-        help="Taxonomy YAML file (e.g. fact_taxonomy.yaml or data/taxonomy/fact_taxonomy.yaml). Responses must be JSON adhering to its dimensions.",
+        help="Taxonomy YAML (e.g. fact_taxonomy.yaml or data/taxonomy/...)",
     )
     ap.add_argument(
         "--out",
         default=None,
         metavar="FILE",
-        help="Write deduplicated facts to this JSON file (default: data/facts/<site>_facts_<timestamp>.json)",
+        help="Facts JSON path. Relative paths go under data/webscrape/facts/. "
+        "Default: data/webscrape/facts/<input_stem>_facts_<timestamp>.json",
     )
     ap.add_argument(
+        "-b",
         "--batch-size",
         type=int,
         default=DEFAULT_BATCH_SIZE,
         metavar="N",
-        help=f"Pages per AI call (default: {DEFAULT_BATCH_SIZE}). Higher = fewer calls, but larger context.",
+        help=(
+            f"Max pages to include in one AI request (default: {DEFAULT_BATCH_SIZE}). "
+            "Pages are concatenated with separators; use with --max-context-chars if batches get too large."
+        ),
     )
     ap.add_argument(
         "--max-context-chars",
         type=int,
         default=DEFAULT_MAX_CONTEXT_CHARS,
         metavar="CHARS",
-        help=f"Max context chars per batch (default: {DEFAULT_MAX_CONTEXT_CHARS}). Batch is sent early if exceeded.",
+        help=f"Max context chars per batch (default: {DEFAULT_MAX_CONTEXT_CHARS})",
+    )
+    ap.add_argument(
+        "--ai-strength",
+        choices=list(AI_STRENGTH_CHOICES),
+        default=DEFAULT_AI_STRENGTH,
+        metavar="LEVEL",
+        help=(
+            "Model capability tier sent to aiserver as `profile` "
+            "(fast < chat < reason < agent; default: agent)."
+        ),
     )
     args = ap.parse_args()
+
+    ai_profile = args.ai_strength
 
     taxonomy_instruction = ""
     if args.taxonomy:
@@ -321,10 +379,21 @@ def main() -> int:
             print(f"Taxonomy: {e}", file=sys.stderr)
             return 1
 
-    site = (args.site or "").strip().rstrip("/")
-    if not site:
-        print("site is required", file=sys.stderr)
+    try:
+        input_path = resolve_input_path(args.input)
+    except FileNotFoundError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        if SCRAPES_SITES_DIR.is_dir():
+            names = sorted(p.name for p in SCRAPES_SITES_DIR.iterdir() if p.suffix == ".md")
+            if names:
+                print(f"Markdown files in {SCRAPES_SITES_DIR.relative_to(ROOT)}: {', '.join(names[:20])}", file=sys.stderr)
         return 1
+
+    md = input_path.read_text(encoding="utf-8")
+    site, pages = parse_scrape_export_markdown(md)
+    if not site:
+        site = input_path.stem
+
     prompt_text = (args.prompt or "").strip()
     if not prompt_text:
         print("prompt is required", file=sys.stderr)
@@ -337,23 +406,10 @@ def main() -> int:
         print(f"Aiserver discovery: {e}", file=sys.stderr)
         return 1
 
-    worker_url = (args.worker_url or "").strip().rstrip("/") if args.worker_url else None
-    content = StoredSiteContent(site, worker_url=worker_url, registry_url=registry_url)
-    try:
-        content.load()
-    except Exception as e:
-        available = _list_available_sites(worker_url or registry_url, registry_url)
-        print(f"Error: {e}", file=sys.stderr)
-        if available:
-            print(f"Available sites: {', '.join(available)}", file=sys.stderr)
-        else:
-            print("No stored sites found. Scrape a site first (webscraper_skill POST /scrape).", file=sys.stderr)
-        return 1
-
-    total = len(content)
+    total = len(pages)
     if total == 0:
-        print("No pages in stored site.", file=sys.stderr)
-        return 0
+        print("No pages found in markdown (expected webscrape_save.py export format).", file=sys.stderr)
+        return 1
 
     max_pages = args.max_pages
     if max_pages is not None and max_pages < 1:
@@ -362,14 +418,14 @@ def main() -> int:
     batch_size = max(1, args.batch_size)
     max_context = max(1000, args.max_context_chars)
 
-    pages: list[tuple[str, str]] = []
-    for i, (url, page_content) in enumerate(content):
-        if i >= limit:
-            break
-        pages.append((url, page_content or ""))
-
+    pages = pages[:limit]
     batches = _build_batches(pages, batch_size, max_context)
-    print(f"[site_pages_ai] {len(pages)} pages → {len(batches)} batch(es) (batch_size={batch_size}, max_context={max_context})", flush=True)
+    print(
+        f"[webscrape_site_facts] {_path_display(input_path)}: "
+        f"{len(pages)} pages → {len(batches)} batch(es) "
+        f"(batch_size={batch_size}, max_context={max_context}, ai_strength={ai_profile})",
+        flush=True,
+    )
 
     all_facts: list[dict[str, Any]] = []
     seen_canonical: set[str] = set()
@@ -395,7 +451,7 @@ def main() -> int:
         )
         label = f"Batch {bi + 1}/{len(batches)} (pages {page_start}-{page_end})"
         try:
-            response = call_ai(aiserver_url, full_prompt, PROFILE)
+            response = call_ai(aiserver_url, full_prompt, profile=ai_profile)
             text = extract_text(response)
         except Exception as e:
             urls = [u for u, _ in batch]
@@ -413,29 +469,35 @@ def main() -> int:
                 seen_canonical.add(canonical)
                 all_facts.append(fact)
 
-    # Print and save deduplicated facts
-    payload = {"facts": all_facts, "count": len(all_facts)}
+    payload = {
+        "facts": all_facts,
+        "count": len(all_facts),
+        "source_file": _path_display(input_path),
+        "site": site,
+        "ai_strength": ai_profile,
+        "batch_size": batch_size,
+        "batch_count": len(batches),
+        "max_context_chars": max_context,
+    }
     if all_facts:
         print("--- All facts (deduplicated) ---")
         print(json.dumps(payload, indent=2, ensure_ascii=False))
-        # Save to JSON file
-        out_path = args.out
-        if out_path is None:
+        if args.out is None:
             FACTS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
             try:
-                host = urlparse(site).netloc or "site"
-                host = re.sub(r"[^\w.-]", "_", host).strip("_") or "site"
+                host = urlparse(site).netloc or input_path.stem
+                host = re.sub(r"[^\w.-]", "_", host).strip("_") or input_path.stem
             except Exception:
-                host = "site"
+                host = input_path.stem
             ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
             out_path = FACTS_OUTPUT_DIR / f"{host}_facts_{ts}.json"
         else:
-            out_path = Path(out_path)
+            out_path = Path(args.out)
             if not out_path.is_absolute():
-                out_path = ROOT / out_path
-            out_path.parent.mkdir(parents=True, exist_ok=True)
+                out_path = FACTS_OUTPUT_DIR / out_path
+        out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(f"Saved to {out_path}", file=sys.stderr)
+        print(f"Saved to {_path_display(out_path)}", file=sys.stderr)
     else:
         print("--- No facts collected ---", file=sys.stderr)
 

@@ -85,6 +85,20 @@ def get_provider_base_url(provider: Provider) -> str | None:
     return None
 
 
+def get_wandb_http_timeout_seconds() -> float:
+    """
+    httpx timeout for W&B Inference (chat/completions). Large agent prompts can exceed short limits.
+    Set AISERVER_WANDB_TIMEOUT_SECONDS in .env (default 600).
+    """
+    raw = _get_env("AISERVER_WANDB_TIMEOUT_SECONDS")
+    if raw is not None:
+        try:
+            return max(30.0, float(raw))
+        except ValueError:
+            pass
+    return 600.0
+
+
 def get_model(provider: Provider, profile: Profile) -> str:
     """
     Model to use for (provider, profile). Per-profile override wins:
