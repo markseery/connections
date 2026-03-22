@@ -1,0 +1,6 @@
+# rss_new_and_save_skill configuration
+rss_new_skill_timeout: 600.0
+storage_put_timeout: 10.0
+registry_timeout: 5.0
+worker_load_timeout: 10.0
+persist_log_interval: 50

@@ -1,0 +1,6 @@
+# notification_skill configuration
+subject_max_length: 500
+default_throttle_per_min: 60
+throttle_window_minutes: 1
+smtp_timeout: 20
+default_notification_limit: 100

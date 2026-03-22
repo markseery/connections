@@ -17,10 +17,11 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 router = APIRouter()
 
-FEED_TIMEOUT = 30.0
+_conf = SkillConfig("rss_skill")
 USER_AGENT = "ConnectionsRSSSkill/1.0"
 # Request feed formats so servers (e.g. Google Alerts) return XML instead of HTML
 FEED_ACCEPT = "application/atom+xml, application/rss+xml, application/xml, text/xml, */*"
@@ -157,7 +158,7 @@ def fetch_and_parse(feed_url: str) -> dict[str, Any]:
     feed_url = _normalize_google_news_feed_url(feed_url)
     try:
         with httpx.Client(
-            timeout=FEED_TIMEOUT,
+            timeout=_conf.get("feed_timeout", 30.0),
             follow_redirects=True,
             headers={"User-Agent": USER_AGENT, "Accept": FEED_ACCEPT},
         ) as client:

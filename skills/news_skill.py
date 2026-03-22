@@ -17,8 +17,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, model_validator
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 router = APIRouter()
+_conf = SkillConfig("news_skill")
 
 
 class SearchRequest(BaseModel):
@@ -167,7 +169,7 @@ def _parse_yf_item(item: dict[str, Any]) -> dict[str, Any] | None:
     if pub_date:
         out["published"] = _safe_value(pub_date)
     if summary:
-        out["summary"] = summary[:500]
+        out["summary"] = summary[:_conf.get("yf_summary_max_chars", 500)]
     return out
 
 
@@ -182,7 +184,7 @@ def _web_search_news(query: str, limit: int) -> list[dict[str, Any]]:
     search_payload = {"prompt": query, "profile": "search"}
     print(f"[news_skill] web_search prompt → {search_payload}", flush=True)
     try:
-        with httpx.Client(timeout=30.0) as client:
+        with httpx.Client(timeout=_conf.get("web_search_timeout", 30.0)) as client:
             r = client.post(
                 f"{aiserver_url}/generate",
                 json=search_payload,
@@ -216,7 +218,7 @@ def _web_search_news(query: str, limit: int) -> list[dict[str, Any]]:
         if item.get("date"):
             article["published"] = item["date"]
         if item.get("snippet"):
-            article["summary"] = _clean_snippet(item["snippet"])[:500]
+            article["summary"] = _clean_snippet(item["snippet"])[:_conf.get("web_snippet_max_chars", 500)]
         articles.append(article)
     print(
         f"[news_skill] web_search parsed: {len(articles)} articles with titles",
@@ -238,7 +240,7 @@ def _merge_and_dedupe(
     merged: list[dict[str, Any]] = []
 
     def _add(article: dict[str, Any]) -> bool:
-        title_key = article.get("title", "").lower().strip()[:80]
+        title_key = article.get("title", "").lower().strip()[:_conf.get("title_dedup_chars", 80)]
         if not title_key or title_key in seen_titles:
             return False
         seen_titles.add(title_key)
@@ -272,7 +274,7 @@ def _summarize_articles(query: str, articles: list[dict[str, Any]]) -> str:
     for a in articles:
         line = a.get("title", "")
         if a.get("summary"):
-            line += f" — {a['summary'][:200]}"
+            line += f" — {a['summary'][:_conf.get('summary_snippet_chars', 200)]}"
         if line:
             headlines.append(line)
 
@@ -287,7 +289,7 @@ def _summarize_articles(query: str, articles: list[dict[str, Any]]) -> str:
     )
 
     try:
-        with httpx.Client(timeout=30.0) as client:
+        with httpx.Client(timeout=_conf.get("ai_summary_timeout", 30.0)) as client:
             r = client.post(
                 f"{aiserver_url}/generate",
                 json={"prompt": prompt, "profile": "fast"},
@@ -390,7 +392,7 @@ def _domain_label(url: str) -> str:
 def _get_aiserver_url() -> str | None:
     registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
     try:
-        with httpx.Client(timeout=2.0) as client:
+        with httpx.Client(timeout=_conf.get("registry_timeout", 2.0)) as client:
             r = client.get(f"{registry}/servers/aiserver")
             if r.status_code != 200:
                 return None

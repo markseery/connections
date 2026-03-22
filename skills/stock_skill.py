@@ -19,9 +19,11 @@ import yfinance as yf
 from fastapi import APIRouter, HTTPException, Response
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 
 router = APIRouter()
+_conf = SkillConfig("stock_skill")
 
 
 def _safe_value(value: Any) -> Any:
@@ -79,7 +81,7 @@ def quote(symbol: str, response: Response) -> dict[str, Any]:
     t = _ticker(symbol)
     try:
         info = t.info or {}
-        hist = t.history(period="2d")
+        hist = t.history(period=f"{_conf.get('history_days', 2)}d")
         prev_close = None
         if hist is not None and len(hist) >= 2:
             prev_close = float(hist.iloc[-2]["Close"])
@@ -174,8 +176,8 @@ def earnings(symbol: str, response: Response) -> dict[str, Any]:
         return skill_result(
             summary=f"Earnings for **{sym}**.",
             symbol=sym,
-            earnings_dates=_dataframe_to_records(ed)[:10],
-            quarterly_financials=_dataframe_to_records(qf.T)[:8] if qf is not None else [],
+            earnings_dates=_dataframe_to_records(ed)[:_conf.get("earnings_dates_limit", 10)],
+            quarterly_financials=_dataframe_to_records(qf.T)[:_conf.get("quarterly_financials_limit", 8)] if qf is not None else [],
         )
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"

@@ -1,0 +1,4 @@
+# math_skill configuration
+default_root_degree: 2
+default_log_base: 10.0
+factorial_max: 1000

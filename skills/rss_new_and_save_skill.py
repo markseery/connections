@@ -24,14 +24,14 @@ from pydantic import BaseModel, Field
 from common.skill_response import skill_result
 
 from common.skill_lifecycle import find_live_worker
+from common.skill_config import SkillConfig
 
 router = APIRouter()
 
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 STORAGE_NAMESPACE = "rss_notified"
 # rss_new_skill fetches many feeds then fetches article content per item (Google News = 2–3 requests per item)
-RSS_NEW_SKILL_TIMEOUT = 600.0
-STORAGE_PUT_TIMEOUT = 10.0
+_conf = SkillConfig("rss_new_and_save_skill")
 
 
 class RunRequest(BaseModel):
@@ -46,7 +46,7 @@ def _storage_url() -> str:
     env_url = os.environ.get("STORAGE_SERVER_URL", "").strip().rstrip("/")
     if env_url:
         return env_url
-    with httpx.Client(timeout=5.0) as client:
+    with httpx.Client(timeout=_conf.get("registry_timeout", 5.0)) as client:
         r = client.get(f"{REGISTRY_URL}/servers/storage")
         r.raise_for_status()
         u = (r.json() or {}).get("url")
@@ -60,7 +60,7 @@ def _persist_item(storage_base: str, item_id: str) -> None:
     url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records/{key}"
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     body = {"link": item_id, "notified_at": now}
-    with httpx.Client(timeout=STORAGE_PUT_TIMEOUT) as client:
+    with httpx.Client(timeout=_conf.get("storage_put_timeout", 10.0)) as client:
         r = client.put(url, json=body)
         r.raise_for_status()
 
@@ -80,7 +80,7 @@ def run(body: RunRequest) -> dict[str, Any]:
 
     # Single source of truth: call rss_new_skill
     t0 = time.perf_counter()
-    with httpx.Client(timeout=10.0) as client:
+    with httpx.Client(timeout=_conf.get("worker_load_timeout", 10.0)) as client:
         r = client.post(f"{worker_url}/worker/skills/rss_new_skill/load")
         if not r.is_success:
             raise HTTPException(status_code=503, detail=f"Failed to load rss_new_skill: {r.text}")
@@ -95,7 +95,7 @@ def run(body: RunRequest) -> dict[str, Any]:
         "skip_content": body.warmup,
     }
     t0 = time.perf_counter()
-    with httpx.Client(timeout=RSS_NEW_SKILL_TIMEOUT) as client:
+    with httpx.Client(timeout=_conf.get("rss_new_skill_timeout", 600.0)) as client:
         r = client.post(f"{worker_url}/skills/rss_new_skill/run", json=payload)
         r.raise_for_status()
     data = r.json()
@@ -122,7 +122,7 @@ def run(body: RunRequest) -> dict[str, Any]:
                 persisted_count += 1
             except Exception as e:
                 persist_errors.append(f"{iid!r}: {e}")
-            if (idx + 1) % 50 == 0 or (idx + 1) == n_total:
+            if (idx + 1) % int(_conf.get("persist_log_interval", 50)) == 0 or (idx + 1) == n_total:
                 print(f"[rss_new_and_save_skill]   persisted {idx + 1}/{n_total}", file=sys.stderr, flush=True)
         elapsed = time.perf_counter() - t0
         print(f"[rss_new_and_save_skill] Persist done in {elapsed:.2f}s: {persisted_count} written", file=sys.stderr, flush=True)

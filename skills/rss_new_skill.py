@@ -3,7 +3,7 @@ License: MIT
 Description: RSS new-item fetcher as a worker-loadable skill.
 
 Load feed list from data/lists/{list_name}.json, fetch feeds via rss_skill,
-diff against storage (rss_notified), return new items within MAX_AGE_DAYS only.
+diff against storage (rss_notified), return new items within the configured max age only.
 For each item fetches the article URL and adds a sanitized "content" field (HTML/JS
 removed, whitespace normalized). Does not send email or persist; caller handles notification/persistence.
 
@@ -36,21 +36,13 @@ from common.skill_response import skill_result
 
 from common.google_news_decoder import GoogleNewsDecoder
 from common.skill_lifecycle import find_live_worker
+from common.skill_config import SkillConfig
 
 router = APIRouter()
 
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 STORAGE_NAMESPACE = "rss_notified"
-FEED_TIMEOUT = 45.0
-CONTENT_FETCH_TIMEOUT = 20.0
-CONTENT_MAX_CHARS = 100_000
-MIN_CONTENT_LENGTH = 250  # below this, try to follow canonical/outbound article link
-MAX_AGE_DAYS = 30
-# Cap parallel content fetches to avoid 429s (e.g. from Google News)
-CONTENT_FETCH_MAX_WORKERS = 6
-# When item count exceeds this, cap each item's content to CONTENT_CAP_WORDS to avoid overwhelming later steps
-CONTENT_CAP_LINKS_THRESHOLD = 100
-CONTENT_CAP_WORDS = 500
+_conf = SkillConfig("rss_new_skill")
 
 
 def _truncate_to_words(text: str, max_words: int) -> str:
@@ -63,19 +55,16 @@ def _truncate_to_words(text: str, max_words: int) -> str:
     return " ".join(words[:max_words])
 
 
-# Max chars for per-item summary in display (title + link + this snippet)
-CONTENT_SNIPPET_CHARS = 220
-
-
 def _content_snippet(content: str) -> str:
     """One-line snippet from article content for display (no newlines, truncated)."""
+    n = _conf.get("content_snippet_chars", 220)
     if not content:
         return ""
     s = " ".join((content or "").split())
-    if len(s) <= CONTENT_SNIPPET_CHARS:
+    if len(s) <= n:
         return s.strip()
-    cut = s[: CONTENT_SNIPPET_CHARS + 1].rsplit(" ", 1)
-    return (cut[0] if cut else s[:CONTENT_SNIPPET_CHARS]).strip() + "…"
+    cut = s[: n + 1].rsplit(" ", 1)
+    return (cut[0] if cut else s[:n]).strip() + "…"
 
 
 def _ssl_verify_context() -> ssl.SSLContext:
@@ -102,7 +91,7 @@ def _get_google_news_decoder() -> GoogleNewsDecoder:
     global _google_news_decoder
     if _google_news_decoder is None:
         _google_news_decoder = GoogleNewsDecoder(
-            timeout=CONTENT_FETCH_TIMEOUT,
+            timeout=_conf.get("content_fetch_timeout", 20.0),
             user_agent=USER_AGENT,
             ssl_verify=_ssl_verify_context(),
             log=_log,
@@ -148,7 +137,7 @@ def _storage_url() -> str:
     env_url = os.environ.get("STORAGE_SERVER_URL", "").strip().rstrip("/")
     if env_url:
         return env_url
-    with httpx.Client(timeout=5.0) as client:
+    with httpx.Client(timeout=_conf.get("registry_timeout", 5.0)) as client:
         r = client.get(f"{REGISTRY_URL}/servers/storage")
         r.raise_for_status()
         u = (r.json() or {}).get("url")
@@ -210,7 +199,7 @@ def _published_within_days(published_str: str, days: int) -> bool:
 
 def _list_notified_item_ids(storage_base: str) -> set[str]:
     url = f"{storage_base}/namespaces/{STORAGE_NAMESPACE}/records"
-    with httpx.Client(timeout=15.0) as client:
+    with httpx.Client(timeout=_conf.get("storage_fetch_timeout", 15.0)) as client:
         r = client.get(url)
         r.raise_for_status()
     data = r.json()
@@ -218,8 +207,10 @@ def _list_notified_item_ids(storage_base: str) -> set[str]:
     return set(keys) if isinstance(keys, list) else set()
 
 
-def _sanitize_content(html_raw: str, max_chars: int = CONTENT_MAX_CHARS) -> str:
+def _sanitize_content(html_raw: str, max_chars: int | None = None) -> str:
     """Remove HTML, script, style, normalize whitespace; return plain text."""
+    if max_chars is None:
+        max_chars = _conf.get("content_max_chars", 100_000)
     if not (html_raw or "").strip():
         return ""
     s = str(html_raw).strip()
@@ -267,7 +258,7 @@ def _unwrap_google_redirect_url(href: str) -> str | None:
 
 def _is_angular_license_stub(text: str) -> bool:
     """True if content is the Angular framework license/footer (Google News often returns this instead of article)."""
-    if not text or len(text) < 200:
+    if not text or len(text) < _conf.get("angular_stub_min_chars", 200):
         return False
     t = text.strip()
     return (
@@ -424,7 +415,7 @@ def _fetch_page_content(url: str) -> str:
                 _log("fetch_page_content: using decoded URL for content fetch")
                 url = decoded
         with httpx.Client(
-            timeout=CONTENT_FETCH_TIMEOUT,
+            timeout=_conf.get("content_fetch_timeout", 20.0),
             follow_redirects=True,
             verify=_ssl_verify_context(),
             headers={"User-Agent": USER_AGENT},
@@ -444,8 +435,9 @@ def _fetch_page_content(url: str) -> str:
             content = _sanitize_content(html)
             _log(f"fetch_page_content: sanitized content_len={len(content)} preview={repr(content[:150])}")
             # If content is stub (short, "Google News", or Angular license boilerplate), try to get real article URL
-            if len(content) < MIN_CONTENT_LENGTH or _is_angular_license_stub(content):
-                reason = "Angular stub" if _is_angular_license_stub(content) else f"content short (< {MIN_CONTENT_LENGTH})"
+            if len(content) < _conf.get("min_content_length", 250) or _is_angular_license_stub(content):
+                min_len = _conf.get("min_content_length", 250)
+                reason = "Angular stub" if _is_angular_license_stub(content) else f"content short (< {min_len})"
                 _log(f"fetch_page_content: {reason}, trying extract_article_url")
                 article_url = _extract_article_url(html, final_url)
                 if article_url and _is_static_resource_url(article_url):
@@ -475,7 +467,7 @@ def _fetch_page_content(url: str) -> str:
 
 
 def _fetch_feed(worker_url: str, feed_url: str) -> dict[str, Any] | None:
-    with httpx.Client(timeout=FEED_TIMEOUT) as client:
+    with httpx.Client(timeout=_conf.get("feed_timeout", 45.0)) as client:
         r = client.post(f"{worker_url}/skills/rss_skill/feed", json={"url": feed_url})
         if not r.is_success:
             return None
@@ -505,7 +497,7 @@ def _process_feed(
             continue
         seen.add(iid)
         ids_to_add.append(iid)
-        if not _published_within_days((item.get("published") or item.get("updated") or "").strip(), MAX_AGE_DAYS):
+        if not _published_within_days((item.get("published") or item.get("updated") or "").strip(), _conf.get("max_age_days", 30)):
             continue
         entries.append({
             "feed_title": feed_title,
@@ -552,7 +544,7 @@ def run(body: RunRequest) -> dict[str, Any]:
             raise HTTPException(status_code=503, detail="No live worker in registry")
         worker_url = w.rstrip("/")
 
-    with httpx.Client(timeout=10.0) as client:
+    with httpx.Client(timeout=_conf.get("worker_load_timeout", 10.0)) as client:
         r = client.post(f"{worker_url}/worker/skills/rss_skill/load")
         if not r.is_success:
             raise HTTPException(status_code=503, detail=f"Failed to load rss_skill: {r.text}")
@@ -599,11 +591,11 @@ def run(body: RunRequest) -> dict[str, Any]:
 
         links = [(entry.get("link") or "").strip() for entry in all_entries]
         n_links = len(links)
-        msg = f"Fetching content for {n_links} items (workers={CONTENT_FETCH_MAX_WORKERS})..."
+        msg = f"Fetching content for {n_links} items (workers={_conf.get('content_fetch_max_workers', 6)})..."
         print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
         _log(msg)
         t0 = time.perf_counter()
-        with ThreadPoolExecutor(max_workers=CONTENT_FETCH_MAX_WORKERS) as executor:
+        with ThreadPoolExecutor(max_workers=_conf.get("content_fetch_max_workers", 6)) as executor:
             contents = list(executor.map(_fetch_content_for_link, links))
         elapsed = time.perf_counter() - t0
         msg = f"Content fetch done in {elapsed:.2f}s for {n_links} items"
@@ -613,12 +605,14 @@ def run(body: RunRequest) -> dict[str, Any]:
             entry["content"] = content
 
         # When many items, cap each item's content to avoid overwhelming summarization/later steps
-        if n_links > CONTENT_CAP_LINKS_THRESHOLD:
+        if n_links > _conf.get("content_cap_links_threshold", 100):
+            cap_words = _conf.get("content_cap_words", 500)
+            thresh = _conf.get("content_cap_links_threshold", 100)
             for entry in all_entries:
                 entry["content"] = _truncate_to_words(
-                    entry.get("content") or "", CONTENT_CAP_WORDS
+                    entry.get("content") or "", cap_words
                 )
-            msg = f"Capped content to {CONTENT_CAP_WORDS} words per item (>{CONTENT_CAP_LINKS_THRESHOLD} links)"
+            msg = f"Capped content to {cap_words} words per item (>{thresh} links)"
             print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
             _log(msg)
 
@@ -630,7 +624,7 @@ def run(body: RunRequest) -> dict[str, Any]:
             link = (entry.get("link") or "").strip()
             content = (entry.get("content") or "").strip()
             if decoder.is_google_news_article_url(link) and (
-                len(content) < MIN_CONTENT_LENGTH
+                len(content) < _conf.get("min_content_length", 250)
                 or content == "Google News"
                 or _is_angular_license_stub(content)
             ):

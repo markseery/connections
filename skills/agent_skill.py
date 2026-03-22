@@ -15,11 +15,12 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 router = APIRouter()
 
 DEFAULT_PROFILE = "agent"
-GENERATE_TIMEOUT = 120.0
+_conf = SkillConfig("agent_skill")
 
 
 def _registry_url() -> str:
@@ -28,7 +29,7 @@ def _registry_url() -> str:
 
 def _aiserver_url() -> str:
     reg = _registry_url()
-    with httpx.Client(timeout=5.0) as client:
+    with httpx.Client(timeout=_conf.get("registry_timeout", 5.0)) as client:
         r = client.get(f"{reg}/servers/aiserver")
         r.raise_for_status()
         url = (r.json() or {}).get("url", "").strip().rstrip("/")
@@ -55,7 +56,7 @@ def respond(body: AgentRequest) -> dict[str, Any]:
             "Relevant context:\n\n" + body.context.strip() + "\n\nUser prompt:\n\n" + prompt_text
         )
     payload = {"prompt": prompt_text, "profile": body.profile.strip() or DEFAULT_PROFILE}
-    with httpx.Client(timeout=GENERATE_TIMEOUT) as client:
+    with httpx.Client(timeout=_conf.get("generate_timeout", 120.0)) as client:
         r = client.post(f"{aiserver}/generate", json=payload)
         r.raise_for_status()
     data = r.json() or {}

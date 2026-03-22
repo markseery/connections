@@ -14,9 +14,11 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 
 router = APIRouter()
+_conf = SkillConfig("help_skill")
 
 
 # ── Skill catalog ───────────────────────────────────────────────────────
@@ -280,7 +282,7 @@ def _discover_skill_names() -> list[str]:
     """Best-effort discovery of configured skill names from the config server."""
     registry = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").strip().rstrip("/")
     try:
-        with httpx.Client(timeout=2.0) as client:
+        with httpx.Client(timeout=_conf.get("registry_timeout", 2.0)) as client:
             r = client.get(f"{registry}/servers/configuration")
             if r.status_code != 200:
                 return []

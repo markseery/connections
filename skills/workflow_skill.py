@@ -24,11 +24,14 @@ from uuid import uuid4
 
 import httpx
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 router = APIRouter()
+
+_conf = SkillConfig("workflow_skill")
 
 _STORAGE_NS = "workflows"
 _TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "data" / "workflows"
@@ -51,7 +54,14 @@ class ExecuteWorkflowRequest(BaseModel):
 
     steps: list[dict[str, Any]] = Field(..., min_length=1)
     name: str = "unnamed"
-    timeout: float = Field(default=120, ge=1, le=300)
+    timeout: float = Field(default=120, ge=1)
+
+    @model_validator(mode="after")
+    def _cap_timeout(self) -> "ExecuteWorkflowRequest":
+        limit = _conf.get("max_timeout", 300)
+        if self.timeout > limit:
+            self.timeout = limit
+        return self
 
 
 # ── Template CRUD ────────────────────────────────────────────────────────
@@ -189,7 +199,7 @@ def run_template(name: str, body: dict[str, Any] | None = None) -> dict[str, Any
     return execute_workflow(ExecuteWorkflowRequest(
         name=f"{name} ({', '.join(f'{k}={v}' for k, v in params.items() if k != 'timeout')})",
         steps=resolved_steps,
-        timeout=params.get("timeout", 120),
+        timeout=params.get("timeout", _conf.get("default_timeout", 120)),
     ))
 
 
@@ -244,7 +254,7 @@ def execute_workflow(body: ExecuteWorkflowRequest) -> dict[str, Any]:
             break
 
         for step in wave:
-            remaining = max(1.0, deadline - time.monotonic())
+            remaining = max(_conf.get("min_remaining_timeout", 1.0), deadline - time.monotonic())
             resolved_args = _resolve_refs(step["args"], scratchpad)
             resolved_route = _resolve_route(step["route"], scratchpad)
 
@@ -410,8 +420,8 @@ def _parse_steps(raw: list[Any]) -> list[dict[str, Any]]:
                 "route": poll.get("route", ""),
                 "field": poll.get("field", "status"),
                 "target": poll.get("target", "completed"),
-                "interval": float(poll.get("interval", 2)),
-                "max_attempts": int(poll.get("max_attempts", 60)),
+                "interval": float(poll.get("interval", _conf.get("default_poll_interval", 2))),
+                "max_attempts": int(poll.get("max_attempts", _conf.get("default_poll_max_attempts", 60))),
             }
 
         steps.append(parsed_step)
@@ -441,7 +451,7 @@ def _poll_until_ready(
             return None
         time.sleep(interval)
         try:
-            with httpx.Client(timeout=10.0) as client:
+            with httpx.Client(timeout=_conf.get("poll_request_timeout", 10.0)) as client:
                 r = client.get(url)
             if r.status_code != 200:
                 print(f"[workflow] poll attempt {attempt}: status {r.status_code}", flush=True)
@@ -590,7 +600,7 @@ def _get_worker_url() -> str | None:
         "REGISTRY_SERVER_URL", "http://127.0.0.1:7002"
     ).strip().rstrip("/")
     try:
-        with httpx.Client(timeout=2.0) as client:
+        with httpx.Client(timeout=_conf.get("registry_timeout", 2.0)) as client:
             for name in ["worker-1", "worker"]:
                 try:
                     r = client.get(f"{registry}/servers/{name}")

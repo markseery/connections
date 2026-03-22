@@ -31,6 +31,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+from common.skill_config import SkillConfig
 from common.skill_response import skill_result
 from decorations.monitor import monitor
 from common.skill_lifecycle import find_live_worker
@@ -45,8 +46,7 @@ PAGE_KEY_SEP = "\x00"
 
 _jobs: dict[str, dict[str, Any]] = {}
 
-# When notifying about new URLs, summarize each page with AI if below this count.
-NEW_URL_NOTIFY_SUMMARY_MAX = 10
+_conf = SkillConfig("webscraper_skill")
 
 
 # ── storage (per-page records) ───────────────────────────────────────────
@@ -378,8 +378,8 @@ def _top_phrases(text: str, n: int = 10) -> list[tuple[str, int]]:
 
 class ScrapeRequest(BaseModel):
     url: str
-    max_pages: int = Field(default=30, ge=1, le=2000)
-    max_depth: int = Field(default=2, ge=1, le=15)
+    max_pages: int | None = None
+    max_depth: int | None = None
     include_patterns: list[str] = Field(default_factory=list)
     exclude_patterns: list[str] = Field(default_factory=list)
     summarize: bool = True
@@ -393,6 +393,24 @@ class ScrapeRequest(BaseModel):
             raise ValueError("url must start with http:// or https://")
         return _strip_url_query(u)
 
+    @model_validator(mode="after")
+    def _apply_config_defaults(self) -> ScrapeRequest:
+        if self.max_pages is None:
+            self.max_pages = int(_conf.get("default_max_pages", 30))
+        if self.max_depth is None:
+            self.max_depth = int(_conf.get("default_max_depth", 2))
+        limit_pages = int(_conf.get("max_pages_limit", 10000))
+        limit_depth = int(_conf.get("max_depth_limit", 100))
+        if self.max_pages < 1:
+            self.max_pages = 1
+        if self.max_pages > limit_pages:
+            self.max_pages = limit_pages
+        if self.max_depth < 1:
+            self.max_depth = 1
+        if self.max_depth > limit_depth:
+            self.max_depth = limit_depth
+        return self
+
 
 async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str, Any]], str]:
     root = _strip_url_query(req.url.strip())
@@ -402,8 +420,13 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
     queue: list[tuple[str, int]] = [(root, 0)]
     pages: list[dict[str, Any]] = []
 
+    fetch_timeout = float(_conf.get("page_fetch_timeout", 20))
+    min_text = int(_conf.get("min_text_length", 80))
+    max_content = int(_conf.get("max_content_chars", 8000))
+    delay = float(_conf.get("crawl_delay", 0.1))
+
     async with httpx.AsyncClient(
-        timeout=20.0,
+        timeout=fetch_timeout,
         follow_redirects=True,
         headers={"User-Agent": "ConnectionsWebScraper/1.0"},
     ) as client:
@@ -429,19 +452,19 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
                     continue
                 html = r.text
                 text = _extract_text_from_html(html)
-                if len(text) < 80:
+                if len(text) < min_text:
                     job["pages_skipped"] += 1
                     continue
 
                 title = _extract_title(html) or url
-                pages.append({"url": url, "title": title, "content": text[:8000], "depth": depth})
+                pages.append({"url": url, "title": title, "content": text[:max_content], "depth": depth})
                 job["pages_crawled"] = len(pages)
 
                 for link in _extract_links(html, url):
                     pl = urlparse(link)
                     if pl.netloc == base_domain and link not in visited:
                         queue.append((link, depth + 1))
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(delay)
             except Exception as exc:
                 print(f"[webscraper_skill] page scrape failed for {url}: {exc}", flush=True)
                 job["pages_failed"] += 1
@@ -459,7 +482,7 @@ def _build_markdown(root_url: str, pages: list[dict[str, Any]]) -> str:
         lines.append("")
         lines.append(f"**URL:** {p.get('url')}")
         lines.append("")
-        lines.append(str(p.get("content") or "")[:3000])
+        lines.append(str(p.get("content") or "")[:int(_conf.get("markdown_content_preview", 3000))])
         lines.append("")
         lines.append("---")
         lines.append("")
@@ -468,9 +491,10 @@ def _build_markdown(root_url: str, pages: list[dict[str, Any]]) -> str:
 
 async def _summarize(markdown: str) -> str:
     aiserver = _aiserver_url()
+    trunc = int(_conf.get("summary_max_chars", 15000))
     prompt = (
         "Summarize the following website content. Be concise, bullet points, and list key themes.\n\n"
-        f"{markdown[:15000]}"
+        f"{markdown[:trunc]}"
     )
     async with httpx.AsyncClient(timeout=120.0) as client:
         r = await client.post(f"{aiserver}/generate", json={"prompt": prompt, "profile": "fast"})
@@ -485,8 +509,8 @@ async def _summarize_page_terse_bullets(
     client: httpx.AsyncClient, aiserver: str, page_text: str
 ) -> str:
     """AIServer: a few succinct bullet points for one page's text (notification body)."""
-    text = (page_text or "")[:12000]
-    if len(text) < 40:
+    text = (page_text or "")[:int(_conf.get("page_summary_max_chars", 12000))]
+    if len(text) < int(_conf.get("page_summary_min_text", 40)):
         return "(insufficient text for summary)"
     prompt = (
         "Summarize the following web page text in a few terse, succinct bullet points only. "
@@ -541,7 +565,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
     job["markdown_path"] = str(md_path)
 
     combined_text = " ".join(p.get("content", "") for p in pages)
-    job["top_words"] = _top_phrases(combined_text, n=15)
+    job["top_words"] = _top_phrases(combined_text, n=int(_conf.get("top_phrases_count", 15)))
 
     scraped_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -580,7 +604,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
         to_email = (os.environ.get("EMAIL_RECEIVER_DEFAULT") or "").strip()
         if new_urls and to_email:
             per_url_summaries: dict[str, str] | None = None
-            if len(new_urls) < NEW_URL_NOTIFY_SUMMARY_MAX:
+            if len(new_urls) < int(_conf.get("notify_summary_max_urls", 10)):
                 page_text_by_url = {
                     (p.get("url") or "").strip(): str(p.get("content") or "")
                     for p in pages
@@ -739,7 +763,7 @@ def get_summary(job_id: str) -> dict[str, Any]:
 
 def _summarize_by_topic_sync(text: str, topic: str) -> str:
     aiserver = _aiserver_url()
-    truncated = (text or "")[:15000]
+    truncated = (text or "")[:int(_conf.get("summary_max_chars", 15000))]
     prompt = (
         f"Summarize ONLY content related to: {topic}. "
         "Focus on products, offerings, brand/positioning phrases, and concrete claims. "
@@ -1099,12 +1123,19 @@ def post_parse_combined(body: ParseCombinedRequest) -> dict[str, Any]:
 class LegacyStoredRequest(BaseModel):
     base_url: str = Field(..., min_length=1)
     namespace: str = Field(default=STORAGE_NAMESPACE)
-    max_chars: int | None = Field(default=None, ge=1, le=2_000_000)
+    max_chars: int | None = Field(default=None, ge=1)
 
     @field_validator("base_url")
     @classmethod
     def _norm_stored_base_url(cls, v: str) -> str:
         return _canonical_sitename(v.strip())
+
+    @model_validator(mode="after")
+    def _cap_max_chars(self) -> LegacyStoredRequest:
+        limit = int(_conf.get("max_combined_text_chars", 2_000_000))
+        if self.max_chars is not None and self.max_chars > limit:
+            self.max_chars = limit
+        return self
 
 
 @monitor

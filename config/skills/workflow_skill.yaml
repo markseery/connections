@@ -1,0 +1,8 @@
+# workflow_skill configuration
+default_timeout: 120
+max_timeout: 300
+min_remaining_timeout: 1.0
+default_poll_interval: 2
+default_poll_max_attempts: 60
+poll_request_timeout: 10.0
+registry_timeout: 2.0

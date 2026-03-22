@@ -29,7 +29,9 @@ from pydantic import BaseModel, Field
 from pydantic import model_validator
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
+_conf = SkillConfig("notification_skill")
 
 router = APIRouter()
 
@@ -125,7 +127,7 @@ def _save_notifications(records: list[dict[str, Any]]) -> None:
 def _parse_throttle(value: str) -> int:
     """Parse throttle value; allow '60' or '60%'."""
     s = (value or "").strip().rstrip("%").strip()
-    return int(s) if s else 60
+    return int(s) if s else _conf.get("default_throttle_per_min", 60)
 
 
 def _smtp_config() -> dict[str, Any]:
@@ -148,7 +150,7 @@ def _allow_send(recipients: list[str], throttle_per_min: int) -> bool:
     if throttle_per_min <= 0:
         return True
     now = datetime.now(timezone.utc)
-    window_start = now - timedelta(minutes=1)
+    window_start = now - timedelta(minutes=_conf.get("throttle_window_minutes", 1))
     for recipient in recipients:
         history = _recipient_timestamps.get(recipient, [])
         history = [ts for ts in history if ts > window_start]
@@ -205,7 +207,7 @@ def _send_smtp(cfg: dict[str, Any], req: SendEmailRequest) -> tuple[bool, str | 
         context.verify_mode = ssl.CERT_NONE
 
     try:
-        with smtplib.SMTP(cfg["smtp_host"], cfg["smtp_port"], timeout=20) as server:
+        with smtplib.SMTP(cfg["smtp_host"], cfg["smtp_port"], timeout=_conf.get("smtp_timeout", 20)) as server:
             server.ehlo()
             if cfg["use_tls"]:
                 server.starttls(context=context)

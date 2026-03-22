@@ -1,0 +1,4 @@
+# stock_skill configuration
+history_days: 2
+earnings_dates_limit: 10
+quarterly_financials_limit: 8

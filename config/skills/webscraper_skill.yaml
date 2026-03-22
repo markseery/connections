@@ -1,0 +1,30 @@
+# webscraper_skill configuration
+# Loaded by: from common.skill_config import SkillConfig
+#             _conf = SkillConfig("webscraper_skill")
+
+# crawl defaults (overridable per request)
+default_max_pages: 30
+default_max_depth: 2
+max_pages_limit: 10000
+max_depth_limit: 100
+
+# per-page fetch during crawl
+page_fetch_timeout: 20
+min_text_length: 80
+max_content_chars: 8000
+crawl_delay: 0.1
+
+# AI summarization
+summary_max_chars: 15000
+page_summary_max_chars: 12000
+page_summary_min_text: 40
+top_phrases_count: 15
+
+# markdown output
+markdown_content_preview: 3000
+
+# notifications
+notify_summary_max_urls: 10
+
+# stored/combined text
+max_combined_text_chars: 2000000

@@ -1,0 +1,15 @@
+# rss_new_skill configuration
+feed_timeout: 45.0
+content_fetch_timeout: 20.0
+content_max_chars: 100000
+min_content_length: 250
+max_age_days: 30
+content_fetch_max_workers: 6
+content_cap_links_threshold: 100
+content_cap_words: 500
+content_snippet_chars: 220
+registry_timeout: 5.0
+storage_fetch_timeout: 15.0
+angular_stub_min_chars: 200
+worker_load_timeout: 10.0
+persist_log_interval: 50

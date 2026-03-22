@@ -17,8 +17,10 @@ from pydantic import BaseModel, Field, model_validator
 from pydantic import field_validator
 
 from common.skill_response import skill_result
+from common.skill_config import SkillConfig
 
 router = APIRouter()
+_conf = SkillConfig("math_skill")
 
 
 class ValuesRequest(BaseModel):
@@ -78,7 +80,14 @@ class LogRequest(BaseModel):
 
 
 class FactorialRequest(BaseModel):
-    n: int = Field(..., ge=0, le=1000, description="Non-negative integer (max 1000)")
+    n: int = Field(..., ge=0, description="Non-negative integer")
+
+    @model_validator(mode="after")
+    def _cap_n(self) -> "FactorialRequest":
+        limit = _conf.get("factorial_max", 1000)
+        if self.n > limit:
+            raise ValueError(f"n must be <= {limit}")
+        return self
 
 
 class PercentOfRequest(BaseModel):
