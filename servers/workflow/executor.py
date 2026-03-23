@@ -592,6 +592,7 @@ class WorkflowExecutor:
                         _apply_placeholders(str(v), placeholders), step_responses
                     )
 
+        # Per-step cap; each subprocess step may use up to this many seconds (independent of other steps).
         step_timeout = step.get("timeout")
         if isinstance(step_timeout, (int, float)) and step_timeout > 0:
             timeout = float(step_timeout)

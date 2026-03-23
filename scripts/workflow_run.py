@@ -178,7 +178,7 @@ def main() -> int:
         "--subprocess-timeout",
         type=float,
         default=None,
-        help="Submit subprocess_timeout (omit for server default from app_config)",
+        help="Per-step subprocess cap in seconds (omit: server defaults to 7200; --local uses timeouts.workflow_subprocess, default 7200)",
     )
     parser.add_argument("--max-context-chars", type=int, default=150_000, help="Submit max_context_chars")
     parser.add_argument(

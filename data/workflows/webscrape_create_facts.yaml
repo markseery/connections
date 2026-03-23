@@ -8,7 +8,7 @@
 #   {
 #     "config": "webscrape_create_facts.yaml",
 #     "vars": { "sitename": "acme" },
-#     "subprocess_timeout": 7200,
+#     (subprocess_timeout defaults to 7200s per step on the workflow server; raise if needed.)
 #     "ai_timeout": 600
 #   }
 #
@@ -23,6 +23,7 @@ vars:
 steps:
   - id: create_facts
     type: subprocess
+    timeout: 7200
     command:
       - python3
       - scripts/webscrape_site_facts.py

@@ -1,4 +1,7 @@
 app_name: connections
+# Optional overrides for common/timeouts.py defaults (see common/timeouts.py _DEFAULTS).
+timeouts:
+  workflow_subprocess: 7200
 health:
   interval_seconds: 60
   timeout_seconds: 1

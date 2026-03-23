@@ -79,9 +79,13 @@ class SubmitRequest(BaseModel):
     vars: dict[str, str] = Field(default_factory=dict, description="Variable overrides")
     skill_timeout: float = Field(default=300, ge=1)
     ai_timeout: float = Field(default=300, ge=1)
-    subprocess_timeout: float | None = Field(
-        default=None,
-        description="Max seconds per subprocess step; omit to use timeouts.workflow_subprocess from app_config",
+    subprocess_timeout: float = Field(
+        default=7200,
+        ge=1,
+        description=(
+            "Max seconds per subprocess step (default 7200 = 2h). Each step gets this full budget one after "
+            "another (not a shared pool). Increase for huge crawls."
+        ),
     )
     max_context_chars: int = Field(default=150_000, ge=0)
 

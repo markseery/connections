@@ -5,8 +5,8 @@ Exercise webscraper_skill: list stored URLs, run a scrape, list again, print dif
 Requires: registry, worker (webscraper_skill auto-loads on first request).
 
 Usage:
-  python scripts/webscrape_test.py https://example.com --namespace webscrape --max-pages 20 --max-depth 2
-  python scripts/webscrape_test.py https://example.com --registry-url http://127.0.0.1:7002
+  python scripts/webscrape_fetch.py https://example.com --namespace webscrape --max-pages 20 --max-depth 2
+  python scripts/webscrape_fetch.py https://example.com --registry-url http://127.0.0.1:7002
 """
 
 from __future__ import annotations
