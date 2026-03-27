@@ -81,13 +81,15 @@ class StoredSiteContent:
         worker_url: str | None = None,
         *,
         registry_url: str | None = None,
+        namespace: str = "webscrape",
     ) -> None:
         u = _strip_url_query((base_url or "").strip())
         self.base_url = u.rstrip("/")
         self._worker_url = (worker_url or "").strip().rstrip("/") if worker_url else None
         self._registry_url = (registry_url or DEFAULT_REGISTRY_URL).rstrip("/")
+        self._namespace = (namespace or "").strip() or "webscrape"
         self._value: dict[str, Any] | None = None
-        self._pages: list[tuple[str, str]] | None = None  # used when built from combined_text
+        self._pages: list[tuple[str, str]] | None = None
 
     @classmethod
     def from_combined_text(cls, combined_text: str) -> StoredSiteContent:
@@ -116,7 +118,7 @@ class StoredSiteContent:
         with httpx.Client(timeout=FETCH_TIMEOUT) as client:
             r = client.get(
                 f"{worker_url}/skills/{STORED_SKILL_NAME}/pages/content",
-                params={"sitename": self.base_url},
+                params={"sitename": self.base_url, "namespace": self._namespace},
             )
             if r.status_code == 404:
                 raise ValueError(

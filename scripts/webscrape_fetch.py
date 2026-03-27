@@ -35,8 +35,9 @@ from common.skill_lifecycle import find_live_worker
 SKILL = "webscraper_skill"
 DEFAULT_NAMESPACE = "webscrape"
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
-POLL_INTERVAL_SEC = 1.5
-SCRAPE_TIMEOUT = 600.0
+POLL_INTERVAL_SEC = 3.0
+SCRAPE_TIMEOUT_BASE = 600.0
+SCRAPE_TIMEOUT_PER_PAGE = 1.0
 
 
 def _urls_from_pages_response(payload: dict) -> list[str]:
@@ -93,16 +94,29 @@ def start_scrape(
 def wait_for_job(client: httpx.Client, worker_url: str, job_id: str, timeout_sec: float) -> dict:
     deadline = time.monotonic() + timeout_sec
     last: dict = {}
+    last_crawled = 0
     while time.monotonic() < deadline:
         r = client.get(f"{worker_url}/skills/{SKILL}/scrape/{quote(job_id, safe='')}")
         r.raise_for_status()
         last = r.json()
         data = last.get("data") if isinstance(last.get("data"), dict) else {}
         status = (data.get("status") or "").lower()
+        crawled = data.get("pages_crawled", 0)
+        if crawled != last_crawled:
+            elapsed = int(time.monotonic() - (deadline - timeout_sec))
+            visited = data.get("urls_visited", 0)
+            failed = data.get("pages_failed", 0)
+            skipped = data.get("pages_skipped", 0)
+            stored = data.get("url_count", 0)
+            print(f"  [{elapsed:4d}s] crawled={crawled} stored={stored} "
+                  f"visited={visited} skipped={skipped} failed={failed}",
+                  flush=True)
+            last_crawled = crawled
         if status in ("completed", "failed"):
             return data
         time.sleep(POLL_INTERVAL_SEC)
-    raise TimeoutError(f"Job {job_id} did not finish within {timeout_sec}s; last={last!r}")
+    raise TimeoutError(f"Job {job_id} did not finish within {timeout_sec:.0f}s; "
+                       f"crawled={last_crawled} pages so far")
 
 
 def main() -> int:
@@ -120,10 +134,13 @@ def main() -> int:
     p.add_argument(
         "--timeout",
         type=float,
-        default=SCRAPE_TIMEOUT,
-        help="Max seconds to wait for scrape job (default: 600)",
+        default=0,
+        help="Max seconds to wait (default: auto-scaled from max-pages)",
     )
     args = p.parse_args()
+
+    if args.timeout <= 0:
+        args.timeout = max(SCRAPE_TIMEOUT_BASE, args.max_pages * SCRAPE_TIMEOUT_PER_PAGE)
 
     sitename = args.sitename.strip()
     namespace = (args.namespace or "").strip() or DEFAULT_NAMESPACE
@@ -144,7 +161,7 @@ def main() -> int:
             before = fetch_stored_urls(client, worker_url, namespace, sitename)
             _print_url_block(f"=== Stored URLs before scrape (namespace={namespace!r}, sitename={sitename!r}) ===", before)
 
-            print("\nStarting scrape...", flush=True)
+            print(f"\nStarting scrape (timeout={args.timeout:.0f}s)…", flush=True)
             job_id = start_scrape(
                 client,
                 worker_url,

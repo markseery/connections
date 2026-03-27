@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import re
 import textwrap
+from collections import Counter
 from typing import Any
 
 import httpx
@@ -128,6 +129,15 @@ class SplitRequest(BaseModel):
     text: str = Field(..., min_length=1, description="Text to split")
     delimiter: str = Field(default="\n", description="Delimiter to split on")
     strip_empty: bool = Field(default=True, description="Remove empty segments")
+
+
+class PhraseFrequencyRequest(BaseModel):
+    text: str = Field(..., min_length=1, description="Text to analyze")
+    n: int = Field(
+        default=2, ge=1,
+        description="Phrase length: 1 = single words, 2 = bigrams, 3 = trigrams, etc.",
+    )
+    top: int = Field(default=20, ge=1, le=200, description="Number of top phrases to return")
 
 
 # ── Pure transformation routes ─────────────────────────────────────────────
@@ -257,6 +267,56 @@ def split_text(body: SplitRequest) -> dict[str, Any]:
         summary=f"Split into **{len(parts)}** segments.",
         items=[{"text": p, "index": i} for i, p in enumerate(parts)],
         count=len(parts),
+    )
+
+
+_STOP_WORDS: set[str] = {
+    "a", "an", "the", "and", "or", "but", "nor", "so", "yet",
+    "in", "on", "at", "to", "for", "of", "with", "by", "from",
+    "as", "into", "through", "during", "before", "after", "above",
+    "below", "between", "under", "over", "about", "against",
+    "is", "am", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "do", "does", "did",
+    "will", "would", "shall", "should", "may", "might", "can",
+    "could", "must",
+    "i", "me", "my", "mine", "we", "us", "our", "ours",
+    "you", "your", "yours", "he", "him", "his", "she", "her",
+    "hers", "it", "its", "they", "them", "their", "theirs",
+    "this", "that", "these", "those", "what", "which", "who",
+    "whom", "whose",
+    "not", "no", "just", "also", "very", "too", "only", "own",
+    "then", "than", "when", "where", "how", "all", "each",
+    "every", "both", "few", "more", "most", "other", "some",
+    "such", "any", "if", "while", "because", "until", "up",
+    "out", "off", "down", "here", "there", "again", "once",
+    "s", "t", "d", "ll", "re", "ve", "m",
+}
+
+
+def _tokenize(text: str) -> list[str]:
+    return re.findall(r"[a-zA-Z'\u2019]+", text.lower())
+
+
+@monitor
+@router.post("/phrasefrequency")
+def phrase_frequency(body: PhraseFrequencyRequest) -> dict[str, Any]:
+    """Count the most common n-word phrases in the text."""
+    words = _tokenize(body.text)
+    if not words:
+        return skill_result(summary="No words found in input.", items=[], count=0)
+
+    if body.n <= 2:
+        words = [w for w in words if w not in _STOP_WORDS]
+
+    ngrams = [" ".join(words[i : i + body.n]) for i in range(len(words) - body.n + 1)]
+    counts = Counter(ngrams).most_common(body.top)
+
+    items = [{"phrase": phrase, "count": freq, "index": i} for i, (phrase, freq) in enumerate(counts)]
+    return skill_result(
+        summary=f"Top **{len(counts)}** {body.n}-word phrase(s) by frequency.",
+        items=items,
+        count=len(counts),
+        n=body.n,
     )
 
 

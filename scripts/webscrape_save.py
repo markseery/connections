@@ -52,6 +52,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Save stored webscrape content to a markdown file.")
     ap.add_argument("site", help="Site URL (must already be scraped and stored)")
     ap.add_argument(
+        "--namespace", default="webscrape",
+        help="Storage namespace (default: webscrape)",
+    )
+    ap.add_argument(
         "--out", default=None, metavar="FILE",
         help="Output file path. Relative paths go under data/webscrape/sites/. "
         "Default: data/webscrape/sites/<host>_<timestamp>.md",
@@ -78,7 +82,8 @@ def main() -> int:
     registry_url = (args.registry_url or DEFAULT_REGISTRY_URL).rstrip("/")
     worker_url = (args.worker_url or "").strip().rstrip("/") if args.worker_url else None
 
-    content = StoredSiteContent(site, worker_url=worker_url, registry_url=registry_url)
+    namespace = (args.namespace or "").strip() or "webscrape"
+    content = StoredSiteContent(site, worker_url=worker_url, registry_url=registry_url, namespace=namespace)
     try:
         content.load()
     except Exception as e:

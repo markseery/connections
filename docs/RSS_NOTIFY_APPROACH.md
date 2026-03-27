@@ -1,6 +1,6 @@
 # Approach: RSS New-Item Notifications via Storage + Email
 
-**Goal:** Track which RSS items have already been notified, and email **mark.a.seery@gmail.com** the title and link for any **new** items only.
+**Goal:** Track which RSS items have already been notified, and email **mseery@coreweave.com** the title and link for any **new** items only.
 
 **Note:** This codebase has a **storage server** (with namespaces as a dimension) and a **registry** (service discovery). There is no separate "namespace server" — we use the storage server's **namespace** feature (e.g. `rss_notified`) to partition state.
 
@@ -51,7 +51,7 @@
 
 - Use the existing **notification_skill** (SMTP).
 - **Endpoint:** `POST {worker_url}/skills/notification_skill/send`
-- **Body:** `{ "to": ["mark.a.seery@gmail.com"], "subject": "...", "body": "..." }`
+- **Body:** `{ "to": ["mseery@coreweave.com"], "subject": "...", "body": "..." }`
 - **Content:** For each new item, send a short email:
   - **Subject:** e.g. `New RSS: <feed title> — <item title>` (truncate if needed).
   - **Body:** Plain text with item **title** and **link** (and optionally feed name/source).
@@ -70,7 +70,7 @@
      If 404 → treat as `notified_ids = []`.
    - **Compute new items:** For each item, take `item.id or item.link`; if not in `notified_ids`, consider it new.
    - **For each new item:**
-     - Send email via `POST {worker}/skills/notification_skill/send` (to mark.a.seery@gmail.com, subject + body with title and link).
+     - Send email via `POST {worker}/skills/notification_skill/send` (to mseery@coreweave.com, subject + body with title and link).
      - Append that item’s id (or link) to `notified_ids`.
    - **Persist updated state:**  
      `PUT {storage}/namespaces/rss_notified/records/{encoded_feed_url}` with body  
@@ -91,7 +91,7 @@
 
 **Option 2 – Skill**  
 - New skill (e.g. `rss_new_skill`) that exposes something like:
-  - `POST /check-and-notify` with body `{ "feed_urls": [...], "to_email": "mark.a.seery@gmail.com" }`.
+  - `POST /check-and-notify` with body `{ "feed_urls": [...], "to_email": "mseery@coreweave.com" }`.
   - Skill uses storage (same namespace/key scheme) and calls notification_skill (HTTP to same worker or another) to send email.
 - A cron job or external scheduler then calls this skill’s endpoint periodically.
 
@@ -108,7 +108,7 @@
 |------|--------|
 | Storage namespace | Fixed in code: `rss_notified` |
 | Feed list | Script default list (e.g. same as `process_rss_feeds.py`) or CLI/config file |
-| Recipient email | `mark.a.seery@gmail.com` (in script/skill or env e.g. `RSS_NOTIFY_EMAIL`) |
+| Recipient email | `mseery@coreweave.com` (in script/skill or env e.g. `RSS_NOTIFY_EMAIL`) |
 | Storage/worker URLs | From registry (`REGISTRY_SERVER_URL`) |
 | Email sending | notification_skill (existing `.env`: `EMAIL_SENDER`, `EMAIL_PASSWORD`, `SMTP_*`) |
 
@@ -128,5 +128,5 @@
 
 - **Storage server:** Namespace `rss_notified`, one record per feed URL (key = encoded feed URL), value = `feed_url`, `updated_at`, `notified_ids[]`.
 - **Registry:** Used only to discover storage and worker URLs; no separate “namespace server.”
-- **Email:** Existing notification_skill, POST `/skills/notification_skill/send`, to mark.a.seery@gmail.com with title + link for each new item.
+- **Email:** Existing notification_skill, POST `/skills/notification_skill/send`, to mseery@coreweave.com with title + link for each new item.
 - **Implementation:** Script (e.g. `rss_notify_new.py` or `--notify-new` in `process_rss_feeds.py`) that runs periodically (cron), fetches feeds via rss_skill, diffs against storage, sends email for new items, then updates storage.

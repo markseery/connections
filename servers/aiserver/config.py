@@ -13,11 +13,11 @@ from typing import Literal
 
 from dotenv import load_dotenv
 
-Provider = Literal["ollama", "openai", "xai", "google", "perplexity", "wandb"]
-Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search"]
+Provider = Literal["ollama", "openai", "xai", "google", "perplexity", "wandb", "anthropic", "mlx"]
+Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"]
 
-SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity", "wandb"}
-SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search"}
+SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity", "wandb", "anthropic", "mlx"}
+SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"}
 
 
 _env_path = Path(__file__).resolve().parents[2] / ".env"
@@ -52,6 +52,10 @@ def get_provider_for_profile(profile: Profile) -> Provider:
         return v  # type: ignore[return-value]
     if profile == "search":
         return "perplexity"
+    if profile == "fast":
+        return "anthropic"
+    if profile == "batch":
+        return "mlx"
     return get_default_provider()
 
 
@@ -66,6 +70,8 @@ def get_provider_key(provider: Provider) -> str | None:
         return _get_env("PERPLEXITY_API_KEY")
     if provider == "wandb":
         return _get_env("WANDB_API_KEY")
+    if provider == "anthropic":
+        return _get_env("ANTHROPIC_API_KEY")
     return None
 
 
@@ -82,6 +88,8 @@ def get_provider_base_url(provider: Provider) -> str | None:
         return _get_env("PERPLEXITY_BASE_URL", "https://api.perplexity.ai")
     if provider == "wandb":
         return _get_env("WANDB_INFERENCE_BASE_URL", "https://api.inference.wandb.ai/v1")
+    if provider == "anthropic":
+        return _get_env("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
     return None
 
 
@@ -182,6 +190,23 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "search": "zai-org/GLM-5-FP8",
         }
         return defaults[profile]
+
+    if provider == "anthropic":
+        defaults = {
+            "fast": "claude-haiku-4-5-20251001",
+            "chat": "claude-sonnet-4-20250514",
+            "reason": "claude-sonnet-4-20250514",
+            "agent": "claude-opus-4-6",
+            "code": "claude-sonnet-4-20250514",
+            "image": "claude-sonnet-4-20250514",
+            "video": "claude-sonnet-4-20250514",
+            "search": "claude-haiku-4-5-20251001",
+        }
+        return defaults[profile]
+
+    if provider == "mlx":
+        default_model = "mlx-community/Mistral-7B-Instruct-v0.3-4bit"
+        return _get_env(f"AISERVER_MODEL_MLX_{profile.upper()}", default_model)
 
     raise RuntimeError(f"Unsupported provider: {provider}")
 

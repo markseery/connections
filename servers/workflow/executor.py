@@ -160,6 +160,7 @@ class WorkflowExecutor:
         self.base_dir = base_dir or PROJECT_ROOT
         self._aiserver_url = aiserver_url
         self._worker_url = worker_url
+        self._active_configs: set[Path] = set()
 
     def _get_ai_url(self) -> str:
         if self._aiserver_url:
@@ -213,7 +214,7 @@ class WorkflowExecutor:
                 if not isinstance(s, dict):
                     continue
                 step = dict(s)
-                if step.get("type") not in ("ai", "skill", "subprocess"):
+                if step.get("type") not in ("ai", "skill", "subprocess", "workflow"):
                     step["type"] = "ai"
                 out.append(step)
             return out
@@ -243,6 +244,22 @@ class WorkflowExecutor:
 
         Returns WorkflowResult with step outputs, final output, and report path.
         """
+        resolved = config_path.resolve()
+        if resolved in self._active_configs:
+            raise ValueError(f"Recursive workflow detected: {config_path.name} is already running")
+        self._active_configs.add(resolved)
+
+        try:
+            return self._run_inner(config_path, var_overrides, on_step_progress)
+        finally:
+            self._active_configs.discard(resolved)
+
+    def _run_inner(
+        self,
+        config_path: Path,
+        var_overrides: dict[str, str] | None = None,
+        on_step_progress: Callable[[int, str, str, str | None], None] | None = None,
+    ) -> WorkflowResult:
         cfg = self.load_config(config_path)
 
         if var_overrides:
@@ -321,6 +338,8 @@ class WorkflowExecutor:
                     text = self._run_skill_step(step, step_id, placeholders, step_responses)
                 elif step_type == "subprocess":
                     text = self._run_subprocess_step(step, step_id, placeholders, step_responses)
+                elif step_type == "workflow":
+                    text = self._run_workflow_step(step, step_id, placeholders, step_responses)
                 else:
                     text = self._run_ai_step(step, placeholders, step_responses)
                     step_responses[step_id] = _scratchpad_for_ai_text(text)
@@ -648,6 +667,44 @@ class WorkflowExecutor:
             )
 
         return text.strip()
+
+    def _run_workflow_step(
+        self,
+        step: dict[str, Any],
+        step_id: str,
+        placeholders: dict[str, str],
+        step_responses: dict[str, Any],
+    ) -> str:
+        config_ref = (step.get("config") or "").strip()
+        if not config_ref:
+            raise ValueError("workflow step missing 'config'")
+        config_ref = _substitute_step_refs_in_string(
+            _apply_placeholders(config_ref, placeholders), step_responses
+        )
+        child_path = self.resolve_config_path(config_ref)
+
+        child_vars: dict[str, str] = {}
+        raw_vars = step.get("vars")
+        if isinstance(raw_vars, dict):
+            resolved = _resolve_value_refs(raw_vars, placeholders, step_responses)
+            child_vars = {str(k): str(v) for k, v in resolved.items()}
+
+        result = self.run(child_path, var_overrides=child_vars)
+
+        response: dict[str, Any] = {
+            "final_output": result.final_output,
+            "report_path": result.report_path,
+            "steps": [
+                {"step_id": so.step_id, "status": so.status, "elapsed_ms": so.elapsed_ms}
+                for so in result.step_outputs
+            ],
+        }
+        step_responses[step_id] = response
+
+        output_path = step.get("output_path")
+        if output_path:
+            return _extract_output_from_response(response, str(output_path).strip())
+        return result.final_output
 
 
 class StepOutput:

@@ -42,13 +42,71 @@ def _maybe_encrypt_response(request: Request, payload: Any) -> Any:
     return payload
 
 
+def _extract_upstream_error(exc: Exception) -> tuple[str, int]:
+    """Return (detail_string, http_status) from an upstream exception.
+
+    SDK clients (e.g. perplexity) attach the original ``httpx.Response``
+    so we can forward the real status code instead of a blanket 500.
+    For 429 responses, includes rate-limit headers to distinguish
+    rate limiting from quota exhaustion.
+    """
+    response = getattr(exc, "response", None)
+    upstream_status: int | None = None
+    snippet = ""
+    rate_info = ""
+
+    if response is not None:
+        try:
+            upstream_status = int(response.status_code)
+        except (ValueError, TypeError):
+            pass
+        try:
+            body = response.text
+            if body:
+                snippet = body[:800].strip()
+                if len(body) > 800:
+                    snippet += "..."
+        except Exception:
+            pass
+
+        if upstream_status == 429:
+            rl_parts: list[str] = []
+            headers = getattr(response, "headers", {})
+            for key in ("retry-after", "anthropic-ratelimit-requests-remaining",
+                        "anthropic-ratelimit-requests-limit",
+                        "anthropic-ratelimit-requests-reset",
+                        "anthropic-ratelimit-tokens-remaining",
+                        "anthropic-ratelimit-tokens-limit",
+                        "anthropic-ratelimit-tokens-reset",
+                        "x-ratelimit-limit-requests",
+                        "x-ratelimit-remaining-requests",
+                        "x-ratelimit-reset-requests"):
+                val = headers.get(key)
+                if val is not None:
+                    rl_parts.append(f"{key}={val}")
+            if rl_parts:
+                rate_info = " | rate-limit: " + ", ".join(rl_parts)
+
+    detail = str(exc)
+    if snippet:
+        detail = f"{detail}; upstream response: {snippet}"
+    if rate_info:
+        detail += rate_info
+
+    if upstream_status and 400 <= upstream_status < 600:
+        return detail, upstream_status
+    if response is not None:
+        return detail, 502
+    return detail, 500
+
+
 @router.post("/generate")
 def generate_route(request: Request, body: dict[str, Any]) -> Any:
     """
     Body:
       - prompt: str (required)
-      - profile: one of fast/chat/reason/agent/code/image/video (required)
-      - provider: one of ollama/openai/xai/google/perplexity/wandb (optional)
+      - profile: one of fast/chat/reason/agent/code/image/video/batch (required)
+      - provider: one of ollama/openai/xai/google/perplexity/wandb/anthropic/mlx (optional)
     """
     body_any = _maybe_decrypt_body(body)
     if not isinstance(body_any, dict):
@@ -72,38 +130,25 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
             detail=f"provider must be one of {sorted(SUPPORTED_PROVIDERS)}",
         )
 
+    from .config import get_model
+    model = get_model(provider, profile)  # type: ignore[arg-type]
+
     try:
         result = generate(prompt=prompt, profile=profile, provider=provider)  # type: ignore[arg-type]
     except httpx.HTTPError as e:  # type: ignore[name-defined]
-        detail = str(e)
-        response_snippet = ""
-        if getattr(e, "response", None) is not None:
-            try:
-                body = e.response.text
-                if body:
-                    response_snippet = body[:800].strip()
-                    if len(body) > 800:
-                        response_snippet += "..."
-            except Exception:
-                pass
-        if response_snippet:
-            detail = f"{detail}; upstream response: {response_snippet}"
+        detail, status = _extract_upstream_error(e)
         logger.error(
-            "generate 502 (upstream error): %s | profile=%s provider=%s",
-            detail,
-            profile,
-            provider,
-            exc_info=True,
+            "generate %d (upstream HTTP error): %s | profile=%s provider=%s model=%s",
+            status, detail, profile, provider, model, exc_info=True,
         )
-        raise HTTPException(status_code=502, detail=detail) from e
+        raise HTTPException(status_code=status, detail=detail) from e
     except Exception as e:
+        detail, status = _extract_upstream_error(e)
         logger.exception(
-            "generate 500: %s | profile=%s provider=%s",
-            e,
-            profile,
-            provider,
+            "generate %d: %s | profile=%s provider=%s model=%s",
+            status, e, profile, provider, model,
         )
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(status_code=status, detail=detail) from e
 
     return _maybe_encrypt_response(request, result)
 

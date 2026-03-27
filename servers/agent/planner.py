@@ -85,8 +85,14 @@ def create_plan(
             prompt_parts.append("\nFailed steps: " + "; ".join(failures))
 
     if request.conversation_context and request.conversation_context.strip():
-        prompt_parts.append("\nRelevant conversation history:\n\n" + request.conversation_context.strip())
-    prompt_parts.append(f"\nRequest: {request.prompt}")
+        prompt_parts.append(
+            "\n--- CONVERSATION HISTORY (for context only, do NOT re-execute prior requests) ---\n\n"
+            + request.conversation_context.strip()
+            + "\n\n--- END CONVERSATION HISTORY ---"
+        )
+    prompt_parts.append(
+        f"\n>>> CURRENT USER REQUEST (plan ONLY for this, ignore prior requests): {request.prompt}"
+    )
     if request.system_prompt:
         prompt_parts.insert(1, f"\nSystem: {request.system_prompt}")
     prompt = "\n".join(prompt_parts)

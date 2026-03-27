@@ -163,6 +163,63 @@ def _perplexity_generate(prompt: str, model: str, profile: Profile) -> dict[str,
     return {"type": "search", "text": text, "results": results}
 
 
+_mlx_cache: dict[str, tuple[Any, Any]] = {}
+_mlx_lock: Any = None
+
+
+def _get_mlx_lock() -> Any:
+    global _mlx_lock
+    if _mlx_lock is None:
+        import threading
+        _mlx_lock = threading.Lock()
+    return _mlx_lock
+
+
+def _mlx_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
+    """Run inference locally via mlx_lm (Apple Silicon). Model is loaded once and cached.
+
+    All calls are serialized with a lock because MLX's Metal backend
+    is not thread-safe under uvicorn's thread pool.
+    """
+    from mlx_lm import load, generate as mlx_generate
+
+    with _get_mlx_lock():
+        if model not in _mlx_cache:
+            _mlx_cache.clear()
+            _mlx_cache[model] = load(model)
+        mdl, tokenizer = _mlx_cache[model]
+
+        messages = [{"role": "user", "content": prompt}]
+        formatted = tokenizer.apply_chat_template(messages, add_generation_prompt=True)
+        text = mlx_generate(mdl, tokenizer, prompt=formatted, verbose=False)
+    return {"type": "text", "text": text.strip()}
+
+
+def _anthropic_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
+    base = (get_provider_base_url("anthropic") or "https://api.anthropic.com").rstrip("/")
+    key = _require_key("anthropic")
+    url = f"{base}/v1/messages"
+    headers = {
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json",
+    }
+    payload = {
+        "model": model,
+        "max_tokens": 4096,
+        "messages": [{"role": "user", "content": prompt}],
+    }
+    with httpx.Client(timeout=120.0) as client:
+        r = client.post(url, json=payload, headers=headers)
+        r.raise_for_status()
+        j = r.json()
+        parts = j.get("content") or []
+        text = "".join(
+            block.get("text", "") for block in parts if block.get("type") == "text"
+        )
+        return {"type": "text", "text": text}
+
+
 def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any]:
     model = get_model(provider, profile)
 
@@ -178,6 +235,10 @@ def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any
         out = _perplexity_generate(prompt, model, profile)
     elif provider == "wandb":
         out = _wandb_generate(prompt, model, profile)
+    elif provider == "anthropic":
+        out = _anthropic_generate(prompt, model, profile)
+    elif provider == "mlx":
+        out = _mlx_generate(prompt, model, profile)
     else:
         raise RuntimeError(f"Unsupported provider: {provider}")
 

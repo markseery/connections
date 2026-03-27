@@ -66,6 +66,9 @@ routes:
   - method: POST
     path: /skills/text_skill/rewrite
     description: rewrite_text
+  - method: POST
+    path: /skills/text_skill/phrasefrequency
+    description: phrase_frequency
 
 route_risk:
   "POST /skills/text_skill/summarize": safe
@@ -86,3 +89,4 @@ route_risk:
   "POST /skills/text_skill/translate": safe
   "POST /skills/text_skill/extract": safe
   "POST /skills/text_skill/rewrite": safe
+  "POST /skills/text_skill/phrasefrequency": safe

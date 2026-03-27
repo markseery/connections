@@ -3,15 +3,15 @@
 Run the Agent skill: send a prompt to the worker's Agent skill, which uses the
 AI server to generate a response. Prints the response text to stdout.
 
-With --client (e.g. mark.a.seery@gmail.com), the script uses the storage server
+With --client (e.g. mseery@coreweave.com), the script uses the storage server
 to load or create a "current_memory" record in the client namespace and passes
 it as context to every AI call; after each response it appends the exchange to
 memory and saves.
 
 Usage:
   python scripts/run_agent.py "Your prompt here"
-  python scripts/run_agent.py --client mark.a.seery@gmail.com --prompt "Remember I prefer Python"
-  python scripts/run_agent.py --client mark.a.seery@gmail.com "What do I prefer?"
+  python scripts/run_agent.py --client mseery@coreweave.com --prompt "Remember I prefer Python"
+  python scripts/run_agent.py --client mseery@coreweave.com "What do I prefer?"
 
 Requires: registry (unless --worker-url), worker with agent_skill, aiserver.
 With --client: storage server (via registry or STORAGE_SERVER_URL).

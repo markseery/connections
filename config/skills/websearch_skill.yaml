@@ -1,0 +1,10 @@
+# websearch_skill configuration
+search_timeout: 15.0
+fetch_timeout: 10.0
+max_page_chars: 15000
+summary_content_chars: 8000
+ai_timeout: 60.0
+registry_timeout: 2.0
+
+route_risk:
+  "POST /skills/websearch_skill/search": safe

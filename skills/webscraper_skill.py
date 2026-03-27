@@ -400,7 +400,14 @@ class ScrapeRequest(BaseModel):
         return self
 
 
-async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str, Any]], str]:
+async def _crawl(
+    job: dict[str, Any],
+    req: ScrapeRequest,
+    *,
+    storage_base: str = "",
+    namespace: str = "",
+    sitename: str = "",
+) -> tuple[list[dict[str, Any]], str]:
     root = _strip_url_query(req.url.strip())
     parsed = urlparse(root)
     base_domain = parsed.netloc
@@ -412,6 +419,9 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
     min_text = int(_conf.get("min_text_length", 80))
     max_content = int(_conf.get("max_content_chars", 8000))
     delay = float(_conf.get("crawl_delay", 0.1))
+
+    store_inline = bool(storage_base and namespace and sitename)
+    stored_count = 0
 
     async with httpx.AsyncClient(
         timeout=fetch_timeout,
@@ -445,8 +455,24 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
                     continue
 
                 title = _extract_title(html) or url
-                pages.append({"url": url, "title": title, "content": text[:max_content], "depth": depth})
+                page_content = text[:max_content]
+                pages.append({"url": url, "title": title, "content": page_content, "depth": depth})
                 job["pages_crawled"] = len(pages)
+
+                if store_inline:
+                    try:
+                        sk = _page_storage_key(sitename, url)
+                        body = _build_page_value(namespace, sitename, url, page_content)
+                        sr = await client.put(
+                            _record_url(storage_base, namespace, sk), json=body,
+                            timeout=30.0,
+                        )
+                        sr.raise_for_status()
+                        stored_count += 1
+                        job["url_count"] = stored_count
+                    except Exception as store_exc:
+                        print(f"[webscraper_skill] inline store failed for {url}: {store_exc}",
+                              flush=True)
 
                 for link in _extract_links(html, url):
                     pl = urlparse(link)
@@ -458,6 +484,7 @@ async def _crawl(job: dict[str, Any], req: ScrapeRequest) -> tuple[list[dict[str
                 job["pages_failed"] += 1
                 continue
 
+    job["stored"] = store_inline
     markdown = _build_markdown(root, pages)
     return pages, markdown
 
@@ -541,7 +568,12 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
         flush=True,
     )
 
-    pages, md = await _crawl(job, req)
+    pages, md = await _crawl(
+        job, req,
+        storage_base=storage_base,
+        namespace=ns,
+        sitename=sitename,
+    )
     if not pages:
         job["status"] = "failed"
         job["error"] = "No pages crawled; check URL and filters"
@@ -556,39 +588,28 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
     job["top_words"] = _top_phrases(combined_text, n=int(_conf.get("top_phrases_count", 15)))
 
     scraped_at = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    job["scraped_at"] = scraped_at
+    job["namespace"] = ns
+    job["sitename"] = sitename
+
+    crawled_ordered: list[str] = []
+    seen_c: set[str] = set()
+    for p in pages:
+        u = (p.get("url") or "").strip()
+        if u and u not in seen_c:
+            seen_c.add(u)
+            crawled_ordered.append(u)
+    new_urls = [u for u in crawled_ordered if u not in prior_set]
+    job["new_urls"] = new_urls
+
+    print(f"[webscraper_skill] job {job_id}: {len(new_urls)} new URL(s) (not previously stored):", flush=True)
+    if new_urls:
+        for u in new_urls:
+            print(f"  {u}", flush=True)
+    else:
+        print("  (none)", flush=True)
 
     try:
-        if not storage_base:
-            storage_base = _storage_url()
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            for p in pages:
-                sk = _page_storage_key(sitename, p["url"])
-                body = _build_page_value(ns, sitename, p["url"], p.get("content") or "")
-                r = await client.put(_record_url(storage_base, ns, sk), json=body)
-                r.raise_for_status()
-        job["stored"] = True
-        job["url_count"] = len(pages)
-        job["scraped_at"] = scraped_at
-        job["namespace"] = ns
-        job["sitename"] = sitename
-
-        crawled_ordered: list[str] = []
-        seen_c: set[str] = set()
-        for p in pages:
-            u = (p.get("url") or "").strip()
-            if u and u not in seen_c:
-                seen_c.add(u)
-                crawled_ordered.append(u)
-        new_urls = [u for u in crawled_ordered if u not in prior_set]
-        job["new_urls"] = new_urls
-
-        print(f"[webscraper_skill] job {job_id}: {len(new_urls)} new URL(s) (not previously stored):", flush=True)
-        if new_urls:
-            for u in new_urls:
-                print(f"  {u}", flush=True)
-        else:
-            print("  (none)", flush=True)
-
         to_email = (os.environ.get("EMAIL_RECEIVER_DEFAULT") or "").strip()
         if new_urls and to_email:
             per_url_summaries: dict[str, str] | None = None
@@ -630,10 +651,7 @@ async def _run_job(job_id: str, req: ScrapeRequest) -> None:
                 flush=True,
             )
     except Exception as exc:
-        job["status"] = "failed"
-        job["error"] = f"Failed to persist pages to storage: {exc}"
-        job["completed_at"] = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-        return
+        print(f"[webscraper_skill] notification failed: {exc}", flush=True)
 
     if req.summarize:
         job["status"] = "summarizing"
@@ -950,6 +968,65 @@ def get_pages_content(
             combined_text_length=len(combined),
             url_count=len(pairs),
         )
+
+
+@monitor
+@router.get("/pages/list")
+def get_pages_list(
+    sitename: str,
+    namespace: str = STORAGE_NAMESPACE,
+    url: str | None = None,
+    max_content: int = 3000,
+) -> dict[str, Any]:
+    """List stored pages for a site with structured content. Returns items with url, title, and content fields. Use url param to filter to a specific page."""
+    if not sitename.strip():
+        raise HTTPException(status_code=400, detail="sitename is required")
+    ns = (namespace or "").strip() or STORAGE_NAMESPACE
+    sn = _canonical_sitename(sitename)
+    storage_base = _storage_url()
+
+    with httpx.Client(timeout=120.0) as client:
+        if url and url.strip():
+            lookup = _strip_url_query(url.strip())
+            val = _fetch_page_value(client, storage_base, ns, sn, lookup)
+            if val is None:
+                raise HTTPException(status_code=404, detail="Page not found for this sitename/namespace/url")
+            pu = str(val.get("url") or lookup)
+            content = str(val.get("content") or "")
+            if max_content > 0 and len(content) > max_content:
+                content = content[:max_content]
+            items = [{"url": pu, "title": pu, "content": content}]
+            return skill_result(
+                summary=f"1 page for **{sn}** in **{ns}**.",
+                items=items,
+                namespace=ns,
+                sitename=sn,
+                url_count=1,
+            )
+
+        all_keys = _storage_list_keys(client, storage_base, ns)
+        site_keys = _keys_for_site(all_keys, sn)
+        items = []
+        for sk in sorted(site_keys):
+            try:
+                _, pu = _parse_page_storage_key(sk)
+            except ValueError:
+                continue
+            val = _fetch_page_value(client, storage_base, ns, sn, pu)
+            if val is None:
+                continue
+            content = str(val.get("content") or "")
+            if max_content > 0 and len(content) > max_content:
+                content = content[:max_content]
+            items.append({"url": pu, "title": pu, "content": content})
+
+    return skill_result(
+        summary=f"**{len(items)}** pages for **{sn}** in **{ns}**.",
+        items=items,
+        namespace=ns,
+        sitename=sn,
+        url_count=len(items),
+    )
 
 
 @monitor

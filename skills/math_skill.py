@@ -30,8 +30,11 @@ class ValuesRequest(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def _accept_values_or_numbers(cls, data: Any) -> Any:
-        if isinstance(data, dict) and "values" not in data and "numbers" in data:
-            data = {"values": data["numbers"]}
+        if isinstance(data, dict) and "values" not in data:
+            if "numbers" in data:
+                data = {"values": data["numbers"]}
+            elif "a" in data or "b" in data:
+                data = {"values": [data.get("a", 0), data.get("b", 0)]}
         return data
 
     @field_validator("values")
