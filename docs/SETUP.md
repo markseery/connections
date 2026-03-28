@@ -13,14 +13,31 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Create `.env`
-Copy the example:
+### Initialize your user directory
 
 ```bash
-cp .env.example .env
+python connections_init.py
 ```
 
-Fill in the values you need.
+This creates `application_files/` with subdirectories for your personal
+config, scripts, workflows, notes, data, and logs.  It also copies
+`.env.example` as a starting `.env` inside the user directory and sets up
+the git pre-commit hook.  The `application_files/` directory is gitignored.
+
+Override the location with `CONNECTIONS_USER_DIR`:
+```bash
+export CONNECTIONS_USER_DIR=/path/to/my/workspace
+python connections_init.py
+```
+
+### Configure `.env`
+
+Your `.env` file lives at `application_files/.env` (gitignored).  Edit it
+to set your API keys and encryption keys:
+
+```bash
+$EDITOR application_files/.env
+```
 
 ### Run the stack (supervised)
 
@@ -30,24 +47,57 @@ python start_app.py
 
 This starts servers listed in `app_config.yaml`, monitors `/health`, and registers each server into the registry.
 
-### Run the demo agent script
+---
 
-```bash
-python run_agent_mean_demo.py "what is the mean of 10,13,45,23"
+## User directory (`application_files/`)
+
+The framework separates **core/shared code** (committed to git) from
+**user-specific content** (gitignored in `application_files/`).
+
+### Structure
+
+```
+application_files/
+├── .env                  # Secrets and API keys
+├── app_config.yaml       # Optional overrides (deep-merged with repo default)
+├── config/
+│   ├── skills/           # Skill config overrides (deep-merged)
+│   └── agents/           # Agent configs (deep-merged)
+├── skills/               # Custom user skills (auto-discovered by worker)
+├── scripts/              # Personal scripts and utilities
+├── workflows/            # Workflow YAML definitions
+├── notes/                # Research notes, reports, etc.
+├── data/                 # Runtime data (storage, reports, taxonomy)
+│   └── reports/          # Workflow step reports
+└── logs/                 # All log files (monitor, http, agent)
 ```
 
-The demo script:
-- finds `configuration` and `registry`
-- starts a dedicated `worker` and `agent` for the run
-- loads skills into the worker
-- registers skill definitions into configuration
-- calls `POST /agent/execute`
+### Resolution order
+
+All config loaders in `common/` follow the same pattern:
+
+1. Check `application_files/<path>` first
+2. Fall back to the repo default at `<repo>/<path>`
+3. When both exist, the user file is **deep-merged** on top of the repo
+   file — so you only need to specify overrides, not full copies.
+
+### Custom skills
+
+Place `.py` files in `application_files/skills/`.  The worker server discovers
+them automatically alongside the built-in repo skills.  User skills follow
+the same contract: export `router` or `get_router()`.
+
+### Workflows
+
+Place YAML files in `application_files/workflows/`.  The workflow executor
+checks the user directory first when resolving config paths.
 
 ---
 
 ## Environment variables
 
-This project loads `.env` in multiple servers. Some values are required; many are optional.
+Your `.env` is loaded from `application_files/.env` (preferred) or the repo
+root `.env` as a fallback.  Some values are required; many are optional.
 
 ### Core / required for most runs
 - **`STORAGE_ENCRYPTION_KEY`**: Fernet key for encrypting records at rest in the storage server.

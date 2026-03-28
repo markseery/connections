@@ -4,6 +4,10 @@ Per-skill YAML configuration loader.
 Each skill can have its own config file at config/skills/<skill_name>.yaml.
 Skills use SkillConfig to load their config once (cached) and read typed values.
 
+Resolution order: user dir ``config/skills/<name>.yaml`` wins over the repo
+default at ``config/skills/<name>.yaml``.  When both exist, the user file is
+deep-merged on top of the repo file so users only need to specify overrides.
+
 Usage in a skill:
 
     from common.skill_config import SkillConfig
@@ -19,24 +23,42 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, overload
 
-_ROOT = Path(__file__).resolve().parent.parent
-_CONFIG_DIR = _ROOT / "config" / "skills"
+from common.user_dir import repo_root, user_dir
 
 _cache: dict[str, dict[str, Any]] = {}
+
+
+def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, val in override.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(val, dict):
+            merged[key] = _deep_merge(merged[key], val)
+        else:
+            merged[key] = val
+    return merged
 
 
 def _load(skill_name: str) -> dict[str, Any]:
     if skill_name in _cache:
         return _cache[skill_name]
-    path = _CONFIG_DIR / f"{skill_name}.yaml"
+    repo_path = repo_root() / "config" / "skills" / f"{skill_name}.yaml"
+    user_path = user_dir() / "config" / "skills" / f"{skill_name}.yaml"
     cfg: dict[str, Any] = {}
-    if path.is_file():
-        import yaml
+    import yaml
+    if repo_path.is_file():
         try:
-            with open(path) as f:
+            with open(repo_path) as f:
                 raw = yaml.safe_load(f)
             if isinstance(raw, dict):
                 cfg = raw
+        except Exception:
+            pass
+    if user_path.is_file():
+        try:
+            with open(user_path) as f:
+                raw = yaml.safe_load(f)
+            if isinstance(raw, dict):
+                cfg = _deep_merge(cfg, raw) if cfg else raw
         except Exception:
             pass
     _cache[skill_name] = cfg

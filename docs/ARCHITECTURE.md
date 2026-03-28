@@ -145,4 +145,4 @@ All `servers/*/main.py` call this so every HTTP handler is monitored without man
 - **Configuration via configuration server**: skills and other runtime mappings can be changed without code import wiring.
 - **HTTP as the skill boundary**: agent never imports skill code; it calls skills by HTTP route.
 - **Fail clearly**: validation errors are surfaced as 4xx; operational failures as 5xx; agent retries/replans only where it helps.
-
+- **Core vs. user separation**: framework code is committed to git; user-specific content (`.env`, scripts, workflows, agent configs, custom skills, data, logs) lives in `application_files/` (gitignored; override via `CONNECTIONS_USER_DIR`). See `common/user_dir.py` and `docs/SETUP.md` for details.

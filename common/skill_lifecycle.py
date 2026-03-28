@@ -20,9 +20,10 @@ import httpx
 
 from servers.agent.skill_discovery import SkillDefinition, SkillRoute, discover_skills
 
+from common.user_dir import repo_root, user_skills_dir
 
 WORKER_NAMES = ["worker-1", "worker-2", "worker"]
-_SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"
+_SKILLS_DIR = repo_root() / "skills"
 
 # Removed from the codebase; delete stale configuration keys so agent/planner
 # do not keep resolving a dead skill module.
@@ -231,14 +232,18 @@ def _server_url(registry_url: str, server_name: str) -> str:
 
 
 def _scan_skill_modules() -> list[str]:
-    """Return skill module names found in the skills/ directory."""
-    if not _SKILLS_DIR.is_dir():
-        return []
+    """Return skill module names found in the repo skills/ and user skills/ directories."""
+    seen: set[str] = set()
     names: list[str] = []
-    for p in sorted(_SKILLS_DIR.iterdir()):
-        if p.suffix != ".py" or p.name.startswith("_"):
+    for skills_dir in (_SKILLS_DIR, user_skills_dir()):
+        if not skills_dir or not skills_dir.is_dir():
             continue
-        names.append(p.stem)
+        for p in sorted(skills_dir.iterdir()):
+            if p.suffix != ".py" or p.name.startswith("_"):
+                continue
+            if p.stem not in seen:
+                seen.add(p.stem)
+                names.append(p.stem)
     return names
 
 

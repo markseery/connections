@@ -24,8 +24,8 @@ TRANSPORT_ENCRYPTION_KEY_ENV = "TRANSPORT_ENCRYPTION_KEY"
 
 
 def _load_env() -> None:
-    # Project root is parent of `common/`
-    env_path = Path(__file__).resolve().parents[1] / ".env"
+    from common.user_dir import resolve_env_file
+    env_path = resolve_env_file() or Path(__file__).resolve().parents[1] / ".env"
     load_dotenv(env_path)
 
 

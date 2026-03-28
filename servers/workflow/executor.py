@@ -23,11 +23,12 @@ import yaml
 from common.http_client import http_client
 from common.skill_lifecycle import find_live_worker
 from common.timeouts import get as _timeout
+from common.user_dir import repo_root, user_dir, resolve_workflow, resolve_workflows_dir
 
-REPORTS_DIR = Path(__file__).resolve().parent.parent.parent / "application" / "promptwithcontext" / "reports"
-CONFIG_DIR = Path(__file__).resolve().parent.parent.parent / "application" / "promptwithcontext" / "configuration"
-WORKFLOWS_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "workflows"
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+REPORTS_DIR = user_dir() / "data" / "reports"
+CONFIG_DIR = user_dir() / "config" / "workflows"
+WORKFLOWS_DATA_DIR = repo_root() / "data" / "workflows"
+PROJECT_ROOT = repo_root()
 
 DEFAULT_MAX_CONTEXT_CHARS = 150_000
 
@@ -196,6 +197,10 @@ class WorkflowExecutor:
         p = Path(config)
         if p.is_absolute() and p.is_file():
             return p.resolve()
+        # Check user workflows directory first
+        user_wf = resolve_workflow(p.name)
+        if user_wf:
+            return user_wf.resolve()
         if (CONFIG_DIR / p).is_file():
             return (CONFIG_DIR / p).resolve()
         if (CONFIG_DIR / p.name).is_file():

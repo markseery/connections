@@ -4,6 +4,9 @@ Agent configuration loader.
 Loads YAML configs from config/agents/<agent_name>.yaml.
 Supports nested key access via dot notation (e.g. "memory.working_ttl").
 
+Resolution order: user dir ``config/agents/<name>.yaml`` wins over the repo
+default.  When both exist the user file is deep-merged on top.
+
 Usage:
     from common.agent_config import AgentConfigLoader
 
@@ -14,27 +17,44 @@ Usage:
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any, overload
 
-_ROOT = Path(__file__).resolve().parent.parent
-_CONFIG_DIR = _ROOT / "config" / "agents"
+from common.user_dir import repo_root, user_dir
 
 _cache: dict[str, dict[str, Any]] = {}
+
+
+def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(base)
+    for key, val in override.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(val, dict):
+            merged[key] = _deep_merge(merged[key], val)
+        else:
+            merged[key] = val
+    return merged
 
 
 def _load(agent_name: str) -> dict[str, Any]:
     if agent_name in _cache:
         return _cache[agent_name]
-    path = _CONFIG_DIR / f"{agent_name}.yaml"
+    repo_path = repo_root() / "config" / "agents" / f"{agent_name}.yaml"
+    user_path = user_dir() / "config" / "agents" / f"{agent_name}.yaml"
     cfg: dict[str, Any] = {}
-    if path.is_file():
-        import yaml
+    import yaml
+    if repo_path.is_file():
         try:
-            with open(path) as f:
+            with open(repo_path) as f:
                 raw = yaml.safe_load(f)
             if isinstance(raw, dict):
                 cfg = raw
+        except Exception:
+            pass
+    if user_path.is_file():
+        try:
+            with open(user_path) as f:
+                raw = yaml.safe_load(f)
+            if isinstance(raw, dict):
+                cfg = _deep_merge(cfg, raw) if cfg else raw
         except Exception:
             pass
     _cache[agent_name] = cfg

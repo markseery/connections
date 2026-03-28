@@ -32,8 +32,9 @@ from typing import Any
 import httpx
 
 from common.timeouts import get as _timeout
+from common.user_dir import resolve_logs
 
-_LOG_DIR = Path(os.environ.get("HTTP_LOG_DIR", "./logs"))
+_LOG_DIR = Path(os.environ.get("HTTP_LOG_DIR", str(resolve_logs())))
 _LOG_FILE = _LOG_DIR / "http_calls.jsonl"
 _MAX_BODY_LOG = 256
 

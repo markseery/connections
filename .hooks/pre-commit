@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Pre-commit hook: reject staging of user-specific files that belong in
+# the user directory (~/.connections/) rather than the shared repo.
+#
+# Install with:  connections init  (or manually: git config core.hooksPath .hooks)
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+
+BLOCKED=""
+for f in $STAGED; do
+  case "$f" in
+    # Root-level personal scripts and notes
+    *.user.yaml|*.user.py)
+      BLOCKED="$BLOCKED\n  $f" ;;
+  esac
+done
+
+if [ -n "$BLOCKED" ]; then
+  echo ""
+  echo "${RED}Blocked by pre-commit hook:${NC} user-specific files staged for commit:"
+  printf "$BLOCKED\n"
+  echo ""
+  echo "These files belong in your user directory (~/.connections/)."
+  echo "Move them there, or use --no-verify to bypass (not recommended)."
+  echo ""
+  exit 1
+fi

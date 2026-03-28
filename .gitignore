@@ -1,7 +1,8 @@
-# Ignore dotfiles only (.*); track everything else
+# Ignore dotfiles except explicitly tracked ones
 .*
 !.env.example
 !.gitignore
+!.hooks/
 
 __pycache__/
 *.py[cod]
@@ -9,21 +10,14 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
+# Runtime data — lives in user dir (application_files/)
 logs/
 data/
 application/
+application_files/
 
 .DS_Store
 
-# Root scripts: only ask_ai.py, kill_start_app.py, start_app.py are tracked
-run_agent_mean_demo.py
-test_wandb_provider.py
-wandb_ai_provider.py
-website_marketing_analysis.py
-
-# Generated marketing reports (do not track)
-coreweave_report.md
-iren_report.md
-nebius_report.md
-nscale_report.md
-nspace_report.md
+# User-specific files that belong in ~/.connections/scripts/ or ~/.connections/notes/
+*.user.yaml
+*.user.py

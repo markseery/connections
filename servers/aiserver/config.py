@@ -20,7 +20,9 @@ SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexit
 SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"}
 
 
-_env_path = Path(__file__).resolve().parents[2] / ".env"
+from common.user_dir import resolve_env_file
+
+_env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(_env_path)
 
 

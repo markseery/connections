@@ -21,9 +21,10 @@ from pathlib import Path
 from typing import Any
 
 from common.agent_config import AgentConfigLoader
+from common.user_dir import resolve_logs
 
 _conf = AgentConfigLoader("supervisor")
-_LOG_DIR = Path("./logs")
+_LOG_DIR = resolve_logs()
 _lock = threading.Lock()
 _loggers: dict[str, logging.Logger] = {}
 

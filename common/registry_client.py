@@ -15,7 +15,9 @@ from pathlib import Path
 import httpx
 from dotenv import load_dotenv
 
-_env_path = Path(__file__).resolve().parents[1] / ".env"
+from common.user_dir import resolve_env_file
+
+_env_path = resolve_env_file() or Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(_env_path)
 
 _REGISTRY_ENV = "REGISTRY_SERVER_URL"
