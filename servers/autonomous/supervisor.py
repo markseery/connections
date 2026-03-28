@@ -12,13 +12,13 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from common.agent_config import AgentConfigLoader
-from common.agent_logger import AgentLogger
-from common.agent_memory import Episode, MemoryManager
-from common.approval_gate import ApprovalGate, ApprovalPolicy
-from common.context_compactor import ContextCompactor
-from common.http_client import http_client
-from common.json_repair import parse_llm_json
+from common.compound.agent_config import AgentConfigLoader
+from common.compound.agent_logger import AgentLogger
+from common.complex.agent_memory import Episode, MemoryManager
+from common.complex.approval_gate import ApprovalGate, ApprovalPolicy
+from common.compound.context_compactor import ContextCompactor
+from common.compound.http_client import http_client
+from common.simple.json_repair import parse_llm_json
 from servers.agent.config import get_aiserver_url
 from servers.agent.skill_discovery import SkillDefinition, discover_skills
 
@@ -95,7 +95,7 @@ class GoalStore:
 
 
 def _get_storage_url() -> str:
-    from common.registry_client import get_server_url
+    from common.compound.registry_client import get_server_url
     return get_server_url("storage")
 
 

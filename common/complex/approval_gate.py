@@ -26,10 +26,10 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-from common.agent_config import AgentConfigLoader
-from common.agent_logger import AgentLogger
-from common.http_client import http_client
-from common.skill_config import SkillConfig
+from common.compound.agent_config import AgentConfigLoader
+from common.compound.agent_logger import AgentLogger
+from common.compound.http_client import http_client
+from common.compound.skill_config import SkillConfig
 
 _conf = AgentConfigLoader("supervisor")
 _logger = AgentLogger(

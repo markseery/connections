@@ -11,7 +11,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from common.transport_encryption import get_transport_encryption
+from common.compound.transport_encryption import get_transport_encryption
 from .backend import StorageBackend, get_json, set_json
 
 

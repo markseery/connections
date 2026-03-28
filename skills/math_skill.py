@@ -16,8 +16,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, model_validator
 from pydantic import field_validator
 
-from common.skill_response import skill_result
-from common.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
+from common.compound.skill_config import SkillConfig
 
 router = APIRouter()
 _conf = SkillConfig("math_skill")

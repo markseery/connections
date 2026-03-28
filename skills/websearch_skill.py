@@ -20,8 +20,8 @@ from bs4 import BeautifulSoup
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from common.skill_config import SkillConfig
-from common.skill_response import skill_result
+from common.compound.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
 
 router = APIRouter()
 _conf = SkillConfig("websearch_skill")

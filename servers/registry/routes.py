@@ -12,7 +12,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
 
-from common.transport_encryption import get_transport_encryption
+from common.compound.transport_encryption import get_transport_encryption
 from .state import RegistryState
 
 

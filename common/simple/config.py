@@ -15,7 +15,7 @@ from typing import Any
 
 import yaml
 
-from common.user_dir import repo_root, user_dir
+from common.simple.user_dir import repo_root, user_dir
 
 _cache: dict[str, Any] | None = None
 

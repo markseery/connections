@@ -21,10 +21,10 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from common.skill_response import skill_result
+from common.simple.skill_response import skill_result
 
-from common.skill_lifecycle import find_live_worker
-from common.skill_config import SkillConfig
+from common.complex.skill_lifecycle import find_live_worker
+from common.compound.skill_config import SkillConfig
 
 router = APIRouter()
 

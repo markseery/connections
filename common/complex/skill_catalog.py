@@ -26,8 +26,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from common.http_client import http_client
-from common.skill_lifecycle import find_live_worker
+from common.compound.http_client import http_client
+from common.complex.skill_lifecycle import find_live_worker
 from servers.agent.skill_discovery import SkillDefinition, SkillRoute, discover_skills
 
 _HTTP_METHODS = {"get", "post", "put", "delete", "patch"}

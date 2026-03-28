@@ -14,7 +14,7 @@ from typing import Any
 import httpx
 from fastapi import APIRouter, HTTPException, Request
 
-from common.transport_encryption import get_transport_encryption
+from common.compound.transport_encryption import get_transport_encryption
 from .config import SUPPORTED_PROFILES, SUPPORTED_PROVIDERS, get_provider_for_profile
 from .providers import generate
 

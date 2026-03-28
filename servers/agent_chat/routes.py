@@ -18,8 +18,8 @@ from urllib.parse import quote
 import httpx
 from fastapi import APIRouter, HTTPException
 
-from common.models import ServiceResponse, SkillOutput, ErrorDetail
-from common.skill_response import skill_response_to_markdown
+from common.simple.models import ServiceResponse, SkillOutput, ErrorDetail
+from common.simple.skill_response import skill_response_to_markdown
 
 from .config import get_registry_url
 
@@ -33,19 +33,19 @@ DEFAULT_PROFILE = "agent"
 
 
 def _agent_url() -> str:
-    from common.registry_client import get_server_url
+    from common.compound.registry_client import get_server_url
     return get_server_url("agent")
 
 
 def _storage_url() -> str:
-    from common.registry_client import get_server_url
+    from common.compound.registry_client import get_server_url
     return get_server_url("storage")
 
 
 def _call_agent_server(
     agent_url: str, prompt: str, conversation_context: str | None = None
 ) -> dict[str, Any]:
-    from common.registry_client import get_http_client
+    from common.compound.registry_client import get_http_client
     payload: dict[str, Any] = {"prompt": prompt}
     if conversation_context:
         payload["conversation_context"] = conversation_context
@@ -75,7 +75,7 @@ def _format_memory_context(attributes: list[dict]) -> str:
 
 
 def _get_current_memory(storage_url: str, namespace: str) -> dict | None:
-    from common.registry_client import get_http_client
+    from common.compound.registry_client import get_http_client
     ns = quote(namespace.strip(), safe="")
     key = quote(CURRENT_MEMORY_KEY, safe="")
     url = f"{storage_url}/namespaces/{ns}/records/{key}"
@@ -89,7 +89,7 @@ def _get_current_memory(storage_url: str, namespace: str) -> dict | None:
 
 
 def _put_current_memory(storage_url: str, namespace: str, record: dict) -> None:
-    from common.registry_client import get_http_client
+    from common.compound.registry_client import get_http_client
     ns = quote(namespace.strip(), safe="")
     key = quote(CURRENT_MEMORY_KEY, safe="")
     url = f"{storage_url}/namespaces/{ns}/records/{key}"

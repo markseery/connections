@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any, Callable, TypeVar, overload
 
 
-from common.user_dir import resolve_logs
+from common.simple.user_dir import resolve_logs
 
 _LOG_DIR = resolve_logs()
 _LOG_FILE = _LOG_DIR / "monitor.log"

@@ -18,8 +18,8 @@ import pandas as pd
 import yfinance as yf
 from fastapi import APIRouter, HTTPException, Response
 
-from common.skill_response import skill_result
-from common.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
+from common.compound.skill_config import SkillConfig
 
 
 router = APIRouter()

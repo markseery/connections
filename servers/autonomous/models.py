@@ -13,8 +13,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
-from common.agent_config import AgentConfigLoader
-from common.approval_gate import ApprovalPolicy
+from common.compound.agent_config import AgentConfigLoader
+from common.complex.approval_gate import ApprovalPolicy
 
 _conf = AgentConfigLoader("supervisor")
 

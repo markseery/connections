@@ -13,7 +13,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, model_validator
 from pydantic import field_validator
 
-from common.skill_response import skill_result
+from common.simple.skill_response import skill_result
 
 
 router = APIRouter()

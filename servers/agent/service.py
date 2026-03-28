@@ -93,7 +93,7 @@ class AgentService:
             skills = discover_skills()
             if not skills:
                 try:
-                    from common.skill_lifecycle import SkillLifecycle
+                    from common.complex.skill_lifecycle import SkillLifecycle
                     lifecycle = SkillLifecycle(
                         registry_url=get_registry_url(),
                         config_url=get_config_server_url(),

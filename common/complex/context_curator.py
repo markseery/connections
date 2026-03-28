@@ -31,11 +31,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
-from common.http_client import http_client
-from common.registry_client import get_server_url
-from common.skill_lifecycle import find_live_worker
+from common.compound.http_client import http_client
+from common.compound.registry_client import get_server_url
+from common.complex.skill_lifecycle import find_live_worker
 
-_ROOT = Path(__file__).resolve().parents[1]
+_ROOT = Path(__file__).resolve().parents[2]
 _SITES_DIR = _ROOT / "data" / "webscrape" / "sites"
 
 _EXTRACTION_WORDS = 500

@@ -22,8 +22,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from common.agent_config import AgentConfigLoader
-from common.http_client import http_client
+from common.compound.agent_config import AgentConfigLoader
+from common.compound.http_client import http_client
 
 _conf = AgentConfigLoader("supervisor")
 

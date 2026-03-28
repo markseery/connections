@@ -11,7 +11,7 @@ from typing import Any
 
 import httpx
 
-from common.json_repair import parse_llm_json
+from common.simple.json_repair import parse_llm_json
 from .config import get_aiserver_url
 from .context import AgentContext
 from .models import AgentExecutionRequest, AgentPlan, PlannedStep

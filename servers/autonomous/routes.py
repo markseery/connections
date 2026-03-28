@@ -10,9 +10,9 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-from common.agent_config import AgentConfigLoader
-from common.agent_memory import MemoryManager
-from common.approval_gate import ApprovalGate
+from common.compound.agent_config import AgentConfigLoader
+from common.complex.agent_memory import MemoryManager
+from common.complex.approval_gate import ApprovalGate
 
 from .models import AgentConfig, GoalSubmitRequest, GoalSubmitResponse
 from .supervisor import SupervisorAgent, _get_storage_url

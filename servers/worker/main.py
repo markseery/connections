@@ -21,7 +21,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from decorations.monitor import monitor_fastapi_app
 from .routes import router, _mgr
 
-from common.user_dir import resolve_env_file
+from common.simple.user_dir import resolve_env_file
 
 _env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(_env_path)

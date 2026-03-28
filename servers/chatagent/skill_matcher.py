@@ -11,7 +11,7 @@ from typing import Any
 
 import httpx
 
-from common.json_repair import parse_llm_json_or_none
+from common.simple.json_repair import parse_llm_json_or_none
 from .config import get_aiserver_url, get_config_url, get_registry_url
 
 

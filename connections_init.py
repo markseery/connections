@@ -35,7 +35,7 @@ SUBDIRS = [
 
 def main() -> int:
     sys.path.insert(0, str(REPO_ROOT))
-    from common.user_dir import user_dir
+    from common.simple.user_dir import user_dir
 
     udir = user_dir()
     print(f"User directory: {udir}")

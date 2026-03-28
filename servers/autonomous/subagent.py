@@ -12,10 +12,10 @@ import time
 import uuid
 from typing import Any
 
-from common.agent_config import AgentConfigLoader
-from common.agent_logger import AgentLogger
-from common.approval_gate import ApprovalGate
-from common.http_client import http_client
+from common.compound.agent_config import AgentConfigLoader
+from common.compound.agent_logger import AgentLogger
+from common.complex.approval_gate import ApprovalGate
+from common.compound.http_client import http_client
 from servers.agent.config import get_aiserver_url, get_config_server_url, get_registry_url
 from servers.agent.context import AgentContext
 from servers.agent.executor import execute_plan
@@ -227,7 +227,7 @@ class SubagentRunner:
     def _wait_for_approval(
         self, approval_id: str, timeout: float,
     ) -> bool:
-        from common.agent_config import AgentConfigLoader
+        from common.compound.agent_config import AgentConfigLoader
         sup_conf = AgentConfigLoader("supervisor")
         poll_min = sup_conf.get("polling.min_delay", 1.0)
         poll_max = sup_conf.get("polling.max_delay", 30.0)

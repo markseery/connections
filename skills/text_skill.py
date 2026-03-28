@@ -20,8 +20,8 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from common.skill_response import skill_result
-from common.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
+from common.compound.skill_config import SkillConfig
 from decorations.monitor import monitor
 
 router = APIRouter()
@@ -33,7 +33,7 @@ _AISERVER_FALLBACK = "http://127.0.0.1:7012"
 
 def _aiserver_url() -> str:
     try:
-        from common.registry_client import get_server_url
+        from common.compound.registry_client import get_server_url
         return get_server_url("aiserver")
     except Exception:
         return _AISERVER_FALLBACK

@@ -14,7 +14,7 @@ from typing import Any, Iterator
 import httpx
 
 def _find_live_worker(*args, **kwargs):
-    from .skill_lifecycle import find_live_worker
+    from common.complex.skill_lifecycle import find_live_worker
     return find_live_worker(*args, **kwargs)
 
 STORED_SKILL_NAME = "webscraper_skill"

@@ -14,7 +14,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from .config import get_aiserver_url
-from common.models import ServiceResponse, SkillOutput
+from common.simple.models import ServiceResponse, SkillOutput
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 

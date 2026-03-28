@@ -16,9 +16,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from common.agent_config import AgentConfigLoader
-from common.agent_logger import AgentLogger
-from common.http_client import http_client
+from common.compound.agent_config import AgentConfigLoader
+from common.compound.agent_logger import AgentLogger
+from common.compound.http_client import http_client
 
 _conf = AgentConfigLoader("supervisor")
 _logger = AgentLogger("context_compactor")

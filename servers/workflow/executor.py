@@ -20,10 +20,10 @@ from collections.abc import Callable
 
 import yaml
 
-from common.http_client import http_client
-from common.skill_lifecycle import find_live_worker
-from common.timeouts import get as _timeout
-from common.user_dir import repo_root, user_dir, resolve_workflow, resolve_workflows_dir
+from common.compound.http_client import http_client
+from common.complex.skill_lifecycle import find_live_worker
+from common.simple.timeouts import get as _timeout
+from common.simple.user_dir import repo_root, user_dir, resolve_workflow, resolve_workflows_dir
 
 REPORTS_DIR = user_dir() / "data" / "reports"
 CONFIG_DIR = user_dir() / "config" / "workflows"
@@ -589,6 +589,16 @@ class WorkflowExecutor:
             else:
                 argv_resolved.append(_substitute_step_refs_in_string(s, step_responses))
         argv = argv_resolved
+
+        _user = user_dir()
+        for i, arg in enumerate(argv):
+            if not arg or arg.startswith("-"):
+                continue
+            repo_candidate = self.base_dir / arg
+            if not repo_candidate.is_file():
+                user_candidate = _user / arg
+                if user_candidate.is_file():
+                    argv[i] = str(user_candidate)
 
         cwd_raw = step.get("cwd")
         if cwd_raw is not None and str(cwd_raw).strip():

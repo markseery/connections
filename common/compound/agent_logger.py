@@ -20,8 +20,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from common.agent_config import AgentConfigLoader
-from common.user_dir import resolve_logs
+from common.compound.agent_config import AgentConfigLoader
+from common.simple.user_dir import resolve_logs
 
 _conf = AgentConfigLoader("supervisor")
 _LOG_DIR = resolve_logs()

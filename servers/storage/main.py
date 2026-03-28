@@ -31,7 +31,7 @@ def get_backend() -> StorageBackend:
 async def lifespan(app: FastAPI):
     from .config import get_storage_encryption_key
     get_storage_encryption_key()  # validate .env key at startup
-    from common.transport_encryption import get_transport_encryption
+    from common.compound.transport_encryption import get_transport_encryption
     get_transport_encryption()  # validate transport key at startup
     app.state.storage_backend = get_backend()
     yield

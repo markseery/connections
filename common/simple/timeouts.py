@@ -11,7 +11,7 @@ from typing import Any
 
 import yaml
 
-_CONFIG_PATH = Path(__file__).resolve().parent.parent / "app_config.yaml"
+_CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "app_config.yaml"
 
 _DEFAULTS: dict[str, float] = {
     "skill_call": 3600,

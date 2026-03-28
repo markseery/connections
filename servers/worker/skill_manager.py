@@ -19,7 +19,7 @@ from typing import Any, Callable
 from fastapi import FastAPI
 from fastapi.routing import APIRouter
 
-from common.user_dir import user_skills_dir
+from common.simple.user_dir import user_skills_dir
 
 
 @dataclass

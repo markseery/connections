@@ -28,8 +28,8 @@ from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel, Field
 from pydantic import model_validator
 
-from common.skill_response import skill_result
-from common.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
+from common.compound.skill_config import SkillConfig
 
 _conf = SkillConfig("notification_skill")
 

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any, overload
 
-from common.user_dir import repo_root, user_dir
+from common.simple.user_dir import repo_root, user_dir
 
 _cache: dict[str, dict[str, Any]] = {}
 

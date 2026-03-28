@@ -12,7 +12,7 @@ from typing import Any
 
 import httpx
 
-from common.transport_encryption import get_transport_encryption
+from common.compound.transport_encryption import get_transport_encryption
 from .config import get_storage_server_url
 
 

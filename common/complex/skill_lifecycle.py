@@ -20,7 +20,7 @@ import httpx
 
 from servers.agent.skill_discovery import SkillDefinition, SkillRoute, discover_skills
 
-from common.user_dir import repo_root, user_skills_dir
+from common.simple.user_dir import repo_root, user_skills_dir
 
 WORKER_NAMES = ["worker-1", "worker-2", "worker"]
 _SKILLS_DIR = repo_root() / "skills"
