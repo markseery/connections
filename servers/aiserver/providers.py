@@ -18,7 +18,7 @@ from .config import (
     get_model,
     get_provider_base_url,
     get_provider_key,
-    get_wandb_http_timeout_seconds,
+    get_provider_timeout,
 )
 
 
@@ -31,10 +31,9 @@ def _require_key(provider: Provider) -> str:
 
 def _ollama_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     base = get_provider_base_url("ollama") or "http://localhost:11434"
-    # Ollama's /api/generate is a simple baseline.
     url = f"{base.rstrip('/')}/api/generate"
     payload = {"model": model, "prompt": prompt, "stream": False}
-    with httpx.Client(timeout=60.0) as client:
+    with httpx.Client(timeout=get_provider_timeout("ollama")) as client:
         r = client.post(url, json=payload)
         r.raise_for_status()
         data = r.json()
@@ -45,11 +44,10 @@ def _ollama_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
 def _openai_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     base = (get_provider_base_url("openai") or "https://api.openai.com").rstrip("/")
     key = _require_key("openai")
-    # Use a conservative Chat Completions call for broad compatibility.
     url = f"{base}/v1/chat/completions"
     messages = [{"role": "user", "content": prompt}]
     payload = {"model": model, "messages": messages}
-    with httpx.Client(timeout=60.0) as client:
+    with httpx.Client(timeout=get_provider_timeout("openai")) as client:
         r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
         r.raise_for_status()
         j = r.json()
@@ -60,10 +58,9 @@ def _openai_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any
 def _xai_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     base = (get_provider_base_url("xai") or "https://api.x.ai").rstrip("/")
     key = _require_key("xai")
-    # xAI is largely OpenAI-compatible.
     url = f"{base}/v1/chat/completions"
     payload = {"model": model, "messages": [{"role": "user", "content": prompt}]}
-    with httpx.Client(timeout=60.0) as client:
+    with httpx.Client(timeout=get_provider_timeout("xai")) as client:
         r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
         r.raise_for_status()
         j = r.json()
@@ -74,12 +71,10 @@ def _xai_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
 def _google_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     base = (get_provider_base_url("google") or "https://generativelanguage.googleapis.com").rstrip("/")
     key = _require_key("google")
-    # Minimal Generative Language API call (text).
-    # POST /v1beta/models/{model}:generateContent?key=...
     url = f"{base}/v1beta/models/{model}:generateContent"
     params = {"key": key}
     payload = {"contents": [{"parts": [{"text": prompt}]}]}
-    with httpx.Client(timeout=60.0) as client:
+    with httpx.Client(timeout=get_provider_timeout("google")) as client:
         r = client.post(url, params=params, json=payload)
         r.raise_for_status()
         j = r.json()
@@ -97,8 +92,7 @@ def _wandb_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]
     url = f"{base}/chat/completions"
     messages = [{"role": "user", "content": prompt}]
     payload = {"model": model, "messages": messages}
-    timeout = get_wandb_http_timeout_seconds()
-    with httpx.Client(timeout=timeout) as client:
+    with httpx.Client(timeout=get_provider_timeout("wandb")) as client:
         r = client.post(url, json=payload, headers={"Authorization": f"Bearer {key}"})
         r.raise_for_status()
         j = r.json()
@@ -209,7 +203,7 @@ def _anthropic_generate(prompt: str, model: str, profile: Profile) -> dict[str, 
         "max_tokens": 4096,
         "messages": [{"role": "user", "content": prompt}],
     }
-    with httpx.Client(timeout=120.0) as client:
+    with httpx.Client(timeout=get_provider_timeout("anthropic")) as client:
         r = client.post(url, json=payload, headers=headers)
         r.raise_for_status()
         j = r.json()

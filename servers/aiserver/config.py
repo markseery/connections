@@ -1,17 +1,23 @@
 """
 License: MIT
-Description: Loads AI server configuration from environment (.env).
+Description: Loads AI server configuration from environment (.env) and
+config/aiserver.yaml.
 
-Defines defaults for provider selection and model mapping per profile.
+Defines defaults for provider selection, model mapping per profile,
+and context window resolution (env override → live probe → YAML fallback).
 """
 
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
+import yaml
 from dotenv import load_dotenv
+
+logger = logging.getLogger(__name__)
 
 Provider = Literal["ollama", "openai", "xai", "google", "perplexity", "wandb", "anthropic", "mlx"]
 Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"]
@@ -22,8 +28,25 @@ SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "imag
 
 from common.simple.user_dir import resolve_env_file
 
-_env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_env_path = resolve_env_file() or _REPO_ROOT / ".env"
 load_dotenv(_env_path)
+
+_AISERVER_YAML = _REPO_ROOT / "config" / "aiserver.yaml"
+_yaml_config: dict[str, Any] | None = None
+
+
+def _load_yaml_config() -> dict[str, Any]:
+    global _yaml_config
+    if _yaml_config is not None:
+        return _yaml_config
+    if _AISERVER_YAML.is_file():
+        with open(_AISERVER_YAML, encoding="utf-8") as f:
+            _yaml_config = yaml.safe_load(f) or {}
+    else:
+        logger.warning("aiserver config not found at %s, using empty config", _AISERVER_YAML)
+        _yaml_config = {}
+    return _yaml_config
 
 
 def _get_env(name: str, default: str | None = None) -> str | None:
@@ -95,18 +118,40 @@ def get_provider_base_url(provider: Provider) -> str | None:
     return None
 
 
-def get_wandb_http_timeout_seconds() -> float:
+def get_provider_timeout(provider: Provider) -> float:
+    """HTTP timeout (seconds) for a provider's generate call.
+
+    Resolution: env AISERVER_TIMEOUT_<PROVIDER> → config/aiserver.yaml
+    timeouts.<provider> → timeouts.default → 600.
     """
-    httpx timeout for W&B Inference (chat/completions). Large agent prompts can exceed short limits.
-    Set AISERVER_WANDB_TIMEOUT_SECONDS in .env (default 600).
-    """
-    raw = _get_env("AISERVER_WANDB_TIMEOUT_SECONDS")
-    if raw is not None:
+    env_val = _get_env(f"AISERVER_TIMEOUT_{provider.upper()}")
+    if env_val:
         try:
-            return max(30.0, float(raw))
+            return max(30.0, float(env_val))
         except ValueError:
             pass
+    # Legacy env var for wandb
+    if provider == "wandb":
+        legacy = _get_env("AISERVER_WANDB_TIMEOUT_SECONDS")
+        if legacy:
+            try:
+                return max(30.0, float(legacy))
+            except ValueError:
+                pass
+    cfg = _load_yaml_config()
+    timeouts = cfg.get("timeouts") or {}
+    val = timeouts.get(provider)
+    if isinstance(val, (int, float)) and val > 0:
+        return float(val)
+    default_val = timeouts.get("default")
+    if isinstance(default_val, (int, float)) and default_val > 0:
+        return float(default_val)
     return 600.0
+
+
+def get_wandb_http_timeout_seconds() -> float:
+    """Backward-compatible alias."""
+    return get_provider_timeout("wandb")
 
 
 def get_model(provider: Provider, profile: Profile) -> str:
@@ -211,4 +256,108 @@ def get_model(provider: Provider, profile: Profile) -> str:
         return _get_env(f"AISERVER_MODEL_MLX_{profile.upper()}", default_model)
 
     raise RuntimeError(f"Unsupported provider: {provider}")
+
+
+# ── Context window resolution ────────────────────────────────────────────
+#
+# Resolution order (first match wins):
+#   1. Env var:   AISERVER_CONTEXT_WINDOW_<MODEL_UPPER>
+#   2. Probe cache: live value fetched from the provider API at startup
+#   3. YAML table:  config/aiserver.yaml → context_windows.<model>
+#   4. YAML default: config/aiserver.yaml → default_context_window
+
+def _yaml_context_windows() -> dict[str, int]:
+    cfg = _load_yaml_config()
+    raw = cfg.get("context_windows") or {}
+    return {str(k): int(v) for k, v in raw.items() if isinstance(v, (int, float)) and v > 0}
+
+
+def _yaml_default_context_window() -> int:
+    cfg = _load_yaml_config()
+    val = cfg.get("default_context_window")
+    if isinstance(val, (int, float)) and val > 0:
+        return int(val)
+    return 128_000
+
+
+_probe_cache: dict[str, int] = {}
+
+
+def prime_context_cache(provider: Provider, model: str) -> None:
+    """Probe a provider API for the model's context window and cache the result.
+
+    Called at startup for each active (provider, profile) combination.
+    Safe to call multiple times — skips models already cached.
+    """
+    if model in _probe_cache:
+        return
+    from .context_probe import probe_context_window
+    result = probe_context_window(provider, model)
+    if result is not None:
+        _probe_cache[model] = result
+        logger.info("Probed context window: %s (%s) = %d tokens", model, provider, result)
+    else:
+        logger.debug("No probe result for %s (%s), will use YAML fallback", model, provider)
+
+
+def _model_env_key(model: str) -> str:
+    return "AISERVER_CONTEXT_WINDOW_" + (
+        model.upper()
+        .replace("-", "_")
+        .replace("/", "_")
+        .replace(".", "_")
+        .replace(":", "_")
+    )
+
+
+def get_context_window(model: str) -> int:
+    """Return the context window (in tokens) for *model*.
+
+    Resolution: env override → probe cache → YAML table → YAML default.
+    """
+    env_val = _get_env(_model_env_key(model))
+    if env_val:
+        try:
+            return max(1, int(env_val))
+        except ValueError:
+            pass
+
+    if model in _probe_cache:
+        return _probe_cache[model]
+
+    yaml_table = _yaml_context_windows()
+    if model in yaml_table:
+        return yaml_table[model]
+
+    return _yaml_default_context_window()
+
+
+def get_context_window_source(model: str) -> str:
+    """Return which layer provided the context window value (for diagnostics)."""
+    env_val = _get_env(_model_env_key(model))
+    if env_val:
+        try:
+            int(env_val)
+            return "env"
+        except ValueError:
+            pass
+    if model in _probe_cache:
+        return "probe"
+    if model in _yaml_context_windows():
+        return "yaml"
+    return "default"
+
+
+def get_model_info(provider: Provider, profile: Profile) -> dict[str, Any]:
+    """Return model metadata for a (provider, profile) pair."""
+    model = get_model(provider, profile)
+    context_window = get_context_window(model)
+    source = get_context_window_source(model)
+    return {
+        "provider": provider,
+        "profile": profile,
+        "model": model,
+        "context_window": context_window,
+        "context_window_source": source,
+    }
 

@@ -1,0 +1,60 @@
+# ── AI Server configuration ──────────────────────────────────────────────
+
+# ── Provider HTTP timeouts (seconds) ────────────────────────────────────
+# How long the aiserver waits for a provider response before timing out.
+# Large prompts (e.g. 500k+ chars) need generous limits.
+# Override per-provider via env: AISERVER_TIMEOUT_<PROVIDER_UPPER>
+timeouts:
+  default: 600
+  ollama: 300
+  openai: 300
+  xai: 300
+  google: 300
+  wandb: 600
+  anthropic: 600
+  mlx: 300
+  perplexity: 120
+
+# ── Context windows (input tokens) ─────────────────────────────────────
+# Used as a fallback when the provider API cannot be probed at runtime.
+# The aiserver will attempt to query the provider directly on startup;
+# these values are only used when that probe fails or the provider does
+# not expose model metadata (e.g. OpenAI, xAI, W&B).
+#
+# Override any value via env: AISERVER_CONTEXT_WINDOW_<MODEL_UPPER>
+# (hyphens, slashes, dots, colons replaced with underscores).
+
+default_context_window: 128000
+
+context_windows:
+  # OpenAI
+  gpt-4o: 128000
+  gpt-4o-mini: 128000
+  o3-mini: 200000
+  gpt-image-1: 128000
+
+  # Anthropic
+  claude-opus-4-6: 1000000
+  claude-sonnet-4-20250514: 1000000
+  claude-haiku-4-5-20251001: 200000
+
+  # Google Gemini
+  gemini-3-flash-preview: 1000000
+  gemini-2.0-flash: 1048576
+  gemini-2.0-pro: 1048576
+
+  # xAI
+  grok-3: 131072
+  grok-3-mini: 131072
+
+  # W&B / GLM
+  zai-org/GLM-5-FP8: 128000
+
+  # Ollama
+  gemma3:4b: 128000
+
+  # MLX
+  mlx-community/Mistral-7B-Instruct-v0.3-4bit: 32768
+
+  # Perplexity
+  search: 128000

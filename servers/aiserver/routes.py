@@ -15,7 +15,12 @@ import httpx
 from fastapi import APIRouter, HTTPException, Request
 
 from common.compound.transport_encryption import get_transport_encryption
-from .config import SUPPORTED_PROFILES, SUPPORTED_PROVIDERS, get_provider_for_profile
+from .config import (
+    SUPPORTED_PROFILES,
+    SUPPORTED_PROVIDERS,
+    get_model_info,
+    get_provider_for_profile,
+)
 from .providers import generate
 
 logger = logging.getLogger(__name__)
@@ -151,4 +156,29 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
         raise HTTPException(status_code=status, detail=detail) from e
 
     return _maybe_encrypt_response(request, result)
+
+
+@router.get("/model-info")
+def model_info_route(
+    profile: str = "agent",
+    provider: str | None = None,
+) -> dict[str, Any]:
+    """Return model name and context window for a profile/provider pair.
+
+    Query params:
+      profile  – one of the supported profiles (default: agent)
+      provider – explicit provider; omit to use the configured default for the profile
+    """
+    if profile not in SUPPORTED_PROFILES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"profile must be one of {sorted(SUPPORTED_PROFILES)}",
+        )
+    resolved_provider = provider or get_provider_for_profile(profile)  # type: ignore[arg-type]
+    if resolved_provider not in SUPPORTED_PROVIDERS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"provider must be one of {sorted(SUPPORTED_PROVIDERS)}",
+        )
+    return get_model_info(resolved_provider, profile)  # type: ignore[arg-type]
 
