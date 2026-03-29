@@ -13,10 +13,13 @@ import re
 import shlex
 import subprocess
 import time
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
+import threading
+from threading import Lock
 from typing import Any
-from collections.abc import Callable
 
 import yaml
 
@@ -161,7 +164,7 @@ class WorkflowExecutor:
         self.base_dir = base_dir or PROJECT_ROOT
         self._aiserver_url = aiserver_url
         self._worker_url = worker_url
-        self._active_configs: set[Path] = set()
+        self._active_configs: threading.local = threading.local()
 
     def _get_ai_url(self) -> str:
         if self._aiserver_url:
@@ -240,6 +243,7 @@ class WorkflowExecutor:
         config_path: Path,
         var_overrides: dict[str, str] | None = None,
         on_step_progress: Callable[[int, str, str, str | None], None] | None = None,
+        on_subprocess_output: Callable[[int, str, str], None] | None = None,
     ) -> WorkflowResult:
         """
         Execute the workflow.
@@ -247,23 +251,31 @@ class WorkflowExecutor:
         on_step_progress(step_num, step_id, status, error) is called when a step
         starts, completes, is skipped, or fails.
 
+        on_subprocess_output(step_num, step_id, line) is called for each line of
+        stdout/stderr produced by a subprocess step while it runs.
+
         Returns WorkflowResult with step outputs, final output, and report path.
         """
         resolved = config_path.resolve()
-        if resolved in self._active_configs:
+        active = getattr(self._active_configs, "paths", None)
+        if active is None:
+            active = set()
+            self._active_configs.paths = active
+        if resolved in active:
             raise ValueError(f"Recursive workflow detected: {config_path.name} is already running")
-        self._active_configs.add(resolved)
+        active.add(resolved)
 
         try:
-            return self._run_inner(config_path, var_overrides, on_step_progress)
+            return self._run_inner(config_path, var_overrides, on_step_progress, on_subprocess_output)
         finally:
-            self._active_configs.discard(resolved)
+            active.discard(resolved)
 
     def _run_inner(
         self,
         config_path: Path,
         var_overrides: dict[str, str] | None = None,
         on_step_progress: Callable[[int, str, str, str | None], None] | None = None,
+        on_subprocess_output: Callable[[int, str, str], None] | None = None,
     ) -> WorkflowResult:
         cfg = self.load_config(config_path)
 
@@ -284,11 +296,19 @@ class WorkflowExecutor:
         run_ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
+        parallel = cfg.get("parallel") is True
+
         outputs: dict[str, str] = {}
         if isinstance(cfg.get("vars"), dict):
             for k, v in cfg["vars"].items():
                 if k and isinstance(k, str):
                     outputs[k] = str(v) if v is not None else ""
+
+        if parallel:
+            return self._run_parallel(
+                steps, outputs, config_path, run_ts,
+                on_step_progress, on_subprocess_output,
+            )
 
         previous_output = ""
         step_responses: dict[str, Any] = {}
@@ -342,9 +362,18 @@ class WorkflowExecutor:
                 if step_type == "skill":
                     text = self._run_skill_step(step, step_id, placeholders, step_responses)
                 elif step_type == "subprocess":
-                    text = self._run_subprocess_step(step, step_id, placeholders, step_responses)
+                    text = self._run_subprocess_step(
+                        step, step_id, placeholders, step_responses,
+                        on_output=lambda line, _sn=step_num, _si=step_id: (
+                            on_subprocess_output(_sn, _si, line) if on_subprocess_output else None
+                        ),
+                    )
                 elif step_type == "workflow":
-                    text = self._run_workflow_step(step, step_id, placeholders, step_responses)
+                    text = self._run_workflow_step(
+                        step, step_id, placeholders, step_responses,
+                        on_step_progress=on_step_progress,
+                        on_subprocess_output=on_subprocess_output,
+                    )
                 else:
                     text = self._run_ai_step(step, placeholders, step_responses)
                     step_responses[step_id] = _scratchpad_for_ai_text(text)
@@ -385,6 +414,102 @@ class WorkflowExecutor:
 
         return WorkflowResult(
             final_output=previous_output,
+            report_path=str(report_path),
+            step_outputs=step_outputs,
+        )
+
+    def _run_parallel(
+        self,
+        steps: list[dict[str, Any]],
+        outputs: dict[str, str],
+        config_path: Path,
+        run_ts: str,
+        on_step_progress: Callable[[int, str, str, str | None], None] | None = None,
+        on_subprocess_output: Callable[[int, str, str], None] | None = None,
+    ) -> WorkflowResult:
+        """Run all steps concurrently using a thread pool."""
+        step_responses: dict[str, Any] = {}
+        step_outputs: list[StepOutput] = []
+        lock = Lock()
+        first_error: list[Exception | None] = [None]
+
+        def _run_one(i: int, step: dict[str, Any]) -> StepOutput:
+            step_num = i + 1
+            step_id = str(step.get("id") or step_num).strip()
+            step_type = (step.get("type") or "ai").strip().lower()
+            placeholders = dict(outputs)
+            placeholders["previous_output"] = ""
+
+            if on_step_progress:
+                on_step_progress(step_num, step_id, "running", None)
+
+            start = time.monotonic()
+            try:
+                if step_type == "skill":
+                    text = self._run_skill_step(step, step_id, placeholders, step_responses)
+                elif step_type == "subprocess":
+                    text = self._run_subprocess_step(
+                        step, step_id, placeholders, step_responses,
+                        on_output=lambda line, _sn=step_num, _si=step_id: (
+                            on_subprocess_output(_sn, _si, line) if on_subprocess_output else None
+                        ),
+                    )
+                elif step_type == "workflow":
+                    text = self._run_workflow_step(
+                        step, step_id, placeholders, step_responses,
+                        on_step_progress=on_step_progress,
+                        on_subprocess_output=on_subprocess_output,
+                    )
+                else:
+                    text = self._run_ai_step(step, placeholders, step_responses)
+            except Exception as e:
+                elapsed = (time.monotonic() - start) * 1000
+                if on_step_progress:
+                    on_step_progress(step_num, step_id, "failed", str(e))
+                with lock:
+                    if first_error[0] is None and step.get("continue_on_error") is not True:
+                        first_error[0] = WorkflowStepError(step_num, step_id, str(e))
+                _write_step_report(config_path.stem, run_ts, step_num, step_id, str(e))
+                return StepOutput(step_num=step_num, step_id=step_id, status="failed",
+                                  error=str(e), elapsed_ms=elapsed)
+
+            elapsed = (time.monotonic() - start) * 1000
+            with lock:
+                step_responses[step_id] = {"stdout": text, "exit_code": 0}
+            _write_step_report(config_path.stem, run_ts, step_num, step_id, text)
+
+            if on_step_progress:
+                on_step_progress(step_num, step_id, "completed", None)
+
+            return StepOutput(step_num=step_num, step_id=step_id, status="completed",
+                              output_chars=len(text), elapsed_ms=elapsed)
+
+        max_workers = min(len(steps), 8)
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futures = {pool.submit(_run_one, i, step): i for i, step in enumerate(steps)}
+            results: dict[int, StepOutput] = {}
+            for future in as_completed(futures):
+                idx = futures[future]
+                results[idx] = future.result()
+
+        step_outputs = [results[i] for i in sorted(results)]
+
+        last_completed = next(
+            (so for so in reversed(step_outputs) if so.status == "completed"), None
+        )
+        final_output = ""
+        if last_completed:
+            key = f"{last_completed.step_id}_output"
+            final_output = outputs.get(key, "")
+
+        report_path = REPORTS_DIR / f"{config_path.stem}_{run_ts}.txt"
+        report_path.write_text(final_output, encoding="utf-8")
+
+        if first_error[0] is not None:
+            raise first_error[0]
+
+        return WorkflowResult(
+            final_output=final_output,
             report_path=str(report_path),
             step_outputs=step_outputs,
         )
@@ -567,8 +692,13 @@ class WorkflowExecutor:
         step_id: str,
         placeholders: dict[str, str],
         step_responses: dict[str, Any],
+        on_output: Callable[[str], None] | None = None,
     ) -> str:
-        """Run argv until the process exits; stdout+stderr become step output (and previous_output)."""
+        """Run argv until the process exits; stdout+stderr become step output (and previous_output).
+
+        When *on_output* is provided, each line of combined stdout/stderr is
+        passed to the callback as it arrives (live streaming).
+        """
         raw_cmd = step.get("command")
         if raw_cmd is None and isinstance(step.get("argv"), list):
             raw_cmd = step["argv"]
@@ -626,58 +756,61 @@ class WorkflowExecutor:
                         _apply_placeholders(str(v), placeholders), step_responses
                     )
 
-        # Per-step cap; each subprocess step may use up to this many seconds (independent of other steps).
         step_timeout = step.get("timeout")
         if isinstance(step_timeout, (int, float)) and step_timeout > 0:
             timeout = float(step_timeout)
         else:
             timeout = float(self.subprocess_timeout)
 
-        merge_streams = step.get("merge_streams")
+        env_with_unbuffered = dict(env) if env else dict(os.environ)
+        env_with_unbuffered["PYTHONUNBUFFERED"] = "1"
+
         try:
-            if merge_streams is False:
-                proc = subprocess.run(
-                    argv,
-                    cwd=cwd,
-                    env=env,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout,
-                    check=False,
-                )
-                out_parts = [f"exit_code: {proc.returncode}"]
-                if (proc.stdout or "").strip():
-                    out_parts.append("--- stdout ---\n" + proc.stdout.rstrip())
-                if (proc.stderr or "").strip():
-                    out_parts.append("--- stderr ---\n" + proc.stderr.rstrip())
-                text = "\n\n".join(out_parts)
-            else:
-                proc = subprocess.run(
-                    argv,
-                    cwd=cwd,
-                    env=env,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    timeout=timeout,
-                    check=False,
-                )
-                text = f"exit_code: {proc.returncode}\n\n" + (proc.stdout or "")
-        except subprocess.TimeoutExpired as e:
+            proc = subprocess.Popen(
+                argv,
+                cwd=cwd,
+                env=env_with_unbuffered,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+        except OSError as e:
+            raise RuntimeError(f"Failed to start subprocess: {e}") from e
+
+        collected: list[str] = []
+        deadline = time.monotonic() + timeout
+
+        try:
+            for line in proc.stdout:  # type: ignore[union-attr]
+                collected.append(line)
+                if on_output:
+                    on_output(line.rstrip("\n"))
+                if time.monotonic() > deadline:
+                    proc.kill()
+                    proc.wait()
+                    raise subprocess.TimeoutExpired(argv, timeout)
+        except subprocess.TimeoutExpired:
             raise RuntimeError(
                 f"subprocess timed out after {timeout}s (cmd: {argv[0]!r}, {len(argv)} args)"
-            ) from e
+            )
+        finally:
+            proc.wait()
+
+        stdout_text = "".join(collected)
+        returncode = proc.returncode
+
+        text = f"exit_code: {returncode}\n\n{stdout_text}"
 
         step_responses[step_id] = {
-            "exit_code": proc.returncode,
-            "stdout": proc.stdout or "",
-            "stderr": (proc.stderr or "") if merge_streams is False else "",
+            "exit_code": returncode,
+            "stdout": stdout_text,
+            "stderr": "",
         }
 
-        if proc.returncode != 0:
+        if returncode != 0:
             tail = (text[-4000:] if len(text) > 4000 else text).strip()
             raise RuntimeError(
-                f"subprocess exited with code {proc.returncode}"
+                f"subprocess exited with code {returncode}"
                 + (f"\n{tail}" if tail else "")
             )
 
@@ -689,6 +822,8 @@ class WorkflowExecutor:
         step_id: str,
         placeholders: dict[str, str],
         step_responses: dict[str, Any],
+        on_step_progress: Callable[[int, str, str, str | None], None] | None = None,
+        on_subprocess_output: Callable[[int, str, str], None] | None = None,
     ) -> str:
         config_ref = (step.get("config") or "").strip()
         if not config_ref:
@@ -704,7 +839,27 @@ class WorkflowExecutor:
             resolved = _resolve_value_refs(raw_vars, placeholders, step_responses)
             child_vars = {str(k): str(v) for k, v in resolved.items()}
 
-        result = self.run(child_path, var_overrides=child_vars)
+        def _child_subprocess_output(child_step_num: int, child_step_id: str, line: str) -> None:
+            if on_subprocess_output:
+                on_subprocess_output(child_step_num, f"{step_id}/{child_step_id}", line)
+
+        def _child_step_progress(child_step_num: int, child_step_id: str, status: str, error: str | None) -> None:
+            if on_subprocess_output:
+                prefix = f"{step_id}/{child_step_id}"
+                if status == "running":
+                    on_subprocess_output(child_step_num, prefix, f"[child step {child_step_id} started]")
+                elif status == "completed":
+                    on_subprocess_output(child_step_num, prefix, f"[child step {child_step_id} completed]")
+                elif status == "failed":
+                    msg = f"[child step {child_step_id} failed: {error}]" if error else f"[child step {child_step_id} failed]"
+                    on_subprocess_output(child_step_num, prefix, msg)
+
+        result = self.run(
+            child_path,
+            var_overrides=child_vars,
+            on_step_progress=_child_step_progress,
+            on_subprocess_output=_child_subprocess_output,
+        )
 
         response: dict[str, Any] = {
             "final_output": result.final_output,

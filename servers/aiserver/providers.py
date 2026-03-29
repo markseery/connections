@@ -8,9 +8,13 @@ This module maps profiles to models and provides a single `generate(...)` functi
 
 from __future__ import annotations
 
+import logging
+import time
 from typing import Any, Literal
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 from .config import (
     Profile,
@@ -189,6 +193,10 @@ def _mlx_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     return {"type": "text", "text": text.strip()}
 
 
+_MAX_429_RETRIES = 5
+_DEFAULT_RETRY_AFTER = 15.0
+
+
 def _anthropic_generate(prompt: str, model: str, profile: Profile) -> dict[str, Any]:
     base = (get_provider_base_url("anthropic") or "https://api.anthropic.com").rstrip("/")
     key = _require_key("anthropic")
@@ -203,15 +211,40 @@ def _anthropic_generate(prompt: str, model: str, profile: Profile) -> dict[str, 
         "max_tokens": 4096,
         "messages": [{"role": "user", "content": prompt}],
     }
-    with httpx.Client(timeout=get_provider_timeout("anthropic")) as client:
-        r = client.post(url, json=payload, headers=headers)
-        r.raise_for_status()
-        j = r.json()
-        parts = j.get("content") or []
-        text = "".join(
-            block.get("text", "") for block in parts if block.get("type") == "text"
+    timeout = get_provider_timeout("anthropic")
+
+    for attempt in range(_MAX_429_RETRIES + 1):
+        with httpx.Client(timeout=timeout) as client:
+            r = client.post(url, json=payload, headers=headers)
+
+        if r.status_code != 429:
+            r.raise_for_status()
+            j = r.json()
+            parts = j.get("content") or []
+            text = "".join(
+                block.get("text", "") for block in parts if block.get("type") == "text"
+            )
+            return {"type": "text", "text": text}
+
+        if attempt >= _MAX_429_RETRIES:
+            r.raise_for_status()
+
+        retry_after = _DEFAULT_RETRY_AFTER
+        ra_header = r.headers.get("retry-after")
+        if ra_header:
+            try:
+                retry_after = max(1.0, float(ra_header))
+            except ValueError:
+                pass
+
+        logger.warning(
+            "Anthropic 429 rate-limited (attempt %d/%d), retrying in %.0fs (model=%s)",
+            attempt + 1, _MAX_429_RETRIES, retry_after, model,
         )
-        return {"type": "text", "text": text}
+        time.sleep(retry_after)
+
+    r.raise_for_status()
+    return {}
 
 
 def generate(prompt: str, profile: Profile, provider: Provider) -> dict[str, Any]:

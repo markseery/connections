@@ -31,6 +31,8 @@ class WorkflowStepProgress(BaseModel):
     output_chars: int = 0
     error: str | None = None
     skipped_reason: str | None = None
+    log_tail: list[str] = Field(default_factory=list)
+    log_offset: int = 0
 
 
 class WorkflowJobState(BaseModel):

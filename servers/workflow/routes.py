@@ -172,8 +172,30 @@ def submit(body: SubmitRequest) -> dict[str, Any]:
                     j.message += f" ({running[0].skill_name})"
             j.updated_at = now
 
+        _LOG_TAIL_MAX = 50
+
+        def _on_subprocess_output(step_num: int, step_id: str, line: str) -> None:
+            j = _store.get(job_id)
+            if not j:
+                return
+            parent_id = step_id.split("/")[0] if "/" in step_id else step_id
+            for sp in j.step_progress:
+                if sp.step_id == parent_id or sp.step_num == step_num:
+                    prefixed = f"{step_id} | {line}" if "/" in step_id else line
+                    sp.log_tail.append(prefixed)
+                    sp.log_offset += 1
+                    if len(sp.log_tail) > _LOG_TAIL_MAX:
+                        sp.log_tail = sp.log_tail[-_LOG_TAIL_MAX:]
+                    break
+            j.updated_at = datetime.now(timezone.utc)
+
         try:
-            result = executor.run(config_path, var_overrides=body.vars, on_step_progress=_on_progress)
+            result = executor.run(
+                config_path,
+                var_overrides=body.vars,
+                on_step_progress=_on_progress,
+                on_subprocess_output=_on_subprocess_output,
+            )
             _store.update(
                 job_id,
                 status=WorkflowJobStatus.completed,

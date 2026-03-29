@@ -48,4 +48,4 @@ servers:
     app: servers.worker.main:app
     host: 127.0.0.1
     port: 7030
-    instances: 2
+    instances: 6

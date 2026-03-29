@@ -12,6 +12,7 @@ skill before using it.
 from __future__ import annotations
 
 import re
+import threading
 from pathlib import Path
 
 from fastapi import FastAPI, Request, Response
@@ -27,6 +28,28 @@ _env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
 load_dotenv(_env_path)
 
 _SKILL_PATH_RE = re.compile(r"^/skills/([^/]+)")
+
+_active_requests = 0
+_active_lock = threading.Lock()
+
+
+class _ActiveRequestMiddleware(BaseHTTPMiddleware):
+    """Track the number of in-flight skill requests."""
+
+    async def dispatch(self, request: Request, call_next):  # type: ignore[override]
+        global _active_requests
+        path = request.url.path
+        is_skill = path.startswith("/skills/")
+
+        if is_skill:
+            with _active_lock:
+                _active_requests += 1
+        try:
+            return await call_next(request)
+        finally:
+            if is_skill:
+                with _active_lock:
+                    _active_requests -= 1
 
 
 class _AutoLoadSkillMiddleware(BaseHTTPMiddleware):
@@ -57,11 +80,12 @@ app = FastAPI(
 
 
 @app.get("/health", tags=["health"])
-def health() -> dict[str, str]:
-    return {"status": "ok"}
+def health() -> dict[str, str | int]:
+    return {"status": "ok", "active_requests": _active_requests}
 
 
 app.include_router(router)
 app.add_middleware(_AutoLoadSkillMiddleware)
+app.add_middleware(_ActiveRequestMiddleware)
 monitor_fastapi_app(app)
 
