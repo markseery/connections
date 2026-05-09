@@ -1,0 +1,188 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Cloud Weekly Briefing</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 20px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f172a;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI & Cloud Weekly Briefing</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#94a3b8;font-weight:400;">Your curated summary of what matters in AI infrastructure, chips & cloud</p>
+</td>
+</tr>
+
+<!-- Body -->
+<tr>
+<td style="padding:40px 48px;">
+
+<!-- Section 1 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">AWS & Amazon's Custom Chips Challenge Nvidia</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+Amazon CEO Andy Jassy's annual shareholder letter positioned AWS's homegrown <strong>Trainium</strong> AI chips as a formidable alternative to Nvidia. He claims Trainium has reached a <strong>$20 billion annual revenue run rate</strong>, with capacity for Trainium3 nearly sold out and Trainium4 (18 months away) also nearly committed. Jassy argues that if Amazon sold chips externally, it would be at a $50B ARR — though Nvidia still did $215.9B in actual revenue last year.
+</p>
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+Separately, <strong>Uber</strong> expanded its AWS contract to use more <strong>Graviton</strong> CPUs and begin trialing <strong>Trainium3</strong>, a notable shift given Uber's previous major cloud commitments to <strong>Oracle</strong> and <strong>Google Cloud</strong>.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Sources: <a href="https://techcrunch.com/2026/04/09/amazon-ceo-takes-aim-at-nvidia-intel-starlink-more-in-annual-shareholder-letter/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Amazon CEO takes aim at Nvidia</a> · <a href="https://techcrunch.com/2026/04/07/uber-is-the-latest-to-be-won-over-by-amazons-ai-chips/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Uber won over by Amazon's AI chips</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 2 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #8b5cf6;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">AWS Navigates Dual Investments in Anthropic & OpenAI</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+AWS CEO Matt Garman addressed Amazon's <strong>$50 billion investment in OpenAI</strong> alongside its existing <strong>$8 billion in Anthropic</strong>, calling it a manageable conflict given AWS's long history of competing with its own partners. He noted this is industry-wide: Anthropic's latest $30B round included investors also backing OpenAI, including <strong>Microsoft</strong>.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Source: <a href="https://techcrunch.com/2026/04/08/aws-boss-explains-why-investing-billions-in-both-anthropic-and-openai-is-an-ok-conflict/" style="color:#3b82f6;text-decoration:none;">TechCrunch — AWS boss explains dual investment conflict</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 3 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #f59e0b;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">Anthropic: New Model, Massive Compute Expansion & UK Courtship</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+<strong>Anthropic</strong> previewed its powerful new frontier model <strong>Mythos</strong> through <strong>Project Glasswing</strong>, a cybersecurity initiative with 12 partners including <strong>Amazon, Apple, Microsoft, Broadcom, Cisco, CrowdStrike</strong>, and others. Mythos has reportedly identified thousands of zero-day vulnerabilities.
+</p>
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+Separately, Anthropic signed a <strong>major new compute deal with Google Cloud and Broadcom</strong> for expanded TPU capacity (reportedly <strong>3.5 gigawatts</strong>), building on an earlier 1+ GW agreement, with new capacity coming online in 2027. This supports Anthropic's $50B U.S. infrastructure commitment. The company recently closed a <strong>$30B Series G at a $380B valuation</strong>.
+</p>
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+The <strong>UK is also courting Anthropic</strong> to expand in London following Anthropic's clash with the U.S. Defense Department, which labeled it a supply-chain risk.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Sources: <a href="https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Anthropic debuts Mythos</a> · <a href="https://techcrunch.com/2026/04/07/anthropic-compute-deal-google-broadcom-tpus/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Anthropic compute deal</a> · <a href="https://www.ft.com/content/6bfd7b59-5e63-4a4d-ab55-7c2bd39b05a5" style="color:#3b82f6;text-decoration:none;">FT — UK courts Anthropic</a> · <a href="https://www.ft.com/content/59249643-a221-4494-bcb5-62e5f4fedc8e" style="color:#3b82f6;text-decoration:none;">FT — Anthropic cyber AI model</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 4 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #ef4444;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">OpenAI Halts Stargate UK Data Centre Project</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+<strong>OpenAI has halted its Stargate UK data centre project</strong>, according to the Financial Times. Details are behind a paywall, but it signals a pullback on international infrastructure expansion.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Source: <a href="https://www.ft.com/content/124189b9-8b2b-4d62-a94b-8a91673ea378" style="color:#3b82f6;text-decoration:none;">FT — OpenAI halts Stargate UK data centre project</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 5 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #10b981;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">Google Cloud & Google Products</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+Beyond the Anthropic TPU deal, <strong>Google</strong> quietly launched <strong>"Google AI Edge Eloquent"</strong>, an offline-first AI dictation app on iOS using Gemma-based models, competing with Wispr Flow and others. <strong>Google Maps</strong> added Gemini-powered AI caption generation for user-contributed photos.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Sources: <a href="https://techcrunch.com/2026/04/07/google-quietly-releases-an-offline-first-ai-dictation-app-on-ios/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Google AI dictation app</a> · <a href="https://techcrunch.com/2026/04/07/google-maps-can-now-write-captions-for-your-photos-using-ai/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Google Maps AI captions</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 6 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #06b6d4;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">Firmus: Nvidia-Backed Data Center Builder Soars</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:4px;">
+<p style="margin:0 0 14px;font-size:15px;color:#334155;line-height:1.7;">
+Singapore-based <strong>Firmus</strong> raised <strong>$505 million at a $5.5B valuation</strong> (led by Coatue), bringing total funding to $1.35B in six months. The company, originally a Bitcoin mining cooling provider, is building <strong>Nvidia Vera Rubin-powered "AI factory" data centers</strong> in Australia and Tasmania (Project Southgate), using Nvidia's reference designs.
+</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+Source: <a href="https://techcrunch.com/2026/04/07/firmus-the-southgate-ai-datacenter-builder-backed-by-nvidia-hits-5-5b-valuation/" style="color:#3b82f6;text-decoration:none;">TechCrunch — Firmus hits $5.5B valuation</a>
+</p>
+</td>
+</tr>
+</table>
+
+<!-- Divider -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr><td style="border-bottom:1px solid #e2e8f0;"></td></tr>
+</table>
+
+<!-- Section 7 -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
+<tr>
+<td style="border-left:3px solid #6366f1;padding-left:16px;">
+<h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3;">Intel Joins Musk's Terafab Chips Project</h2>
+</td>
+</tr>
+<tr>
+<td style="padding-top:

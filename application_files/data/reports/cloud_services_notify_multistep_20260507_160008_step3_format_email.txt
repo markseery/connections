@@ -1,0 +1,223 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreWeave Dominates AI Cloud Infrastructure Headlines</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background:linear-gradient(135deg,#0f172a,#1e293b);padding:48px 40px;">
+<p style="margin:0 0 8px;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#94a3b8;">Market Briefing</p>
+<h1 style="margin:0 0 16px;font-size:26px;line-height:1.3;color:#ffffff;font-weight:700;">CoreWeave Dominates AI Cloud Infrastructure Headlines Amid Q1 Earnings, Major Deals &amp; Insider Activity</h1>
+<div style="width:48px;height:3px;background-color:#3b82f6;border-radius:2px;"></div>
+</td>
+</tr>
+
+<!-- Summary -->
+<tr>
+<td style="padding:40px 40px 0;">
+<p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#334155;">
+<strong>CoreWeave</strong> is the central focus across all items, with the company approaching its Q1 2026 earnings report (May 7 after market close). Analysts expect record quarterly revenue of ~$1.96 billion (up from $981.63M a year ago), though the company is still expected to report a per-share loss. The stock has rallied ~103% from its March lows, with shares trading around $127–128, and options traders are pricing in an ~18.7% post-earnings move.
+</p>
+</td>
+</tr>
+
+<!-- Major Deals -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #3b82f6;padding-left:16px;">Major Deals &amp; Business Developments</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>CoreWeave and Meta</strong> expanded their AI cloud partnership to <strong>$21 billion</strong> through December 2032, including early access to Nvidia's Vera Rubin chips.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>CoreWeave and Anthropic</strong> signed a multi-year infrastructure agreement for Claude AI model deployment, diversifying CoreWeave's customer base beyond its heavy reliance on <strong>Microsoft</strong> (~67% of 2025 revenue).</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Jane Street</strong> signed a <strong>$6 billion</strong> AI cloud agreement with CoreWeave.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;">CoreWeave reported a <strong>$66.8 billion revenue backlog</strong> and guides for $12–13 billion in 2026 revenue with $30–35 billion in capex.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;">CoreWeave expanded its <strong>SUNK unified training system</strong> with self-service, SUNK Anywhere, and Mission Control features, positioning the company as an AI orchestration platform (not just a GPU vendor) across multi-cloud and on-premises environments.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#3b82f6;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;">A <strong>$3.1 billion GPU-backed loan</strong> was syndicated to fund expansion, on top of existing 9.75% senior notes.</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Analyst Sentiment -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #10b981;padding-left:16px;">Analyst Sentiment</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#10b981;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Jefferies</strong> raised its price target to <strong>$160</strong> (from $120), citing CoreWeave's leadership in high-performance compute at scale.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#10b981;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Bank of America</strong> raised its target to <strong>$140</strong> (from $120), emphasizing data center activation and contracted revenue.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#10b981;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Jim Cramer</strong> expects a "big surprise" from CoreWeave's earnings.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#10b981;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;">Some analysts are more cautious, with one Simply Wall St narrative valuing the stock at just $70 (suggesting overvaluation), citing heavy debt and leverage risk.</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Insider Trading -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #f59e0b;padding-left:16px;">Insider &amp; Institutional Trading</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#f59e0b;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;">CoreWeave's <strong>three most senior executives</strong> sold over <strong>$1 billion</strong> in shares in the first four months of 2026—placing them in the 99th percentile of S&amp;P 500 insider selling.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#f59e0b;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Insider Brian Venturo</strong> sold 375,000 shares.</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f1f5f9;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#f59e0b;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>Magnetar Financial</strong> funds conducted massive sell-offs: ~1.16 million shares, ~978,764 shares, ~349,437 shares in separate transactions, plus sold call options on 1 million+ shares at $175 strike and 300,000 shares at $180 strike, and trimmed warrant positions—all while retaining large remaining holdings (~19.3M shares in one account).</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;">
+<table role="presentation" cellpadding="0" cellspacing="0">
+<tr>
+<td valign="top" style="padding-right:12px;color:#f59e0b;font-size:18px;font-weight:700;">•</td>
+<td style="font-size:14px;line-height:1.7;color:#475569;"><strong>SBI Securities</strong> holds a $3.29 million position in CoreWeave.</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Neoclouds vs Google TPUs -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #8b5cf6;padding-left:16px;">Neoclouds vs. Google TPUs</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;">
+<strong>Nebius, Lambda, and CoreWeave</strong> all stated they are <strong>unlikely to adopt Google's TPUs</strong> anytime soon, preferring to remain committed to <strong>Nvidia GPUs</strong>. All three companies have Nvidia backing, reinforcing their GPU-centric strategies. <strong>Google</strong> had revealed during its earnings call expanded availability of its latest TPU, but the neoclouds see no near-term reason to switch.
+</p>
+</td>
+</tr>
+
+<!-- Core Scientific -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #ec4899;padding-left:16px;">Core Scientific &amp; CoreWeave</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;">
+<strong>Core Scientific</strong> reported a $347.2M Q1 loss, sold $208M in Bitcoin, and is pivoting to AI data center operations. Its colocation revenue surged to $77.5M (from $8.6M a year ago), driven primarily by a <strong>590 MW contract expansion with CoreWeave</strong> projected to generate <strong>$10.2 billion in revenue over 12 years</strong>. CoreWeave-related colocation now represents 67% of Core Scientific's total revenue.
+</p>
+</td>
+</tr>
+
+<!-- OpenAI Risk -->
+<tr>
+<td style="padding:32px 40px 0;">
+<h2 style="margin:0 0 20px;font-size:20px;color:#0f172a;font-weight:700;border-left:4px solid #ef4444;padding-left:16px;">OpenAI Risk</h2>

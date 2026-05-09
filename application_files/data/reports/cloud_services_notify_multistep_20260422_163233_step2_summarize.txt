@@ -1,0 +1,63 @@
+# Summary: Cloud Services & AI Infrastructure Landscape (April 2026)
+
+## CoreWeave — Dominant Neocloud Player
+
+**CoreWeave** has emerged as the central player in AI cloud infrastructure, securing a series of blockbuster deals and financing rounds:
+
+- **Meta** expanded its CoreWeave commitment by **$21 billion** (running 2027–2032), on top of a prior $14.2 billion deal, totaling ~$35 billion. Meta is building its own facilities but relies on CoreWeave for supplemental GPU capacity.
+- **Anthropic** signed a multi-year agreement for CoreWeave to power its **Claude AI models**, making nine of the top ten AI model providers CoreWeave customers (only xAI is absent).
+- **Jane Street** signed a **$6 billion** AI cloud agreement with CoreWeave, also purchasing ~$1 billion in stock, boosting revenue visibility.
+- CoreWeave's **pro forma backlog surpassed $88 billion**, underpinned by multi-year contracts tied to real compute demand.
+- **Nvidia** invested $2 billion in CoreWeave at $87.20/share, potentially reaching ~11% ownership, validating CoreWeave's infrastructure position.
+
+**Debt & Financing:**
+- CoreWeave completed a **$1.0 billion add-on** of 9.750% Senior Notes due 2031 (issued at 102%), bringing total outstanding notes to **$2.75 billion**.
+- Separately raised **$3.5 billion via 1.75% convertible notes** with a ~30% premium, signaling strong institutional demand.
+- The company's stock surged ~50% in recent weeks (up ~231% over one year), with analysts arguing the heavy debt is a "leading indicator of contracted growth" rather than a red flag. Shares traded near $117.
+
+**New Product Launches (announced at Google Cloud Next):**
+- **CoreWeave Interconnect** — a fiber-based direct link to **Google Cloud** using Google's Partner Cross-Cloud Interconnect, enabling seamless cross-cloud AI training and inference.
+- **SUNK Anywhere** — supports large-scale AI training across Google Cloud, **AWS**, **Microsoft Azure**, and on-premises environments.
+- **LOTA Cross-Cloud** — allows data storage in one cloud while running workloads across others.
+
+**Local Impact:** A **$1.8 billion AI data center** under construction in Kenilworth, NJ (at the former Merck campus) is drawing community pushback over water, flood, and energy concerns, though the mayor says CoreWeave will fund all transmission upgrades and use closed-loop cooling.
+
+## Google Cloud
+
+- **Google** raised **$5.7 billion** in junk bonds as part of a combined **$6.7 billion** high-yield offering alongside CoreWeave's $1 billion, financing AI data center infrastructure.
+- Google Cloud partnered with CoreWeave on cross-cloud interconnectivity, enabling customers to run AI workloads across both infrastructures.
+- In December 2025, **AWS and Google Cloud** launched a joint multicloud collaboration creating an open specification for network interoperability; **Microsoft Azure** is set to join later in 2026.
+- **Amazon** deepened its AI ties with **Anthropic** via an additional **$5 billion investment** (total up to $25 billion).
+
+## Core Scientific (CORZ)
+
+- **Core Scientific** is raising **$3.3 billion** through a junk bond sale to finance its pivot from crypto mining to **AI-focused data centers**. The company is building **six AI data centers leased to CoreWeave** under a 12-year agreement projected to generate ~$10 billion in revenue. It sold $175 million in Bitcoin to fund the transition and holds under 1,000 BTC.
+- **Edged Compute** is marketing **$1.3 billion** in bonds to fund facilities leased to CoreWeave and an **Alibaba** unit.
+
+## Nebius
+
+- **Nebius**, another neocloud provider, reported Q4 revenue of **$228 million** with substantial year-over-year growth. Analysts project **522% revenue growth** for 2026 and 195% for 2027 — the fastest among peers. Nebius offers a full-stack AI development solution versus CoreWeave's GPU-focused model. Both are benefiting from **Meta's $48 billion** combined AI infrastructure spending.
+
+## Broader Market Context
+
+- AI-linked borrowers have raised **$17.9 billion in junk bonds** in 2026 so far, reflecting the capital intensity of the AI buildout.
+- The **Nasdaq-100** is outperforming the S&P 500, driven by AI infrastructure and software adoption, with the Global X AI & Technology ETF soaring 14% in April.
+- **Microsoft** (MSFT) and **Nvidia** (NVDA) continue to be closely watched as AI infrastructure beneficiaries. Billionaire Philippe Laffont (Coatue) sold CoreWeave and rotated into another AI stock, while institutional investors like Mirae Asset, KBC Group, and Farther Finance are building CRWV positions.
+- **Applied Digital** is also noted for high growth in AI infrastructure.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [Better Buy: CoreWeave vs. Nebius Stock](https://news.google.com/rss/articles/CBMimwFBVV95cUxQc3oyeWIxdTdCdm4tTVoxUU1aaC1OQnNOSmVuREIxblRQVE9fZ2QxaWFjajdfY002WmdZbmo5NzliWTZNdDZHdm02b3VOdmJBN0dRRWtBMHE0SFRTcGtSa09hRmRnT0t2dlFqMGxLRUFCcU50RWJtNW5KQWl5aVVwQ3RmM2pucFFhNjEtTlNNblZQVFFSdDEzSklvRQ?oc=5) (Yahoo Finance)
+- [CoreWeave Completes $1.0 Billion Add-On 9.750% Notes Due 2031 at 102% for Liquidity](https://news.google.com/rss/articles/CBMi2gFBVV95cUxQRURVWXloUTRVU29SeUIySWY3UHpxNlV5V2JOV1YtaTFoTVpSbTBZR0lsYTFfaFJfOVIwdmxQeldKZi1DMmJ1VkNVVkIzci15SHFiQ2tDNE1USncwQVZvZGxTZDAyNXFYOU5rRXltQWVfVDFRNjNkdEp4VEE5bUFzcjFaaDBUZ2hYZ3RZVkExbzZvMXlzN19mUno4Nk1TSEQ2bDlLSXRIUTlHRHJOWkwyQzZJWlExeDl3cEh3aUQ1OEIwblNzc0NMLUpIa1ZWQ3RKRVZQTGRvdUYtQQ?oc=5) (TradingView)
+- [Meta Is Spending $48 Billion With CoreWeave and Nebius. Which Neocloud Stock Is a Better Buy?](https://news.google.com/rss/articles/CBMilwFBVV95cUxPamwzTENUeUpSM2Z0Tk8xRFFNa002ZnF6aFlDX3oxUm5tQnFzazg4a25HOXVxdVR3OUUzTVNhNmVQS21uSy0zX2VLNUloQW9yU0JMN3RjWlpQS0hWX3NHcnlxdGJFRTlKeXd6MDZJUkN1bHRDR1lTNVdTTDY1S0Y4Y2p6YWpaZHc1a2U4SXF1LWZhc3FYaVBN?oc=5) (The Motley Fool)
+- [CoreWeave Expands Multi-Cloud AI Stack at Google Cloud Next](https://news.google.com/rss/articles/CBMiuAFBVV95cUxOc2RBemJzSktKZGZQcGh0Um1uU2hHMzBOSElldC1EeVZjZzlZQlBkZUN6WU81Z3BPb2ZLR2JXbmF4Q2xMNFB3OUZ5ZmlNeWZRbmdaWHBRTFJIdTIxS1Z5T1d1aHVKTGdxY0JZQW5PNFNFRDg4ajU2MWhvaEpQLWY0bmdXWnlUa0M1SVRPcUxCZkwwbEwtOVVmZUVTU29ERVRlcFBMRzhOazRQQlNrRmIzUGQ3X3hDVmh4?oc=5) (Data Center Knowledge)
+- [Core Scientific seeks $3.3 billion bond sale to further AI data center pivot](https://news.google.com/rss/articles/CBMiwAFBVV95cUxPS0xlLUpQQXRhWXlvTmtFbF9iMGw5RmpaSDdnQXAxX0NfbTB5NFZPOGRqa0FiaGRxWUpKRk14MThCLVBYRDgtME5ZdlRUNFdXNjNsOTNHUFVhUlp3Q0xxdUJZLTdBOUwtcGNRZXRZVTg1bGNrTWE3cnZhcVphdkFpNU1KVTlkZHpiVW4wSzVBY25ZcmlLUTZSSnlfRjByWWZXZllSOEFKeTJ1WW9iV2FCbWk3LXhBU05ITlhncGlZZ0o?oc=5) (CoinDesk)
+- [CoreWeave and Google raise $6.7bn in junk bond offering - report](https://news.google.com/rss/articles/CBMipwFBVV95cUxQQVhDUmNRRjVfWTVaTHB3ZHg5VXNiNmJZNmlCVDFING9KWER0ZXVvZUJOS1R5THkySndNVmVBWmFuNGFXTlZRQmtiWmtpTHU3Zl9uRlhHcEVMcU5xRDdlTjBfUVVwcWc0dEJaN3pUNVZnenVnMTAzRF9UX3phb0Y1SElla0JKNG9sVy12SVFtV01pamFYblhHOGViSVFWZk1Ydk5rV1U3Yw?oc=5) (Data Center Dynamics)
+- [CoreWeave's 50% Stock Jump Isn't The Peak — This Expert Says More Is Coming](https://news.google.com/rss/articles/CBMiwAFBVV95cUxQQ1gydzZLM1RXMzU5RTVibThjNjBPN0pWLWxybzFFN1VFNDNKNnFSUEROYnBMVzg2LWVKMWlrWVFDVWpYd1dLVEVKV2VGZVQzUlV6REp4dDczT2dWcm1rOFFTSkJKM0d4QkFtUnpFQWgwUHNjZVpDZ1pUQzNabDN4Um1hR0xFOHRYV2ZJdjRCUWN4ajU0Y1ZxeXVTMEl2eEZUSnJMWWNnbDcwWm0ybHVzbWVkckhfZkpSV1k3WEI1Ync?oc=5) (Benzinga)
+- [CoreWeave, Google Cloud link up for AI training, inference](https://news.google.com/rss/articles/CBMimAFBVV95cUxNbVc0SVlwdjlMVFFsaTFBclNDNTBWenR1blM5aVl0bS1mQWhWa3VBLVFTTmlENUstTDM0TnJnSnhoaUNuLTZNdkFBTjIxYTdQRjA2OHZvay1IWDJCcldRazBtNWhoZjBiQnAwOXBtdDdIZjM0TDF1aG9xSG5GY0NlZVJEWGtwSFZkTTBzZE5hY21IaS1uY0JELQ?oc=5) (CIO Dive)
+- [+3.44% for Core Scientific stock as CoreWeave partnership drives AI infrastructure build](https://news.google.com/rss/articles/CBMimwFBVV95cUxPZFBHWXZNa0FoM012TDBYYjYzd3FnclRvOVZLaUlLUWNVcno4YUVGRHR0S1RqODJZZ1I4Nm9VODRpQ08tT1hXb2NrNzM3X1RLa0F6NklLWm9LdklnLVVZbHJDeC1zMl9ybHVHUWI4NzZmM2JUTVFOcS13cWRFd05KNG0xQy14ODc1OE5nOVktMGthVktNQkZtVXoyNA?oc=5) (Traders Union)
+- [CoreWeave partners with Google Cloud on cross-cloud training and inference](https://news.google.com/rss/articles/CBMiugFBVV95cUxQdFVVNGR0MTFOODA3TFlqdTBZMXJja1NhZi15QkpKN01yeWdwRWljRnlmVU83UTRROGFKbXJsTDZ1a3Q0T1ViR080cGlQV0tjamVuajU5dTFQUWFUNU00VFdZTmxUbTE1SkdhZ3lwQl9PT21JUGlwYVBSSWZ2aWRTamxVZkdEWk5NUGZfZDRxTE5VVjV0NkxEaDJWbFpEN2liQWNjMTQwaTRHeTZwUWNlX1huaXJpX1g0WlE?oc=5) (Data Center Dynamics)
+- [CoreWeave's Next Move Isn't Priced In Yet (NASDAQ:CRWV)](https://news.google.com/rss/articles/CBMihwFBVV95cUxPeW94T21CNWtiSjEzX1BZYXZWX19sTXIwdXZvcnNrMGJXbjdUZTNMa29BWGdzcFp2NVNJckVGTnlZR0p2Z1dSY3QzY1hvS0lPeHYyUFNUWk9zVTRRNDF1cnhQbXcwaTBOd2k2UXhYUHE5MUFxQlVuNTdxQ2k0S2E3UE1kaDhiM0k?oc=5) (Seeking Alpha)
+- [Jane Street Signs $6 Billion AI Cloud Agreement with CoreWeave](https://news.google.com/rss/articles/CBMilw

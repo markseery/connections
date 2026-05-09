@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Industry Newsletter</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:24px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f172a;padding:40px 40px 32px 40px;text-align:center;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI Industry Brief</h1>
+<p style="margin:8px 0 0 0;font-size:14px;color:#94a3b8;font-weight:400;">Weekly Summary</p>
+</td>
+</tr>
+
+<!-- Body -->
+<tr>
+<td style="padding:32px 40px 0 40px;">
+
+<!-- Pentagon AI -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Pentagon AI Deployment (AWS, Microsoft, Nvidia)</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;">The U.S. Department of Defense signed deals with <strong>Nvidia, Microsoft, Amazon Web Services (AWS),</strong> and <strong>Reflection AI</strong> to deploy their AI technology and models on classified military networks (Impact Level 6 and 7 environments). This follows earlier agreements with Google, SpaceX, and OpenAI. The move accelerates the Pentagon's "AI-first fighting force" strategy and diversifies its AI vendor base amid its ongoing legal dispute with <strong>Anthropic</strong>, which refused unrestricted military use of its models. Over 1.3 million DOD personnel have already used the Pentagon's secure generative AI platform, GenAI.mil.</p>
+</td>
+</tr>
+</table>
+
+<!-- AWS Cloud -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">AWS Cloud Business Surging</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Amazon Web Services</strong> reported 28% year-over-year revenue growth to $37.6 billion—its fastest growth in 15 quarters—driven by AI compute demand. CEO Andy Jassy noted AWS's AI revenue run rate exceeds $15 billion. Amazon signaled that capital expenditure would continue rising to build out infrastructure (land, power, buildings, chips, servers, networking).</p>
+</td>
+</tr>
+</table>
+
+<!-- Big Tech AI Spending -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Big Tech AI Spending Hits $725B</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Google</strong> is outpacing rivals in AI infrastructure investment, with Big Tech's collective AI spending plans rising to <strong>$725 billion</strong>. <strong>Google, Meta, and Microsoft</strong> all boosted their AI spending forecasts after strong Q1 earnings, fueling a digital advertising boom. Wall Street hit record highs in its best month since 2020, partly driven by Big Tech's AI-powered earnings growth.</p>
+</td>
+</tr>
+</table>
+
+<!-- Anthropic -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Anthropic Fundraising — Potential $900B+ Valuation</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Anthropic</strong> is on the verge of raising roughly <strong>$50 billion</strong> at a valuation targeting ~$900 billion (potentially higher given soaring investor demand), which would surpass <strong>OpenAI's</strong> $852 billion valuation. Anthropic's annual revenue run rate has reached ~$40 billion, up dramatically from ~$9 billion at end of 2025, driven largely by AI coding tools (Claude Code, Cowork). This is likely Anthropic's last private round before an anticipated IPO. It raised its previous round in February at $380 billion.</p>
+</td>
+</tr>
+</table>
+
+<!-- OpenAI Developments -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">OpenAI Developments</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:4px 0;font-size:14px;line-height:1.7;color:#475569;">
+<span style="color:#3b82f6;font-weight:bold;margin-right:6px;">•</span><strong>OpenAI</strong> expanded its deal with <strong>Amazon</strong> after <strong>Microsoft</strong> loosened exclusivity terms, signaling OpenAI's models will be available more broadly across cloud providers.
+</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:14px;line-height:1.7;color:#475569;">
+<span style="color:#3b82f6;font-weight:bold;margin-right:6px;">•</span>OpenAI launched <strong>Advanced Account Security (AAS)</strong> for ChatGPT, partnering with <strong>Yubico</strong> for co-branded hardware security keys to combat phishing.
+</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:14px;line-height:1.7;color:#475569;">
+<span style="color:#3b82f6;font-weight:bold;margin-right:6px;">•</span>OpenAI is restricting access to its new cybersecurity tool <strong>GPT-5.5 Cyber</strong> to verified defenders—mirroring the same gatekeeping approach it had previously criticized <strong>Anthropic</strong> for with its Mythos tool.
+</td>
+</tr>
+<tr>
+<td style="padding:4px 0;font-size:14px;line-height:1.7;color:#475569;">
+<span style="color:#3b82f6;font-weight:bold;margin-right:6px;">•</span><strong>ChatGPT Images 2.0</strong> saw strong adoption in India (its largest market, ~5 million downloads in launch week) but only modest global engagement gains (~1% DAU increase).
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+<!-- Musk / xAI / OpenAI Trial -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Elon Musk / xAI / OpenAI Trial</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;">In the ongoing Musk v. OpenAI trial, <strong>Elon Musk</strong> testified under oath that <strong>xAI</strong> used distillation techniques on <strong>OpenAI's</strong> models to train Grok, confirming a widely suspected industry practice. Musk also admitted Tesla is not currently pursuing AGI, contradicting his own recent tweet. The lawsuit alleges OpenAI's co-founders betrayed the original nonprofit mission. Cross-examination revealed Musk had explored converting OpenAI to for-profit as early as 2016 and sought majority equity control in 2017.</p>
+</td>
+</tr>
+</table>
+
+<!-- Google Gemini in Vehicles -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Google Gemini in Vehicles</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Google</strong> is rolling out its <strong>Gemini AI assistant</strong> to cars with Google built-in, starting in the U.S. <strong>General Motors</strong> confirmed Gemini is coming to ~4 million vehicles (model year 2022+) across Cadillac, Chevrolet, Buick, and GMC. The upgrade enables natural-language interactions for navigation, restaurant recommendations, vehicle controls, and hands-free messaging, plus a beta "Gemini Live" mode for open-ended conversation.</p>
+</td>
+</tr>
+</table>
+
+<!-- Meta's AI Business Tools -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Meta's AI Business Tools</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Meta's</strong> business AI tools now facilitate <strong>10 million conversations per week</strong> (up from 1 million in early 2026), powered by its new <strong>Muse Spark</strong> LLM from Meta Superintelligence Labs. Over 8 million advertisers use Meta's GenAI ad creative tools, with video generation delivering 3%+ higher conversion rates. Meta is launching open beta of <strong>Meta Ads AI Connectors</strong> for agent-based ad management. Monetization of business AI tools is expected soon.</p>
+</td>
+</tr>
+</table>
+
+<!-- X / xAI Ad Platform -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">X (xAI) Rebuilt Ad Platform</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>X/xAI</strong> launched a rebuilt, AI-powered advertising platform with modern retrieval and ranking systems for better targeting and campaign management. X's ad revenue is estimated at $2.46 billion in 2026, recovering after years of decline under Musk's ownership.</p>
+</td>
+</tr>
+</table>
+
+<!-- SoftBank Roze AI -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">SoftBank — Roze AI for Data Center Construction</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>SoftBank</strong> is creating a new company called <strong>Roze AI</strong> that would use autonomous robots to automate U.S. data center construction. The company is already eyeing a <strong>$100 billion IPO</strong> potentially in H2 2026, though some insiders are skeptical about the valuation and timeline.</p>
+</td>
+</tr>
+</table>
+
+<!-- Apple Mac Demand -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Apple — AI-Driven Mac Demand</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Apple</strong> reported surprise Mac sales growth (up 6% YoY to $8.4 billion) driven by demand for running local AI models like <strong>OpenClaw</strong> on Mac mini and Mac Studio. CEO Tim Cook said demand was "higher than expected" and Mac mini was the top-selling desktop in China during an AI frenzy.</p>
+</td>
+</tr>
+</table>
+
+<!-- Stripe -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+<tr>
+<td style="border-left:3px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 10px 0;font-size:18px;font-weight:700;color:#0f172a;line-height:1.3;">Stripe — AI Agent Payments</h2>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#475569;"><strong>Stripe</strong> upgraded its <strong>Link</strong> digital wallet to support payments by autonomous AI agents (like OpenClaw), enabling agents to make purchases on users' behalf via OAuth authentication without exposing

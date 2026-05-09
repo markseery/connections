@@ -1,0 +1,91 @@
+## Summary
+
+### AWS & Amazon's Custom Chips Challenge Nvidia
+Amazon CEO Andy Jassy's annual shareholder letter positioned AWS's homegrown **Trainium** AI chips as a formidable alternative to Nvidia. He claims Trainium has reached a **$20 billion annual revenue run rate**, with capacity for Trainium3 nearly sold out and Trainium4 (18 months away) also nearly committed. Jassy argues that if Amazon sold chips externally, it would be at a $50B ARR — though Nvidia still did $215.9B in actual revenue last year. Separately, **Uber** expanded its AWS contract to use more **Graviton** CPUs and begin trialing **Trainium3**, a notable shift given Uber's previous major cloud commitments to **Oracle** and **Google Cloud**.
+
+### AWS Navigates Dual Investments in Anthropic & OpenAI
+AWS CEO Matt Garman addressed Amazon's **$50 billion investment in OpenAI** alongside its existing **$8 billion in Anthropic**, calling it a manageable conflict given AWS's long history of competing with its own partners. He noted this is industry-wide: Anthropic's latest $30B round included investors also backing OpenAI, including **Microsoft**.
+
+### Anthropic: New Model, Massive Compute Expansion, and UK Courtship
+**Anthropic** previewed its powerful new frontier model **Mythos** through **Project Glasswing**, a cybersecurity initiative with 12 partners including **Amazon, Apple, Microsoft, Broadcom, Cisco, CrowdStrike**, and others. Mythos has reportedly identified thousands of zero-day vulnerabilities. Separately, Anthropic signed a **major new compute deal with Google Cloud and Broadcom** for expanded TPU capacity (reportedly **3.5 gigawatts**), building on an earlier 1+ GW agreement, with new capacity coming online in 2027. This supports Anthropic's $50B U.S. infrastructure commitment. The company recently closed a **$30B Series G at a $380B valuation**. The **UK is also courting Anthropic** to expand in London following Anthropic's clash with the U.S. Defense Department, which labeled it a supply-chain risk.
+
+### OpenAI Halts Stargate UK Data Centre Project
+**OpenAI has halted its Stargate UK data centre project**, according to the Financial Times. Details are behind a paywall, but it signals a pullback on international infrastructure expansion.
+
+### Google Cloud & Google Products
+Beyond the Anthropic TPU deal, **Google** quietly launched **"Google AI Edge Eloquent"**, an offline-first AI dictation app on iOS using Gemma-based models, competing with Wispr Flow and others. **Google Maps** added Gemini-powered AI caption generation for user-contributed photos.
+
+### Firmus: Nvidia-Backed Data Center Builder Soars
+Singapore-based **Firmus** raised **$505 million at a $5.5B valuation** (led by Coatue), bringing total funding to $1.35B in six months. The company, originally a Bitcoin mining cooling provider, is building **Nvidia Vera Rubin-powered "AI factory" data centers** in Australia and Tasmania (Project Southgate), using Nvidia's reference designs.
+
+### Intel Joins Musk's Terafab Chips Project
+**Intel** signed on to Elon Musk's **Terafab** semiconductor factory project in Texas, joining SpaceX and Tesla. Intel will serve as the manufacturing partner, bringing critical fab expertise that SpaceX and Tesla lack. The facility aims to produce 1 TW/year of compute for AI and robotics. Intel's stock rose ~3% on the news.
+
+### Meta Releases New AI Model
+**Meta** released its first AI model since Zuckerberg's major spending spree, per the FT (details paywalled).
+
+### Databricks Hits Milestones
+Databricks CTO **Matei Zaharia** won the **ACM Prize in Computing**. Databricks has raised over $20B at a $134B valuation and hit $5.4B revenue run rate. Zaharia declared "AGI is here already."
+
+### Atlassian Adds AI Agents to Confluence
+**Atlassian** launched visual AI tool **Remix** and three third-party agents (connecting to **Lovable, Replit, and Gamma**) within Confluence, using model context protocols.
+
+### Startups & Other Developments
+- **Poke** raised $10M more (valued at $300M), offering AI agents via iMessage/SMS/WhatsApp, backed by Spark Capital and General Catalyst.
+- **Arcee**, a 26-person startup, released a 400B-parameter open-source reasoning model on a $20M budget, positioning as a Western alternative to Chinese models.
+- **Astropad** launched **Workbench**, a remote desktop tool for monitoring AI agents on Mac Minis.
+- **OpenAI** released a **Child Safety Blueprint** with NCMEC to combat AI-generated child exploitation.
+- **Tubi** became the first streamer with a native app inside **ChatGPT**.
+- **Samsung** forecasts record profit driven by the AI boom.
+- **Bezos's Project Prometheus** poached an xAI co-founder from OpenAI.
+- Insurers are turning to **catastrophe bonds** to offload data centre risks.
+- **Arm** chief Haas is in line to lead much of **SoftBank's** international business.
+- Top record labels and **Suno** hit an impasse in AI-generated music licensing talks.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [Amazon CEO takes aim at Nvidia, Intel, Starlink, more in annual shareholder letter](https://techcrunch.com/2026/04/09/amazon-ceo-takes-aim-at-nvidia-intel-starlink-more-in-annual-shareholder-letter/) (TechCrunch)
+- [Final 2 days to save up to $500 on your TechCrunch Disrupt 2026 ticket](https://techcrunch.com/2026/04/09/final-2-days-to-save-up-to-500-on-your-techcrunch-disrupt-2026-ticket/) (TechCrunch)
+- [Poke makes using AI agents as easy as sending a text](https://techcrunch.com/2026/04/08/poke-makes-ai-agents-as-easy-as-sending-a-text/) (TechCrunch)
+- [AWS boss explains why investing billions in both Anthropic and OpenAI is an OK conflict](https://techcrunch.com/2026/04/08/aws-boss-explains-why-investing-billions-in-both-anthropic-and-openai-is-an-ok-conflict/) (TechCrunch)
+- [Tubi is the first streamer to launch a native app within ChatGPT](https://techcrunch.com/2026/04/08/tubi-is-the-first-streamer-to-launch-a-native-app-within-chatgpt/) (TechCrunch)
+- [Astropad's Workbench reimagines remote desktop for AI agents, not IT support](https://techcrunch.com/2026/04/08/astropads-workbench-reimagines-remote-desktop-for-ai-agents-not-it-support/) (TechCrunch)
+- [OpenAI releases a new safety blueprint to address the rise in child sexual exploitation](https://techcrunch.com/2026/04/08/openai-releases-a-new-safety-blueprint-to-address-the-rise-in-child-sexual-exploitation/) (TechCrunch)
+- [Databricks co-founder wins prestigious ACM award, says 'AGI is here already'](https://techcrunch.com/2026/04/08/databricks-matei-zaharia-wins-acm-computing-prize-agi/) (TechCrunch)
+- [Final 3 days to save up to $500 on your TechCrunch Disrupt 2026 pass](https://techcrunch.com/2026/04/08/final-3-days-to-save-up-to-500-on-your-techcrunch-disrupt-2026-pass/) (TechCrunch)
+- [Atlassian launches visual AI tools and third-party agents in Confluence](https://techcrunch.com/2026/04/08/atlassian-confluence-visual-ai-tools-agents/) (TechCrunch)
+- [Google quietly launched an AI dictation app that works offline](https://techcrunch.com/2026/04/07/google-quietly-releases-an-offline-first-ai-dictation-app-on-ios/) (TechCrunch)
+- [I can't help rooting for tiny open source AI model maker Arcee](https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/) (TechCrunch)
+- [Firmus, the 'Southgate' AI data center builder backed by Nvidia, hits $5.5B valuation](https://techcrunch.com/2026/04/07/firmus-the-southgate-ai-datacenter-builder-backed-by-nvidia-hits-5-5b-valuation/) (TechCrunch)
+- [Intel signs on to Elon Musk's Terafab chips project](https://techcrunch.com/2026/04/07/intel-signs-on-to-elon-musks-terafab-chips-project/) (TechCrunch)
+- [Anthropic debuts preview of powerful new AI model Mythos in new cybersecurity initiative](https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/) (TechCrunch)
+- [Uber is the latest to be won over by Amazon's AI chips](https://techcrunch.com/2026/04/07/uber-is-the-latest-to-be-won-over-by-amazons-ai-chips/) (TechCrunch)
+- [Anthropic ups compute deal with Google and Broadcom amid skyrocketing demand](https://techcrunch.com/2026/04/07/anthropic-compute-deal-google-broadcom-tpus/) (TechCrunch)
+- [Google Maps can now write captions for your photos using AI](https://techcrunch.com/2026/04/07/google-maps-can-now-write-captions-for-your-photos-using-ai/) (TechCrunch)
+- [Listen up: AI's communication blind spot](https://www.ft.com/content/e085f027-60cc-4079-9d79-54f70836e29a) (Financial Times)
+- [OpenAI halts Stargate UK data centre project](https://www.ft.com/content/124189b9-8b2b-4d62-a94b-8a91673ea378) (Financial Times)
+- [The AI job loss story is all about bundles](https://www.ft.com/content/b69f8599-eaf1-477a-a5a8-60a715e56a04) (Financial Times)
+- [Arm chief Haas in line to lead much of SoftBank's international business](https://www.ft.com/content/7c61190d-e0dd-4ccf-994c-a8af273f5e9c) (Financial Times)
+- [White-collar industries bet on a secret weapon against AI: trust](https://www.ft.com/content/72c20f77-e85d-49cb-84ef-4b676244d1c5) (Financial Times)
+- [Meta releases first AI model since Zuckerberg's spending spree](https://www.ft.com/content/0efb912a-8bac-4655-ad6c-7c27d4ebbf50) (Financial Times)
+- [The UK needs to make choices on tech strategy](https://www.ft.com/content/857cc88f-10f9-48ea-ae4b-7ea10876c87e) (Financial Times)
+- [Why the 'SaaSpocalypse' doomsayers are wrong](https://www.ft.com/content/6fb3105e-d661-4c02-99f2-8f5b14048107) (Financial Times)
+- [Earnings expectations are too high](https://www.ft.com/content/b5fdb918-55ca-4558-b59f-3f7155882f68) (Financial Times)
+- [The dystopian fantasy of uselessness](https://www.ft.com/content/28dfa485-3c88-4963-82f8-5530a72792fe) (Financial Times)
+- [Anthropic rolls out cyber AI model days after source code leak](https://www.ft.com/content/59249643-a221-4494-bcb5-62e5f4fedc8e) (Financial Times)
+- [Lessons for the AI revolutionaries from Francis Bacon](https://www.ft.com/content/0a8fbd81-6129-467e-9941-a1fc73cf10c6) (Financial Times)
+- [Don't forget the Mag 7](https://www.ft.com/content/d033ce6d-9a19-4a9b-98c7-c7b023949c4f) (Financial Times)
+- [Top record labels and start-up Suno hit impasse in AI-generated music talks](https://www.ft.com/content/b066a226-4871-4669-97a8-f9617cdbf48b) (Financial Times)
+- [Bezos's Project Prometheus poaches xAI co-founder from OpenAI](https://www.ft.com/content/e03c235d-8637-41e5-9e63-a872e398897a) (Financial Times)
+- [UK considers testing AI models used by banks](https://www.ft.com/content/3053b547-5e55-4520-9b95-828c417a5d79) (Financial Times)
+- [Samsung forecasts record profit on AI boom](https://www.ft.com/content/82f8d137-49db-446a-8945-f98bcda42628) (Financial Times)
+- [AI has arrived in auditing. Are regulators ready?](https://www.ft.com/content/14062aaa-251d-414f-8978-8d7d8f5311e3) (Financial Times)
+- [AI dolls offer companionship to the elderly](https://www.ft.com/content/88911383-2a17-42e1-aef4-36daac1bd9dd) (Financial Times)
+- [Is AI the new fracking?](https://www.ft.com/content/525cc89e-1ee9-4039-a588-5039565053f9) (Financial Times)
+- [UK courts Anthropic to expand in London after US defence clash](https://www.ft.com/content/6bfd7b59-5e63-4a4d-ab55-7c2bd39b05a5) (Financial Times)
+- [What's the point of an AI novel?](https://www.ft.com/content/b83fbd97-e85d-4e67-90de-bfb7bf8c8cde) (Financial Times)
+- [Investors are betting on AI chaos. History suggests otherwise](https://www.ft.com/content/76ea6878-d11c-4118-ad98-3b361fcdbb01) (Financial Times)
+- [Turbulent markets fuel record year for Alex Gerko's XTX](https://www.ft.com/content/4bd40966-8f9c-4d8a-ae1e-7919316b23c2) (Financial Times)
+- [Insurers turn to catastrophe bonds to offload data centre risks](https://www.ft.com/content/6aa06e07-b881-4a6c-bfcb-f1ac413cf353) (Financial Times)

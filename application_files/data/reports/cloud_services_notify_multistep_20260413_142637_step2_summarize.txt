@@ -1,0 +1,97 @@
+# Summary of All Items
+
+## Cloud Infrastructure & Compute
+
+**Kepler Communications** launched the largest orbital compute cluster — about 40 Nvidia Orin edge processors across 10 satellites linked by laser communications — and now has 18 customers, including **Sophia Space**, which will test passively-cooled space-computer software on the constellation. Large-scale orbital data centers (envisioned by **SpaceX** and **Blue Origin**) are not expected until the 2030s. Kepler sees itself as infrastructure for space and airborne applications, not a data center company.
+
+**Google Cloud and Intel** expanded a multiyear partnership: Google Cloud will continue using Intel's Xeon 6 processors for AI, cloud, and inference, and the two will co-develop custom ASIC-based infrastructure processing units (IPUs) for data center workloads. The deal reflects growing industry demand for CPUs alongside GPUs. **Arm Holdings** (SoftBank-owned) also recently unveiled its own AGI CPU to address a worldwide CPU shortage. Arm chief Rene Haas is reportedly in line to lead much of SoftBank's international business.
+
+**Amazon CEO Andy Jassy's** annual shareholder letter positioned **AWS's** homegrown **Trainium** AI chips as a challenger to **Nvidia**, claiming Trainium has hit a $20 billion ARR (and would be $50B if sold externally). Demand for Trainium3 and even the still-distant Trainium4 is nearly sold out. Jassy also took implicit aim at **Intel**, **Starlink**, and others across Amazon's businesses.
+
+**OpenAI halted its Stargate UK data centre project**, according to the Financial Times.
+
+**Google's TurboQuant** algorithm raised questions about whether it could reduce AI demand for memory chips.
+
+The **AI build-out is broadly powering global goods trade**, per the FT, as hardware shipments for data centers surge worldwide.
+
+## AI Models & Platforms
+
+**Anthropic's new Mythos model** dominated headlines. It was released in a limited fashion to major enterprises (**AWS, JPMorgan Chase, Goldman Sachs, Citigroup, Bank of America, Morgan Stanley**) because of its exceptional ability to find software security vulnerabilities. **Trump administration officials** (Treasury Secretary Bessent and Fed Chair Powell) summoned bank executives to encourage testing Mythos for cyber defense. **UK financial regulators** are also assessing Mythos risks. Cybersecurity stocks fell on worries the model could disrupt the sector. Critics argued the limited release may be more about enterprise sales strategy and preventing model distillation by competitors than about safety alone. Anthropic is simultaneously battling the Trump administration in court over a DoD supply-chain risk designation.
+
+**Anthropic is closing in on OpenAI** in US business usage, per the FT. At the **HumanX conference**, attendees and vendors consistently named **Claude** as the preferred AI chatbot, with many saying **ChatGPT/OpenAI** had "fallen off." OpenAI recently dropped side projects (Sora, a "sexy" ChatGPT variant) to refocus on business and coding, but negative press, advertising in ChatGPT, and the Trump administration partnership have hurt perception.
+
+**Anthropic temporarily banned OpenClaw creator Peter Steinberger** (now at OpenAI) from Claude access, citing "suspicious" activity. The ban was reversed after it went viral. This followed Anthropic's new policy requiring OpenClaw users to pay via API rather than subscriptions — a "claw tax" — citing compute-intensive agentic usage patterns. Steinberger suggested this was a competitive move to benefit Anthropic's own **Cowork** agent.
+
+**OpenAI launched a new $100/month ChatGPT Pro plan** to compete directly with Anthropic's $100/month Claude tier, offering 5x more access to its **Codex** coding tool than the $20 Plus plan. The $200 tier remains available with 20x limits. Plans now range from free (with ads), $8 Go (with ads), $20 Plus, $100 Pro, and $200 Pro.
+
+**Meta's Muse Spark** model — the first release under **Alexandr Wang** (recruited from **Scale AI** to lead Meta's Superintelligence Labs) — pushed the **Meta AI app to #5 on the US App Store** (87% daily download increase on iOS). Muse Spark accepts multimodal input, supports subagents, visual coding, and will expand to WhatsApp, Instagram, Facebook, Messenger, and Meta's AI glasses. Separately, **Meta built an AI version of Mark Zuckerberg** to interact with staff internally. Meta paused contracts with **Mercor** after that startup's data breach.
+
+**Alibaba** is shifting its AI strategy toward revenue generation over open-source, per the FT.
+
+**xAI** (Elon Musk's company) sued Colorado over the first state AI anti-discrimination law.
+
+## AI Safety, Legal & Societal Concerns
+
+**Sam Altman's San Francisco home was attacked with a Molotov cocktail** days after a critical **New Yorker profile** by Ronan Farrow and Andrew Marantz questioned his trustworthiness. A suspect was arrested at OpenAI HQ. Altman called the article "incendiary" and blamed it for escalating dangers.
+
+**A stalking victim sued OpenAI**, alleging ChatGPT fueled her abuser's delusions and that OpenAI ignored three warnings (including an internal mass-casualty flag). She is seeking to force OpenAI to block the user, preserve chat logs, and notify her of new account attempts. OpenAI agreed only to suspend the account. The GPT-4o model cited in the case was retired in February. This follows other lawsuits involving AI-linked deaths. OpenAI is simultaneously backing an **Illinois bill** that would shield AI labs from liability even in mass-casualty cases.
+
+**Florida's attorney general** announced an investigation into OpenAI over ChatGPT's alleged role in planning the 2025 **Florida State University shooting** that killed two. ChatGPT has been linked to a growing number of violent incidents and cases of "AI psychosis."
+
+The FT reported on concerns that **AI-generated legal queries** from clients risk pushing up lawyers' fees, and examined how AI may reshape corporate organizational structures and cause job losses.
+
+## Startups & Other Developments
+
+**Mercor** ($10B-valued AI data training startup) is reeling from a **data breach** caused by a hack of the open-source tool **LiteLLM**. Hackers claim to have stolen 4TB of data. Meta paused Mercor contracts; OpenAI is investigating its exposure. Mercor handles sensitive training data for major model makers.
+
+**Sierra** (Bret Taylor, CEO; also OpenAI board chair) launched **Ghostwriter**, an agent that builds other agents via natural language, aiming to replace click-based enterprise software. Sierra reached $100M ARR in under 21 months and is valued at $10B.
+
+**Poke**, a startup backed by Spark Capital and General Catalyst, launched an AI agent accessible via iMessage/SMS/Telegram/WhatsApp for everyday tasks (calendar, smart home, health tracking), raising $25M total at a $300M valuation.
+
+**Apple** is testing four smart-glasses designs for a 2027 launch (no displays; camera, calls, music, Siri), stepping back from its earlier mixed-reality ambitions after the Vision Pro's lukewarm reception.
+
+**China is luring top AI talent home from Silicon Valley**, and Asian startups are broadly reshaping industries with AI.
+
+**SusHi Tech Tokyo 2026** (Asia's largest innovation conference) features 750 startup exhibitors, with corporate partners including **Sony, Google, Microsoft, and Mizuho**, and speakers from **Nvidia** and **AWS**.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [The largest orbital compute cluster is open for business](https://techcrunch.com/2026/04/13/the-largest-orbital-compute-cluster-is-open-for-business/) (TechCrunch)
+- [Trump officials may be encouraging banks to test Anthropic's Mythos model](https://techcrunch.com/2026/04/12/trump-officials-may-be-encouraging-banks-to-test-anthropics-mythos-model/) (TechCrunch)
+- [Apple reportedly testing four designs for upcoming smart glasses](https://techcrunch.com/2026/04/12/apple-reportedly-testing-four-designs-for-upcoming-smart-glasses/) (TechCrunch)
+- [From LLMs to hallucinations, here's a simple guide to common AI terms](https://techcrunch.com/2026/04/12/artificial-intelligence-definition-glossary-hallucinations-guide-to-common-ai-terms/) (TechCrunch)
+- [At the HumanX conference, everyone was talking about Claude](https://techcrunch.com/2026/04/12/at-the-humanx-conference-everyone-was-talking-about-claude/) (TechCrunch)
+- [Sam Altman responds to 'incendiary' New Yorker article after attack on his home](https://techcrunch.com/2026/04/11/sam-altman-responds-to-incendiary-new-yorker-article-after-attack-on-his-home/) (TechCrunch)
+- [Anthropic temporarily banned OpenClaw's creator from accessing Claude](https://techcrunch.com/2026/04/10/anthropic-temporarily-banned-openclaws-creator-from-accessing-claude/) (TechCrunch)
+- [Stalking victim sues OpenAI, claims ChatGPT fueled her abuser's delusions and ignored her warnings](https://techcrunch.com/2026/04/10/stalking-victim-sues-openai-claims-chatgpt-fueled-her-abusers-delusions-and-ignored-her-warnings/) (TechCrunch)
+- [TechCrunch is heading to Tokyo — and bringing the Startup Battlefield with it](https://techcrunch.com/2026/04/10/techcrunch-is-heading-to-tokyo-and-bringing-the-startup-battlefield-with-it/) (TechCrunch)
+- [Last 24 hours: Save up to $500 on your TechCrunch Disrupt 2026 pass](https://techcrunch.com/2026/04/10/final-24-hours-save-up-to-500-on-your-techcrunch-disrupt-2026-pass/) (TechCrunch)
+- [ChatGPT finally offers $100/month Pro plan](https://techcrunch.com/2026/04/09/chatgpt-pro-plan-100-month-codex/) (TechCrunch)
+- [Florida AG announces investigation into OpenAI over shooting that allegedly involved ChatGPT](https://techcrunch.com/2026/04/09/florida-ag-investigation-openai-chatgpt-shooting/) (TechCrunch)
+- [After data breach, $10B-valued startup Mercor is having a month](https://techcrunch.com/2026/04/09/after-data-breach-10b-valued-startup-mercor-is-having-a-month/) (TechCrunch)
+- [Meta AI app climbs to No. 5 on the App Store after Muse Spark launch](https://techcrunch.com/2026/04/09/meta-ai-app-climbs-to-no-5-on-the-app-store-after-muse-spark-launch/) (TechCrunch)
+- [Is Anthropic limiting the release of Mythos to protect the internet — or Anthropic?](https://techcrunch.com/2026/04/09/is-anthropic-limiting-the-release-of-mythos-to-protect-the-internet-or-anthropic/) (TechCrunch)
+- [Google and Intel deepen AI infrastructure partnership](https://techcrunch.com/2026/04/09/google-and-intel-deepen-ai-infrastructure-partnership/) (TechCrunch)
+- [Sierra's Bret Taylor says the era of clicking buttons is over](https://techcrunch.com/2026/04/09/sierras-bret-taylor-says-the-era-of-clicking-buttons-is-over/) (TechCrunch)
+- [Amazon CEO takes aim at Nvidia, Intel, Starlink, more in annual shareholder letter](https://techcrunch.com/2026/04/09/amazon-ceo-takes-aim-at-nvidia-intel-starlink-more-in-annual-shareholder-letter/) (TechCrunch)
+- [Final 2 days to save up to $500 on your TechCrunch Disrupt 2026 ticket](https://techcrunch.com/2026/04/09/final-2-days-to-save-up-to-500-on-your-techcrunch-disrupt-2026-ticket/) (TechCrunch)
+- [Poke makes using AI agents as easy as sending a text](https://techcrunch.com/2026/04/08/poke-makes-ai-agents-as-easy-as-sending-a-text/) (TechCrunch)
+- [The AI build-out is powering global goods trade](https://www.ft.com/content/ad169119-4a62-437b-b6ec-70819b1e8b4f) (Financial Times)
+- [Meta builds AI version of Mark Zuckerberg to interact with staff](https://www.ft.com/content/02107c23-6c7a-4c19-b8e2-b45f4bb9ce5f) (Financial Times)
+- [The less technically literate might be a touch concerned that your AI escaped](https://www.ft.com/content/75efd2ab-9576-42e7-a3f8-2fea6ba5958b) (Financial Times)
+- [UK financial regulators rush to assess risks of Anthropic's latest AI model](https://www.ft.com/content/ec7bb366-9643-47ce-9909-fc5ad4864ae5) (Financial Times)
+- [How will AI change the org chart?](https://www.ft.com/content/f580228a-bc8a-4450-a159-b19727380d8a) (Financial Times)
+- [Will Google's TurboQuant algorithm hurt AI demand for memory chips?](https://www.ft.com/content/12eaae3a-e1b8-47a0-9006-70fe319b130a) (Financial Times)
+- [Anthropic closes in on OpenAI as US business use surges](https://www.ft.com/content/abb93a6f-9060-4095-8045-84b97d394a4c) (Financial Times)
+- [Clients' barrage of AI-generated queries risks pushing up lawyers' fees](https://www.ft.com/content/744d2c77-a34e-4ca0-9f0e-ce8cdcdee483) (Financial Times)
+- [Molotov cocktail thrown at home of OpenAI chief Sam Altman](https://www.ft.com/content/46ec2fa5-834d-4e49-81ef-6fb736b7e81d) (Financial Times)
+- [Trump touts Palantir's 'war' role after short seller attack](https://www.ft.com/content/8ab0fc62-b6ec-4b31-a8d7-cb076c9b0fb4) (Financial Times)
+- [Cyber security stocks fall on worries over Anthropic's advanced AI tool](https://www.ft.com/content/f1205b22-ad87-43bb-bc63-da5b69a942ef) (Financial Times)
+- [AI models lose their shirts on Premier League bets](https://www.ft.com/content/544cbd80-492e-4ee8-a8b4-66e447361651) (Financial Times)
+- [China's Alibaba shifts towards revenue over open-source AI](https://www.ft.com/content/b39da303-3188-447b-8b65-3dd8dad8b59a) (Financial Times)
+- [Bessent called in US bank CEOs to discuss Anthropic model's cyber risks](https://www.ft.com/content/397bf755-54cf-4018-a01d-8f714d8667c5) (Financial Times)
+- [Asian start-ups evolve to reshape industries with AI](https://www.ft.com/content/2c8f4699-55e5-4cf6-a805-2e074ef7495e) (Financial Times)
+- [China lures home its top AI talent from Silicon Valley](https://www.ft.com/content/b167c6d3-b982-482a-98c3-5303a7b80c6a) (Financial Times)
+- [xAI

@@ -1,0 +1,157 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Tech Briefing</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0a0a0a;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI &amp; Tech Briefing</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#888888;font-weight:400;">Your daily summary of what matters</p>
+</td>
+</tr>
+
+<!-- Body -->
+<tr>
+<td style="padding:40px 48px;">
+
+<!-- OpenAI–Microsoft -->
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">OpenAI–Microsoft Partnership Restructured</h2>
+<p style="margin:0 0 12px;font-size:15px;line-height:1.7;color:#333333;">
+OpenAI and <strong>Microsoft</strong> renegotiated their partnership, replacing Microsoft's exclusive access to OpenAI IP with a <strong>nonexclusive license through 2032</strong>. Microsoft remains OpenAI's "primary cloud partner," and OpenAI committed to buying $250B more of <strong>Azure</strong> cloud services. Critically, <strong>OpenAI can now serve products across any cloud provider</strong>, resolving potential legal conflict stemming from OpenAI's up-to-$50B deal with <strong>Amazon</strong>. Products will still ship "first on Azure" unless Microsoft cannot support the required capabilities.
+</p>
+<p style="margin:0 0 24px;font-size:12px;line-height:1.6;color:#999999;">
+<a href="https://techcrunch.com/2026/04/27/openai-ends-microsoft-legal-peril-over-its-50b-amazon-deal/" style="color:#666;text-decoration:underline;">TechCrunch</a> · <a href="https://www.ft.com/content/20e63d1d-835f-4397-ae88-e7097be1e503" style="color:#666;text-decoration:underline;">Financial Times</a>
+</p>
+
+<hr style="border:none;border-top:1px solid #eeeeee;margin:0 0 28px;">
+
+<!-- Google Cloud & AI -->
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Google Cloud &amp; AI Expansion</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Google</strong> is banking on its AI capabilities to close the gap with cloud rivals <strong>Amazon (AWS)</strong> and <strong>Microsoft (Azure)</strong>, per FT reporting.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Google</strong> signed a <strong>multibillion-dollar cloud deal with Thinking Machines Lab (TML)</strong>, giving the AI startup access to Nvidia's latest GB300 chips — placing TML in the same infrastructure tier as Anthropic and Meta.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Google</strong> is planning to invest <strong>up to $40 billion in Anthropic</strong>, further deepening its AI cloud partnerships.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+YouTube (Google) is testing <strong>"Ask YouTube,"</strong> an AI-powered interactive search feature delivering step-by-step, mixed text-and-video answers, available first to Premium subscribers in the U.S.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Google employees</strong> are urging their CEO to block U.S. military AI use.
+</td>
+</tr>
+</table>
+<p style="margin:0 0 24px;font-size:12px;line-height:1.6;color:#999999;">
+<a href="https://www.ft.com/content/2429f0f0-b685-4747-b425-bf8001a2e94c" style="color:#666;text-decoration:underline;">FT – Google Cloud</a> · <a href="https://www.ft.com/content/366c73dd-4006-4ce6-9816-5004447d30b8" style="color:#666;text-decoration:underline;">FT – Anthropic Investment</a> · <a href="https://techcrunch.com/2026/04/28/youtube-is-testing-an-ai-powered-search-feature-that-shows-guided-answers/" style="color:#666;text-decoration:underline;">TechCrunch – Ask YouTube</a> · <a href="https://www.ft.com/content/9270ce04-558c-44e8-816f-a40219cd5007" style="color:#666;text-decoration:underline;">FT – Military AI</a>
+</p>
+
+<hr style="border:none;border-top:1px solid #eeeeee;margin:0 0 28px;">
+
+<!-- Amazon -->
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Amazon &amp; Data Center Energy</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Amazon-backed nuclear developer X-energy</strong> surged 27% in its trading debut, reflecting growing investor interest in nuclear power for data centers.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Jeff Bezos's AI lab</strong> is in talks to take London office space at King's Cross, signaling expansion.
+</td>
+</tr>
+</table>
+<p style="margin:0 0 24px;font-size:12px;line-height:1.6;color:#999999;">
+<a href="https://www.ft.com/content/905d06cf-9b28-494a-be26-4a64f8269b73" style="color:#666;text-decoration:underline;">FT – X-energy</a> · <a href="https://www.ft.com/content/c0e16cf8-b44b-435f-9b07-83d8f011693a" style="color:#666;text-decoration:underline;">FT – Bezos AI Lab</a>
+</p>
+
+<hr style="border:none;border-top:1px solid #eeeeee;margin:0 0 28px;">
+
+<!-- Meta -->
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Meta's AI &amp; Infrastructure Moves</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>China's NDRC blocked Meta's ~$2B acquisition of Manus</strong>, an agentic AI startup founded by Chinese engineers (now Singapore-based). Manus employees had already integrated into Meta's offices; founders are reportedly under Chinese exit bans.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Meta</strong> signed a deal with <strong>Overview Energy</strong> to potentially deploy ~1,000 satellites beaming infrared solar power to data centers at night, addressing its massive (18,000+ GWh) electricity needs.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Meta</strong> is losing and gaining AI talent in a bidding war with <strong>Thinking Machines Lab</strong>, which has poached key researchers including PyTorch co-founder Soumith Chintala.
+</td>
+</tr>
+</table>
+<p style="margin:0 0 24px;font-size:12px;line-height:1.6;color:#999999;">
+<a href="https://techcrunch.com/2026/04/27/china-vetoes-metas-2b-manus-deal-after-months-long-probe/" style="color:#666;text-decoration:underline;">TechCrunch – Manus</a> · <a href="https://www.ft.com/content/1e4c269a-5258-406c-a308-e55c3d5d640f" style="color:#666;text-decoration:underline;">FT – Manus</a> · <a href="https://techcrunch.com/2026/04/27/meta-inks-deal-for-solar-power-at-night-beamed-from-space/" style="color:#666;text-decoration:underline;">TechCrunch – Space Solar</a> · <a href="https://techcrunch.com/2026/04/24/metas-loss-is-thinking-machines-gain/" style="color:#666;text-decoration:underline;">TechCrunch – TML Talent</a>
+</p>
+
+<hr style="border:none;border-top:1px solid #eeeeee;margin:0 0 28px;">
+
+<!-- Data Center Policy -->
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Data Center Policy &amp; Infrastructure</h2>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Maine's governor vetoed</strong> what would have been the first statewide data center moratorium in the U.S., citing a locally supported project.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+The <strong>"great American data centre divide"</strong> is emerging as a major tension between tech expansion and local community concerns.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 10px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+<strong>Investors are pushing for higher yields on $14B of Oracle-backed data center debt</strong>, reflecting financing pressures in the sector.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+<span style="display:inline-block;width:6px;height:6px;background:#0a0a0a;border-radius:50%;margin-right:10px;vertical-align:middle;"></span>
+The <strong>UK admitted that AI data center emissions are vastly underestimated</strong>.
+</td>
+</tr>
+</table>
+<p style="margin:0 0 24px;font-size:12px;line-height:1.6;color:#999999;">
+<a href="https://techcrunch.com/2026/04/25/maines-governor-vetoes-data-center-moratorium/" style="color:#666;text-decoration:underline;">TechCrunch – Maine

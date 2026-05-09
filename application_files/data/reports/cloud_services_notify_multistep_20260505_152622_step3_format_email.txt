@@ -1,0 +1,238 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreWeave Dominates AI Cloud Infrastructure Headlines</title>
+<style>
+body {
+margin: 0;
+padding: 0;
+background-color: #f4f4f7;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+color: #1a1a2e;
+line-height: 1.7;
+-webkit-text-size-adjust: 100%;
+}
+.wrapper {
+max-width: 680px;
+margin: 0 auto;
+background-color: #ffffff;
+}
+.header {
+background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+padding: 48px 40px 40px;
+text-align: center;
+}
+.header h1 {
+color: #ffffff;
+font-size: 26px;
+font-weight: 700;
+margin: 0 0 8px;
+letter-spacing: -0.3px;
+}
+.header p {
+color: rgba(255,255,255,0.6);
+font-size: 13px;
+margin: 0;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+}
+.content {
+padding: 40px;
+}
+.section {
+margin-bottom: 36px;
+}
+.section:last-child {
+margin-bottom: 0;
+}
+.section h2 {
+font-size: 18px;
+font-weight: 700;
+color: #302b63;
+margin: 0 0 16px;
+padding-bottom: 10px;
+border-bottom: 2px solid #e8e8f0;
+letter-spacing: -0.2px;
+}
+.section p {
+font-size: 15px;
+color: #333;
+margin: 0 0 14px;
+}
+.section ul {
+margin: 0 0 14px;
+padding-left: 20px;
+}
+.section ul li {
+font-size: 15px;
+color: #333;
+margin-bottom: 10px;
+}
+.section ul li:last-child {
+margin-bottom: 0;
+}
+strong {
+color: #1a1a2e;
+}
+.highlight-box {
+background: #f0eef8;
+border-left: 4px solid #302b63;
+padding: 16px 20px;
+border-radius: 0 8px 8px 0;
+margin: 16px 0;
+}
+.highlight-box p {
+margin: 0;
+font-size: 15px;
+color: #302b63;
+font-weight: 600;
+}
+.divider {
+border: none;
+border-top: 1px solid #e8e8f0;
+margin: 36px 0;
+}
+.sources {
+background: #fafafe;
+padding: 32px 40px;
+border-top: 1px solid #e8e8f0;
+}
+.sources h2 {
+font-size: 16px;
+font-weight: 700;
+color: #302b63;
+margin: 0 0 16px;
+padding-bottom: 10px;
+border-bottom: 2px solid #e8e8f0;
+}
+.sources ul {
+margin: 0;
+padding-left: 0;
+list-style: none;
+}
+.sources ul li {
+font-size: 13px;
+color: #555;
+margin-bottom: 10px;
+padding-left: 16px;
+position: relative;
+}
+.sources ul li:before {
+content: "→";
+position: absolute;
+left: 0;
+color: #302b63;
+}
+.sources ul li:last-child {
+margin-bottom: 0;
+}
+.sources a {
+color: #302b63;
+text-decoration: none;
+border-bottom: 1px solid rgba(48,43,99,0.3);
+transition: border-color 0.2s;
+}
+.sources a:hover {
+border-bottom-color: #302b63;
+}
+.source-pub {
+color: #999;
+font-size: 12px;
+}
+.footer {
+text-align: center;
+padding: 32px 40px;
+background: #f4f4f7;
+}
+.footer p {
+font-size: 12px;
+color: #999;
+margin: 0;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+<div class="header">
+<p>AI Infrastructure Briefing</p>
+<h1>CoreWeave Dominates AI Cloud Infrastructure Headlines</h1>
+</div>
+
+<div class="content">
+
+<div class="section">
+<h2>Major Deals &amp; Partnerships</h2>
+<p><strong>CoreWeave</strong> is at the center of a massive AI infrastructure buildout, having secured several landmark agreements:</p>
+<ul>
+<li><strong>Meta</strong> committed ~$21 billion in expanded AI cloud capacity through 2032, covering dedicated capacity across multiple sites and featuring early rollouts of <strong>Nvidia's Vera Rubin</strong> platform.</li>
+<li><strong>Anthropic</strong> signed a multi-year deal for CoreWeave to power Claude AI models, with computing capacity scheduled to go live later in 2026. This deal is seen as a major validation of CoreWeave's neocloud model.</li>
+<li><strong>Jane Street</strong> signed a $6 billion AI cloud agreement with CoreWeave.</li>
+<li><strong>OpenAI</strong> has an existing five-year, $11.9 billion contract (including a $350 million private placement giving OpenAI a stake in CoreWeave). Wells Fargo estimates roughly a third of CoreWeave's contracted revenue is tied to OpenAI.</li>
+</ul>
+<div class="highlight-box">
+<p>These deals could push CoreWeave's remaining performance obligations (backlog) past $95 billion, up from ~$66.8 billion at end of 2025.</p>
+</div>
+</div>
+
+<div class="section">
+<h2>Financial Picture</h2>
+<p>CoreWeave posted <strong>$5.13 billion in 2025 revenue</strong> (up from $1.92B prior year) but recorded a <strong>$1.17 billion net loss</strong>. The company priced a <strong>$1 billion offering of 9.750% senior notes due 2031</strong> in April 2026 to fund continued data center expansion.</p>
+<p>Q1 2026 revenue is projected at ~$1.96 billion. Earnings are scheduled for <strong>May 7</strong> after market close.</p>
+</div>
+
+<div class="section">
+<h2>Executive Stock Sales &amp; Insider Activity</h2>
+<p>Three senior CoreWeave executives sold <strong>more than $1 billion</strong> in shares in the first four months of 2026 — placing them in the <strong>99th percentile</strong> of S&amp;P 500 insider selling. CEO Michael Intrator alone filed an April 28 sale valued at ~$32.8 million.</p>
+<p><strong>Magnetar Financial</strong>, a 10% holder, unloaded ~1.28 million shares on May 1 for ~$154 million and sold call options on 1 million additional shares. The heavy selling has drawn scrutiny from compensation experts, given the company remains unprofitable.</p>
+</div>
+
+<div class="section">
+<h2>Analyst Sentiment &amp; Stock Movement</h2>
+<ul>
+<li><strong>Jefferies</strong> raised its CoreWeave price target to <strong>$160</strong> (from $120), maintaining Buy, citing leadership in high-performance compute and a multi-trillion-dollar opportunity.</li>
+<li><strong>Citi</strong> raised its target to <strong>$155</strong> (from $126), looking for 35–40% quarter-over-quarter backlog growth in Q1.</li>
+<li><strong>Goldman Sachs</strong> reiterated Buy on <strong>Apple</strong> (noting App Store deceleration); other analyst calls covered <strong>Amazon, Tesla, Palantir</strong>.</li>
+<li>CoreWeave shares rose ~5.4–5.8% ahead of earnings, trading around $125, with a <strong>21.87% short interest</strong> adding volatility potential. The stock remains ~35% below its highs near $183.</li>
+<li>Jim Cramer called CoreWeave "aggressive" but with "terrific fundamentals," cautioning about volatility and the possibility of a financing-related surprise.</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>Institutional Buying</h2>
+<p>New positions were disclosed by the <strong>State of New Jersey Common Pension Fund D</strong> and <strong>Wealthfront Advisers</strong> ($788K position), signaling growing institutional interest.</p>
+</div>
+
+<div class="section">
+<h2>Neoclouds vs. Google TPUs</h2>
+<p><strong>Nebius, Lambda, and CoreWeave</strong> all stated they are <strong>unlikely to adopt Google's TPUs</strong> any time soon, preferring to stick with <strong>Nvidia GPUs</strong>. All three companies are Nvidia-backed, and they told The Information that Google's custom chips don't fit their current infrastructure strategies.</p>
+</div>
+
+<div class="section">
+<h2>CoreWeave Product Developments</h2>
+<p>CoreWeave launched <strong>SUNK (SLURM on Kubernetes)</strong> — a platform enabling AI researchers to run SLURM workloads on Kubernetes-based cloud infrastructure. It comes in two versions: SUNK Self-Service (templatized setup) and SUNK Anywhere (multi-cloud). The move targets the growing base of enterprise AI researchers beyond major labs.</p>
+</div>
+
+<div class="section">
+<h2>Broader AI Infrastructure Context</h2>
+<ul>
+<li>Hyperscaler AI capex is now running <strong>$700–725 billion</strong> across companies like <strong>Microsoft, Google, Amazon/AWS, Oracle</strong>, and others.</li>
+<li>OpenAI's reported misses on user growth and revenue targets briefly rattled AI infrastructure stocks including CoreWeave and <strong>Oracle</strong>, though stocks recovered.</li>
+<li>The earnings week also features reports from <strong>Arm Holdings, Palantir, Arista, and AppLovin</strong>, with options markets pricing 10–14% post-earnings moves across AI-linked stocks.</li>
+</ul>
+</div>
+
+</div>
+
+<hr class="divider" style="margin:0;">
+
+<div class="sources">
+<h2>Sources</h2>
+<ul>
+<li><a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNRkhIaDU1ZmRpbFBtUDQycXI4QUtrNHh2ZW54cngwWkhvd3k3Zl95VGNJdGFWcHlSWG9mb0dwbkEwenliYlJGd1pmN0VCX2VCdFBXVUZweWlTdzFRUlJpR0cxNHNoSjA2WkExb1pQOVB4aUNmNGttYXBmakhBOFhsSUFlZV96NkpFNzNfV25WVmxoWlBJUThkT1dWWmRfdF85bUhaNlRB?oc=5">Here are Tuesday's biggest analyst calls: Apple, Tesla, CoreWeave, Amazon, Palantir, Home Depot &amp; more</a> <span class="source-pub">(CNBC)</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMilwFBVV95cUxNeHliMmhTaWlZUnJMMVE3QWZVTktVZ3JORW81ZnFCMnVYaTNEdHh4U1NoX1dlWWdibWp0V2FfMmtTZWRnRUFqUjE3eXhfb3pVTnJ6UVV2OUFUTkpWanJVblRYdnBUNWJzeW9MYW5KMWp2cVN2OWczV0V5N2ZHUVpTaF8zMmRnaFVvX2dzVW5jaXMxVWtYZ0hv?oc=5">CoreWeave's Next Earnings Report: 3 Things That Could Make -- or Break -- the Stock</a> <span class="source-pub">(The Motley Fool)</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxOanZ5TkNvMjU1enlpYWhhU0VzRTdXTkN5YlhjdENMRTczb1ZJYmpINzQwNVpQc3Zfc0ptQThIVDl4b0dRNzBkOW9kYkk0VU8yRWR5aGxfWWxtcjMxQXpXTEllVnlVY2I0MlU2b0NGM0IyRzgxOS13eVUwS1VKNEROcnYzM1QxQmpRN09CaWFuR2xiampIWkYzaURPOA?oc=5">CoreWeave Meta Deal Deepens AI Hyperscaler Ties And Capacity Commitments</a> <span class="source-pub">(Yahoo Finance / Simply Wall St)</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMinAFBVV95cUxNdk5mUXRNdzVuOVhxSDlicnZSdHhkbGNHbV8wNGVXMU9GeVhiby1pZkRHTUVXMklvRHFFRzYwblQ0dmswX0xweW5KelViRkZsQk5iOTlEeVNCaUdSRGdyNGJQSUg3M2FIdFhhbzd0NUlGV0wwemp0OHgxZ1p4cUYxNG5oQjhqRHFIZXJLRkoxS0k1VkIxYk5hb3c2T3c?oc=5">AI data center executives are raking in massive stock windfalls — some are cashing them out</a> <span class="source-pub">(Business Insider)</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxNQ29aeTNlV1RwU21ydVNpTVRzbFNMRlpTVVBFdWlJX3FIZ0pSTGU1TDN1RUFKQUlJU1ZhN2pfZ2FPSUtoakE1Z0FGQU5rX29zZ2dwaWViRDVSUlNYWGF5c2VxM2FST3c0ZEJ4MzF3RjBxb1BUSHY2Y2RDM3kwQzlURl9Nb3NmMXlUTHlVb0VBMnlZUmI3WF93WFhFTjFhbzRsRE1tVHVndGNHa2pNcG1sdC1nVTc?oc=5">AI Stocks: Winners Shift As Google Leads With Palantir, Arista, CoreWeave Earnings On Deck</a> <span class="source-pub">(Investor's Business Daily)</span></li>

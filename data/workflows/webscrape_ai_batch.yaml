@@ -1,0 +1,72 @@
+# Batch AI analysis of stored webscrape pages.
+# Splits pages into batches that fit the model context, runs the prompt
+# against each batch, and synthesizes a merged result.
+#
+# CLI:
+#   python3 scripts/workflow_run.py data/workflows/webscrape_ai_batch.yaml --local \
+#     --set 'sites=https://nebius.com,https://coreweave.com' \
+#     --set namespace=webscrape \
+#     --set 'prompt=List the products, services, and solutions mentioned by each company'
+#
+#   # Faster / smaller run:
+#   python3 scripts/workflow_run.py data/workflows/webscrape_ai_batch.yaml --local \
+#     --set 'sites=https://coreweave.com' \
+#     --set 'prompt=Summarize key differentiators' \
+#     --set max_pages=30 --set ai_strength=fast
+
+id: webscrape_ai_batch
+description: >
+  Batch AI analysis: fetch pages for {sites}, split into batches,
+  run {prompt} per batch, synthesize results.
+
+vars:
+  sites: ""
+  namespace: webscrape
+  prompt: "Summarize the content from the sites below."
+  ai_strength: agent
+  batch_size: "10"
+  max_context_chars: "80000"
+  max_content: "2000"
+  workers: "4"
+  max_pages: ""
+  no_synthesis: ""
+
+steps:
+  - id: batch_analysis
+    type: subprocess
+    command:
+      - python3
+      - -c
+      - |
+        import os, sys, shlex
+        args = [
+            sys.executable, "scripts/webscrape_ai_batch.py",
+            "--sites", os.environ["WF_SITES"],
+            "--prompt", os.environ["WF_PROMPT"],
+            "--namespace", os.environ.get("WF_NAMESPACE", "webscrape"),
+            "--ai-strength", os.environ.get("WF_AI_STRENGTH", "agent"),
+            "-b", os.environ.get("WF_BATCH_SIZE", "10"),
+            "--max-context-chars", os.environ.get("WF_MAX_CONTEXT_CHARS", "80000"),
+            "--max-content", os.environ.get("WF_MAX_CONTENT", "2000"),
+        ]
+        wk = os.environ.get("WF_WORKERS", "").strip()
+        if wk:
+            args.extend(["--workers", wk])
+        mp = os.environ.get("WF_MAX_PAGES", "").strip()
+        if mp:
+            args.extend(["--max-pages", mp])
+        ns = os.environ.get("WF_NO_SYNTHESIS", "").strip()
+        if ns:
+            args.append("--no-synthesis")
+        os.execvp(args[0], args)
+    env:
+      WF_SITES: "{sites}"
+      WF_PROMPT: "{prompt}"
+      WF_NAMESPACE: "{namespace}"
+      WF_AI_STRENGTH: "{ai_strength}"
+      WF_BATCH_SIZE: "{batch_size}"
+      WF_MAX_CONTEXT_CHARS: "{max_context_chars}"
+      WF_MAX_CONTENT: "{max_content}"
+      WF_WORKERS: "{workers}"
+      WF_MAX_PAGES: "{max_pages}"
+      WF_NO_SYNTHESIS: "{no_synthesis}"

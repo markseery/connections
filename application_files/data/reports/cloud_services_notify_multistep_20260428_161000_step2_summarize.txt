@@ -1,0 +1,96 @@
+## Summary
+
+### OpenAI–Microsoft Partnership Restructured
+OpenAI and **Microsoft** renegotiated their partnership, replacing Microsoft's exclusive access to OpenAI IP with a **nonexclusive license through 2032**. Microsoft remains OpenAI's "primary cloud partner," and OpenAI committed to buying $250B more of **Azure** cloud services. Critically, **OpenAI can now serve products across any cloud provider**, resolving potential legal conflict stemming from OpenAI's up-to-$50B deal with **Amazon**. Products will still ship "first on Azure" unless Microsoft cannot support the required capabilities.
+
+### Google Cloud & AI Expansion
+- **Google** is banking on its AI capabilities to close the gap with cloud rivals **Amazon (AWS)** and **Microsoft (Azure)**, per FT reporting.
+- **Google** signed a **multibillion-dollar cloud deal with Thinking Machines Lab (TML)**, giving the AI startup access to Nvidia's latest GB300 chips — placing TML in the same infrastructure tier as Anthropic and Meta.
+- **Google** is planning to invest **up to $40 billion in Anthropic**, further deepening its AI cloud partnerships.
+- YouTube (Google) is testing **"Ask YouTube,"** an AI-powered interactive search feature delivering step-by-step, mixed text-and-video answers, available first to Premium subscribers in the U.S.
+- **Google employees** are urging their CEO to block U.S. military AI use.
+
+### Amazon & Data Center Energy
+- **Amazon-backed nuclear developer X-energy** surged 27% in its trading debut, reflecting growing investor interest in nuclear power for data centers.
+- **Jeff Bezos's AI lab** is in talks to take London office space at King's Cross, signaling expansion.
+
+### Meta's AI & Infrastructure Moves
+- **China's NDRC blocked Meta's ~$2B acquisition of Manus**, an agentic AI startup founded by Chinese engineers (now Singapore-based). Manus employees had already integrated into Meta's offices; founders are reportedly under Chinese exit bans.
+- **Meta** signed a deal with **Overview Energy** to potentially deploy ~1,000 satellites beaming infrared solar power to data centers at night, addressing its massive (18,000+ GWh) electricity needs.
+- **Meta** is losing and gaining AI talent in a bidding war with **Thinking Machines Lab**, which has poached key researchers including PyTorch co-founder Soumith Chintala.
+
+### Data Center Policy & Infrastructure
+- **Maine's governor vetoed** what would have been the first statewide data center moratorium in the U.S., citing a locally supported project.
+- The **"great American data centre divide"** is emerging as a major tension between tech expansion and local community concerns.
+- **Investors are pushing for higher yields on $14B of Oracle-backed data center debt**, reflecting financing pressures in the sector.
+- The **UK admitted that AI data center emissions are vastly underestimated**.
+
+### Sovereign AI & Consolidation
+- **Cohere** (Canada, valued at ~$6.8B) is acquiring **Aleph Alpha** (Germany) to create a sovereign AI alternative to U.S. giants. **Schwarz Group** (operator of the **STACKIT** sovereign cloud platform) is backing the deal with €500M and leading Cohere's Series E at a ~$20B valuation. The combined entity will run on STACKIT's cloud infrastructure.
+
+### OpenAI Hardware & Other Developments
+- **OpenAI** may be developing a smartphone in collaboration with **MediaTek, Qualcomm, and Luxshare**, potentially replacing traditional apps with AI agents. Mass production could begin in 2028.
+- OpenAI CEO Sam Altman **apologized** to Tumbler Ridge, Canada, after the company failed to alert law enforcement about a flagged ChatGPT user involved in a mass shooting.
+
+### Major AI Funding
+- **Ineffable Intelligence** (founded by ex-DeepMind researcher David Silver) raised **$1.1B at $5.1B valuation** to build reinforcement-learning-based AI that learns without human data.
+- **ComfyUI** raised $30M at a $500M valuation for its node-based AI media generation tool (4M+ users).
+
+### Enterprise & Developer Tools
+- **Red Hat's** OpenClaw maintainer released **Tank OS**, an open-source tool for safer enterprise deployment of OpenClaw AI agents using Podman containers.
+- **Otter** launched enterprise search via **Model Context Protocol (MCP)**, connecting Gmail, Google Drive, Notion, Jira, Salesforce, and soon **Microsoft Outlook, Teams, SharePoint**, and Slack.
+
+### Other Notable Items
+- **Anthropic** ran "Project Deal," a test marketplace for agent-on-agent commerce where AI agents negotiated real deals.
+- A Bay Area homeowner is seeking to trade a property for **Anthropic equity**.
+- **Apple** named John Ternus as incoming CEO, signaling a hardware-focused AI strategy.
+- The **White House** accused China of "industrial-scale" theft of AI technology.
+- UK tech ministers warned that Starmer's EU reset could "smother" UK innovation.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [Lovable launches its vibe coding app on iOS and Android](https://techcrunch.com/2026/04/28/lovable-launches-its-vibe-coding-app-on-ios-and-android/) (TechCrunch)
+- [YouTube is testing an AI-powered search feature that shows guided answers](https://techcrunch.com/2026/04/28/youtube-is-testing-an-ai-powered-search-feature-that-shows-guided-answers/) (TechCrunch)
+- [BCI startup Neurable looks to license its 'mind-reading' tech for consumer wearables](https://techcrunch.com/2026/04/28/bci-startup-neurable-looks-to-license-its-mind-reading-tech-for-consumer-wearables/) (TechCrunch)
+- [Red Hat's OpenClaw maintainer just made enterprise Claw deployments a lot safer](https://techcrunch.com/2026/04/28/red-hats-openclaw-maintainer-just-made-enterprise-claw-deployments-a-lot-safer/) (TechCrunch)
+- [Otter's new feature lets users search across their enterprise tools](https://techcrunch.com/2026/04/28/otters-new-feature-lets-users-search-across-their-enterprise-tools/) (TechCrunch)
+- [OpenAI ends Microsoft legal peril over its $50B Amazon deal](https://techcrunch.com/2026/04/27/openai-ends-microsoft-legal-peril-over-its-50b-amazon-deal/) (TechCrunch)
+- [DeepMind's David Silver just raised $1.1B to build an AI that learns without human data](https://techcrunch.com/2026/04/27/deepminds-david-silver-just-raised-1-1b-to-build-an-ai-that-learns-without-human-data/) (TechCrunch)
+- [Investors back Skye's AI home screen app for iPhone ahead of launch](https://techcrunch.com/2026/04/27/investors-back-skye-signull-labs-ai-home-screen-app-for-iphone-ahead-of-launch/) (TechCrunch)
+- [China blocks Meta's $2B Manus deal after months-long probe](https://techcrunch.com/2026/04/27/china-vetoes-metas-2b-manus-deal-after-months-long-probe/) (TechCrunch)
+- [OpenAI could be making a phone with AI agents replacing apps](https://techcrunch.com/2026/04/27/openai-could-be-making-a-phone-with-ai-agents-replacing-apps/) (TechCrunch)
+- [Meta inks deal for solar power at night, beamed from space](https://techcrunch.com/2026/04/27/meta-inks-deal-for-solar-power-at-night-beamed-from-space/) (TechCrunch)
+- [To buy this Bay Area home, you'll need Anthropic equity](https://techcrunch.com/2026/04/26/to-buy-this-bay-area-home-youll-need-anthropic-equity/) (TechCrunch)
+- [Anthropic created a test marketplace for agent-on-agent commerce](https://techcrunch.com/2026/04/25/anthropic-created-a-test-marketplace-for-agent-on-agent-commerce/) (TechCrunch)
+- [Maine's governor vetoes data center moratorium](https://techcrunch.com/2026/04/25/maines-governor-vetoes-data-center-moratorium/) (TechCrunch)
+- [OpenAI CEO apologizes to Tumbler Ridge community](https://techcrunch.com/2026/04/25/openai-ceo-apologizes-to-tumbler-ridge-community/) (TechCrunch)
+- [Why Cohere is merging with Aleph Alpha](https://techcrunch.com/2026/04/25/why-cohere-is-merging-with-aleph-alpha/) (TechCrunch)
+- [Why Tokyo is the most important tech destination of 2026](https://techcrunch.com/2026/04/25/why-tokyo-is-the-most-important-tech-destination-of-2026/) (TechCrunch)
+- [Apple under Ternus: what comes next for the tech giant's hardware strategy](https://techcrunch.com/2026/04/25/apple-under-ternus-what-comes-next-for-the-tech-giants-hardware-strategy/) (TechCrunch)
+- [Meta's loss is Thinking Machines' gain](https://techcrunch.com/2026/04/24/metas-loss-is-thinking-machines-gain/) (TechCrunch)
+- [ComfyUI hits $500M valuation as creators seek more control over AI-generated media](https://techcrunch.com/2026/04/24/comfyui-hits-500m-valuation-as-creators-seek-more-control-over-ai-generated-media/) (TechCrunch)
+- [Reddit may need to sell its soul for scale](https://www.ft.com/content/71d0e503-9d68-4bad-9119-48c43c2c4bc6) (Financial Times)
+- [The great American data centre divide](https://www.ft.com/content/ba4e8e02-11e9-437c-b6a9-89778647a6cc) (Financial Times)
+- [China blocks Meta's $2bn purchase of AI group Manus](https://www.ft.com/content/1e4c269a-5258-406c-a308-e55c3d5d640f) (Financial Times)
+- [OpenAI and Microsoft loosen ties in revised AI deal](https://www.ft.com/content/20e63d1d-835f-4397-ae88-e7097be1e503) (Financial Times)
+- [Google staff urge chief executive to block US military AI use](https://www.ft.com/content/9270ce04-558c-44e8-816f-a40219cd5007) (Financial Times)
+- [Starmer's EU reset could 'smother' UK innovation, tech ministers say](https://www.ft.com/content/b1d1f9be-7790-4227-acec-80fa34dbdbc8) (Financial Times)
+- [Large UK companies in the dark about how their data is used overseas by AI](https://www.ft.com/content/dc326668-b565-418f-92d3-e1266ed59f49) (Financial Times)
+- [Never work with children, animals or escaped AI models](https://www.ft.com/content/67b13628-7df1-499e-9c20-f3f57210dcd6) (Financial Times)
+- [End of the road for the 'Mad Men' as AI moves into advertising](https://www.ft.com/content/a6b3a50c-4c6c-4e6f-9945-3af9fadb50ce) (Financial Times)
+- [Advertisers seek to capitalise on the promise of AI](https://www.ft.com/content/7b58bf02-cb35-4586-a087-cb8ba99c18c5) (Financial Times)
+- [Brands look beyond search engines as customer habits shift](https://www.ft.com/content/e41592d2-9916-4503-988e-1245c3a07d9b) (Financial Times)
+- [Should your board appoint a bot?](https://www.ft.com/content/082192c1-a888-4000-8796-020c83a2b4f3) (Financial Times)
+- [Jeff Bezos's AI lab in talks over taking London office space at King's Cross](https://www.ft.com/content/c0e16cf8-b44b-435f-9b07-83d8f011693a) (Financial Times)
+- [Can AI discriminate if it can't justify itself?](https://www.ft.com/content/47f73399-df62-4683-93c2-ee210d983460) (Financial Times)
+- [Google banks on AI edge to catch up to cloud rivals Amazon and Microsoft](https://www.ft.com/content/2429f0f0-b685-4747-b425-bf8001a2e94c) (Financial Times)
+- [What the AI 'jobpocalypse' narrative misses](https://www.ft.com/content/f55c4eba-6e10-4283-8eae-e9f475048b37) (Financial Times)
+- [Investors push for higher yield on $14bn of Oracle-backed data centre debt](https://www.ft.com/content/e9682adb-f29a-4169-8bf0-19e299e906e2) (Financial Times)
+- [Amazon-backed nuclear developer X-energy surges 27% in trading debut](https://www.ft.com/content/905d06cf-9b28-494a-be26-4a64f8269b73) (Financial Times)
+- [Google to invest up to $40bn in Anthropic](https://www.ft.com/content/366c73dd-4006-4ce6-9816-5004447d30b8) (Financial Times)
+- [AI data centre emissions vastly underestimated, UK admits](https://www.ft.com/content/0c8bc0a9-63e5-4739-a91e-f07189b45f20) (Financial Times)
+- [The Apple juggernaut and the AI roadblock](https://www.ft.com/content/2d1805b1-8750-4120-ad50-3fdbe8791836) (Financial Times)
+- [White House accuses China of 'industrial-scale' theft of AI technology](https://www.ft.com/content/abde4e1e-c69a-4cc4-ad96-d88308314298) (Financial Times)
+- [The companies thriving in turbulent times for IT and software](https://www.ft.com/content/44729a26-8615-4371-8830-7d135f7e1a86) (Financial Times)

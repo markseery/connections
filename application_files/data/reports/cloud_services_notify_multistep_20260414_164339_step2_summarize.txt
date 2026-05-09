@@ -1,0 +1,86 @@
+## Summary
+
+### Cloud Services & Infrastructure
+
+**Microsoft** is developing an OpenClaw-like AI agent to integrate into its **Microsoft 365 Copilot** for enterprise customers, adding to its growing roster of agentic tools including Copilot Cowork (which runs in the cloud and is powered partly by **Anthropic's Claude**) and Copilot Tasks. The new agent would offer better security controls than the open-source OpenClaw. Microsoft has also tapped Anthropic's Claude as an option alongside its own models.
+
+**Google** expanded its Gemini "Personal Intelligence" feature to India, allowing AI Pro and AI Ultra users to connect Gmail, Google Photos, and YouTube for personalized answers. Google plans to extend it to free users soon. Google also launched Gemini in Chrome and enabled agentic restaurant booking via AI mode in India through partners like Zomato and Swiggy. Separately, the **FT** examined whether Google's **TurboQuant** algorithm could reduce AI demand for memory chips.
+
+**Kepler Communications** (Canada) launched the **largest orbital compute cluster** — roughly 40 Nvidia Orin edge processors across 10 satellites linked by laser communications — and now has 18 customers. Partner **Sophia Space** will test passively cooled space-computer software on Kepler's constellation. Large-scale orbital data centers (envisioned by **SpaceX** and **Blue Origin**) aren't expected until the 2030s. **AWS** speaker Rob Chu is featured at the SusHi Tech Tokyo conference alongside Nvidia, Google, and Microsoft.
+
+The **AI infrastructure build-out is powering global goods trade**, according to the FT.
+
+### Anthropic / Claude Rising
+
+**Anthropic's Claude** emerged as the dominant AI chatbot at the HumanX conference in San Francisco, with vendors and panelists consistently preferring it over ChatGPT. Anthropic is **closing in on OpenAI** in U.S. business usage. Its new **Mythos model** — noted for exceptional vulnerability-detection capabilities — prompted **Treasury Secretary Bessent and Fed Chair Powell** to summon bank CEOs (JPMorgan, Goldman Sachs, Citigroup, Bank of America, Morgan Stanley) to encourage testing. **UK financial regulators** are also rushing to assess Mythos's risks, and **cybersecurity stocks fell** on fears the model could disrupt the sector. Anthropic is simultaneously fighting the Trump administration in court over a DoD supply-chain risk designation.
+
+Anthropic **temporarily banned OpenClaw creator Peter Steinberger** (now at OpenAI) from accessing Claude, though the ban was quickly reversed. Anthropic had previously changed pricing so OpenClaw usage requires separate API billing — a so-called "claw tax" — since agentic compute patterns exceed normal subscription usage.
+
+### OpenAI Under Pressure
+
+**OpenAI** faces mounting challenges: investors are **questioning its $852 billion valuation** as strategy shifts. The company acquired **Hiro Finance** (an AI personal finance startup) in what appears to be an acqui-hire. It launched a new **$100/month Pro plan** for ChatGPT, explicitly targeting Anthropic's pricing, with 5× more Codex coding capacity than the $20 Plus plan. The $200 tier remains available.
+
+CEO **Sam Altman** responded to both a **Molotov cocktail attack on his home** and a critical **New Yorker profile** questioning his trustworthiness. **Florida's attorney general** announced an investigation into OpenAI over ChatGPT's alleged role in a deadly FSU shooting. A **stalking victim sued OpenAI**, claiming ChatGPT fueled her abuser's delusions and the company ignored three warnings. OpenAI is also backing an Illinois bill that would shield AI labs from liability.
+
+### Apple & App Store Friction
+
+**Apple** removed vibe-coding app **Anything** twice from the App Store, citing rules against downloading/executing code, part of a broader crackdown affecting **Replit** and Vibecode. Anything is pivoting to desktop. Separately, Apple is testing **four designs for smart glasses** planned for 2027 — no displays, but with camera, calls, music, and Siri integration, competing with **Meta's Ray-Ban** glasses.
+
+### Other Notable Developments
+
+- **Vercel** CEO signaled IPO readiness as AI agents fuel ARR growth to $340M (from $100M in early 2024).
+- **Meta** built an AI version of Mark Zuckerberg to interact with staff; it also paused contracts with **Mercor** ($10B-valued AI data startup) after a major data breach via compromised open-source tool LiteLLM.
+- **Alibaba** is shifting from open-source AI toward revenue-generating models.
+- **China** is luring top AI talent back from Silicon Valley.
+- **Stanford's annual AI report** highlights a growing disconnect between AI insiders (focused on AGI) and the public (worried about jobs, utility costs, and safety).
+- A study found **AI chatbots misdiagnose in over 80%** of early medical cases.
+- **Palantir** received a Trump endorsement after a short-seller attack.
+- **Carson Block** sees AI disruption as a new opportunity for short sellers.
+- AI-generated client queries risk **pushing up lawyers' fees**.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [In just a couple weeks, StrictlyVC San Francisco brings leaders from TDK Ventures, Replit, and more together](https://techcrunch.com/2026/04/14/join-the-first-strictlyvc-of-2026-in-sf-with-leaders-from-tdk-ventures-and-replits-co-founder/) (TechCrunch)
+- [Google brings its Gemini Personal Intelligence feature to India](https://techcrunch.com/2026/04/14/google-brings-its-gemini-personal-intelligence-feature-to-india/) (TechCrunch)
+- [How vibe-coding app Anything is rebuilding after getting booted from the App Store twice](https://techcrunch.com/2026/04/14/how-vibe-coding-app-anything-is-rebuilding-after-getting-booted-from-the-app-store-twice/) (TechCrunch)
+- [OpenAI has bought AI personal finance startup Hiro](https://techcrunch.com/2026/04/13/openai-has-bought-ai-personal-finance-startup-hiro/) (TechCrunch)
+- [Microsoft is working on yet another OpenClaw-like agent](https://techcrunch.com/2026/04/13/microsoft-is-working-on-yet-another-openclaw-like-agent/) (TechCrunch)
+- [Stanford report highlights growing disconnect between AI insiders and everyone else](https://techcrunch.com/2026/04/13/stanford-report-highlights-growing-disconnect-between-ai-insiders-and-everyone-else/) (TechCrunch)
+- [Vercel CEO Guillermo Rauch signals IPO readiness as AI agents fuel revenue surge](https://techcrunch.com/2026/04/13/vercel-ceo-guillermo-rauch-signals-ipo-readiness-as-ai-agents-fuel-revenue-surge/) (TechCrunch)
+- [The largest orbital compute cluster is open for business](https://techcrunch.com/2026/04/13/the-largest-orbital-compute-cluster-is-open-for-business/) (TechCrunch)
+- [Trump officials may be encouraging banks to test Anthropic's Mythos model](https://techcrunch.com/2026/04/12/trump-officials-may-be-encouraging-banks-to-test-anthropics-mythos-model/) (TechCrunch)
+- [Apple reportedly testing four designs for upcoming smart glasses](https://techcrunch.com/2026/04/12/apple-reportedly-testing-four-designs-for-upcoming-smart-glasses/) (TechCrunch)
+- [From LLMs to hallucinations, here's a simple guide to common AI terms](https://techcrunch.com/2026/04/12/artificial-intelligence-definition-glossary-hallucinations-guide-to-common-ai-terms/) (TechCrunch)
+- [At the HumanX conference, everyone was talking about Claude](https://techcrunch.com/2026/04/12/at-the-humanx-conference-everyone-was-talking-about-claude/) (TechCrunch)
+- [Sam Altman responds to 'incendiary' New Yorker article after attack on his home](https://techcrunch.com/2026/04/11/sam-altman-responds-to-incendiary-new-yorker-article-after-attack-on-his-home/) (TechCrunch)
+- [Anthropic temporarily banned OpenClaw's creator from accessing Claude](https://techcrunch.com/2026/04/10/anthropic-temporarily-banned-openclaws-creator-from-accessing-claude/) (TechCrunch)
+- [Stalking victim sues OpenAI, claims ChatGPT fueled her abuser's delusions and ignored her warnings](https://techcrunch.com/2026/04/10/stalking-victim-sues-openai-claims-chatgpt-fueled-her-abusers-delusions-and-ignored-her-warnings/) (TechCrunch)
+- [TechCrunch is heading to Tokyo — and bringing the Startup Battlefield with it](https://techcrunch.com/2026/04/10/techcrunch-is-heading-to-tokyo-and-bringing-the-startup-battlefield-with-it/) (TechCrunch)
+- [Last 24 hours: Save up to $500 on your TechCrunch Disrupt 2026 pass](https://techcrunch.com/2026/04/10/final-24-hours-save-up-to-500-on-your-techcrunch-disrupt-2026-pass/) (TechCrunch)
+- [ChatGPT finally offers $100/month Pro plan](https://techcrunch.com/2026/04/09/chatgpt-pro-plan-100-month-codex/) (TechCrunch)
+- [Florida AG announces investigation into OpenAI over shooting that allegedly involved ChatGPT](https://techcrunch.com/2026/04/09/florida-ag-investigation-openai-chatgpt-shooting/) (TechCrunch)
+- [After data breach, $10B-valued startup Mercor is having a month](https://techcrunch.com/2026/04/09/after-data-breach-10b-valued-startup-mercor-is-having-a-month/) (TechCrunch)
+- [Mythos and the cyber security risk facing all states](https://www.ft.com/content/4334460f-b599-4578-8840-d1c7ecf01e08) (Financial Times)
+- [OpenAI investors question $852bn valuation as strategy shifts](https://www.ft.com/content/04ac7917-940b-4606-be5f-9eb895a7d982) (Financial Times)
+- [Bain & Co vulnerability exposed by hacker a month after McKinsey](https://www.ft.com/content/e73ddecf-8c41-4ecb-ada3-77a163c8d69f) (Financial Times)
+- [Robot-Proof — can the next generation keep a step ahead of the machines?](https://www.ft.com/content/2f1c72f1-e1bc-42b2-9b71-1cd6ad3a39d6) (Financial Times)
+- [AI chatbots misdiagnose in over 80% of early medical cases, study finds](https://www.ft.com/content/b10002fc-5fff-4e4d-bf64-0502b2d09bb1) (Financial Times)
+- [The AI build-out is powering global goods trade](https://www.ft.com/content/ad169119-4a62-437b-b6ec-70819b1e8b4f) (Financial Times)
+- [Carson Block sees new dawn for short sellers in AI disruption](https://www.ft.com/content/83b4d584-686b-4228-a59e-79f15c7510b7) (Financial Times)
+- [Meta builds AI version of Mark Zuckerberg to interact with staff](https://www.ft.com/content/02107c23-6c7a-4c19-b8e2-b45f4bb9ce5f) (Financial Times)
+- [The less technically literate might be a touch concerned that your AI escaped](https://www.ft.com/content/75efd2ab-9576-42e7-a3f8-2fea6ba5958b) (Financial Times)
+- [UK financial regulators rush to assess risks of Anthropic's latest AI model](https://www.ft.com/content/ec7bb366-9643-47ce-9909-fc5ad4864ae5) (Financial Times)
+- [How will AI change the org chart?](https://www.ft.com/content/f580228a-bc8a-4450-a159-b19727380d8a) (Financial Times)
+- [Will Google's TurboQuant algorithm hurt AI demand for memory chips?](https://www.ft.com/content/12eaae3a-e1b8-47a0-9006-70fe319b130a) (Financial Times)
+- [Anthropic closes in on OpenAI as US business use surges](https://www.ft.com/content/abb93a6f-9060-4095-8045-84b97d394a4c) (Financial Times)
+- [Clients' barrage of AI-generated queries risks pushing up lawyers' fees](https://www.ft.com/content/744d2c77-a34e-4ca0-9f0e-ce8cdcdee483) (Financial Times)
+- [Molotov cocktail thrown at home of OpenAI chief Sam Altman](https://www.ft.com/content/46ec2fa5-834d-4e49-81ef-6fb736b7e81d) (Financial Times)
+- [Trump touts Palantir's 'war' role after short seller attack](https://www.ft.com/content/8ab0fc62-b6ec-4b31-a8d7-cb076c9b0fb4) (Financial Times)
+- [Cyber security stocks fall on worries over Anthropic's advanced AI tool](https://www.ft.com/content/f1205b22-ad87-43bb-bc63-da5b69a942ef) (Financial Times)
+- [AI models lose their shirts on Premier League bets](https://www.ft.com/content/544cbd80-492e-4ee8-a8b4-66e447361651) (Financial Times)
+- [China's Alibaba shifts towards revenue over open-source AI](https://www.ft.com/content/b39da303-3188-447b-8b65-3dd8dad8b59a) (Financial Times)
+- [Bessent called in US bank CEOs to discuss Anthropic model's cyber risks](https://www.ft.com/content/397bf755-54cf-4018-a01d-8f714d8667c5) (Financial Times)
+- [Asian start-ups evolve to reshape industries with AI](https://www.ft.com/content/2c8f4699-55e5-4cf6-a805-2e074ef7495e) (Financial Times)
+- [China lures home its top AI talent from Silicon Valley](https://www.ft.com/content/b167c6d3-b982-482a-98c3-5303a7b80c6a) (Financial Times)

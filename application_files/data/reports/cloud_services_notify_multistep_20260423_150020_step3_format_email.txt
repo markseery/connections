@@ -1,0 +1,197 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreWeave and the AI Cloud Infrastructure Buildout</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 20px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0d0d0d;padding:40px 48px;">
+<h1 style="margin:0 0 8px 0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">CoreWeave and the AI Cloud Infrastructure Buildout</h1>
+<p style="margin:0;font-size:15px;color:#a0a0a0;font-weight:400;">CRWV · Market Summary</p>
+</td>
+</tr>
+
+<!-- Intro -->
+<tr>
+<td style="padding:40px 48px 24px 48px;">
+<p style="margin:0;font-size:16px;line-height:26px;color:#333333;"><strong style="color:#0d0d0d;">CoreWeave (CRWV)</strong> is at the epicenter of the accelerating AI infrastructure buildout, rapidly signing massive contracts and raising capital to fund GPU-centric cloud capacity.</p>
+</td>
+</tr>
+
+<!-- Major Customer Deals -->
+<tr>
+<td style="padding:16px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Major Customer Deals</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:0 0 16px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;border-left:4px solid #0d0d0d;">
+<tr>
+<td style="padding:16px 20px;">
+<p style="margin:0 0 4px 0;font-size:13px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Meta</p>
+<p style="margin:0;font-size:15px;line-height:24px;color:#333;">Expanded commitment by <strong>$21 billion</strong> (2027–2032), on top of a prior $14.2B arrangement, totaling <strong>~$35 billion</strong>. Infrastructure spans multiple locations including NVIDIA Vera Rubin deployments.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 16px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;border-left:4px solid #0d0d0d;">
+<tr>
+<td style="padding:16px 20px;">
+<p style="margin:0 0 4px 0;font-size:13px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Anthropic</p>
+<p style="margin:0;font-size:15px;line-height:24px;color:#333;">Signed a multi-year agreement to power its Claude AI models, sending CRWV stock up <strong>~11%</strong>. CoreWeave now serves 9 of the top 10 AI model providers (only xAI excluded).</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 16px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;border-left:4px solid #0d0d0d;">
+<tr>
+<td style="padding:16px 20px;">
+<p style="margin:0 0 4px 0;font-size:13px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;">Jane Street</p>
+<p style="margin:0;font-size:15px;line-height:24px;color:#333;">Signed a <strong>$6 billion</strong> AI cloud agreement with CoreWeave.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 8px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0d0d0d;border-radius:6px;">
+<tr>
+<td style="padding:20px 24px;" align="center">
+<p style="margin:0;font-size:14px;color:#a0a0a0;text-transform:uppercase;letter-spacing:1px;">Total Backlog</p>
+<p style="margin:4px 0 0 0;font-size:32px;font-weight:700;color:#ffffff;letter-spacing:-1px;">$66.8 Billion</p>
+<p style="margin:4px 0 0 0;font-size:13px;color:#a0a0a0;">Pre-sold capacity</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Cross-Cloud & Google Cloud Partnership -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Cross-Cloud &amp; Google Cloud Partnership</h2>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:25px;color:#333;">CoreWeave launched <strong>"CoreWeave Interconnect,"</strong> a fiber-based direct link to <strong>Google Cloud</strong> enabling cross-cloud AI training and inference, leveraging Google Cloud's Partner Cross-Cloud Interconnect.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:0 0 12px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;border-radius:6px;">
+<tr>
+<td style="padding:14px 18px;">
+<p style="margin:0 0 2px 0;font-size:14px;font-weight:700;color:#0d0d0d;">SUNK Anywhere</p>
+<p style="margin:0;font-size:14px;line-height:22px;color:#555;">Multi-cloud training across Google Cloud, AWS, Azure, and on-premises.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f7ff;border-radius:6px;">
+<tr>
+<td style="padding:14px 18px;">
+<p style="margin:0 0 2px 0;font-size:14px;font-weight:700;color:#0d0d0d;">LOTA Cross-Cloud</p>
+<p style="margin:0;font-size:14px;line-height:22px;color:#555;">Cross-cloud data storage and workload portability.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<p style="margin:0;font-size:14px;line-height:23px;color:#666;">This aligns with the broader AWS–Google Cloud multicloud interoperability initiative, which Microsoft Azure plans to join later in 2026.</p>
+</td>
+</tr>
+
+<!-- Debt & Capital Raises -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Debt &amp; Capital Raises</h2>
+<ul style="margin:0;padding:0 0 0 20px;font-size:15px;line-height:26px;color:#333;">
+<li style="margin-bottom:14px;">CoreWeave completed a <strong>$1.0 billion add-on offering of 9.750% Senior Notes due 2031</strong> at 102%, bringing total outstanding notes to $2.75B. Total debt: <strong>~$21.6 billion</strong>.</li>
+<li style="margin-bottom:14px;"><strong>Core Scientific (CORZ)</strong> is raising <strong>$3.3 billion via junk bonds</strong> to fund six AI data centers leased to CoreWeave under a 12-year agreement potentially generating ~$10B in revenue. Pivoted from bitcoin mining to AI hosting.</li>
+<li style="margin-bottom:0;"><strong>Edged Compute</strong> is marketing $1.3 billion in bonds for facilities leased to CoreWeave and an Alibaba unit.</li>
+</ul>
+</td>
+</tr>
+
+<!-- Nebius -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Nebius</h2>
+<p style="margin:0;font-size:15px;line-height:25px;color:#333;"><strong>Meta</strong> also committed up to <strong>$27 billion in AI capacity with Nebius</strong>, another neocloud provider. Combined with CoreWeave, Meta is spending <strong>~$48 billion</strong> across both neoclouds.</p>
+</td>
+</tr>
+
+<!-- Stock & Insider Activity -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Stock &amp; Insider Activity</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
+<tr>
+<td width="33%" style="padding:0 8px 0 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;">
+<tr>
+<td style="padding:16px;text-align:center;">
+<p style="margin:0;font-size:24px;font-weight:700;color:#0d0d0d;">~$122</p>
+<p style="margin:4px 0 0 0;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;">Share Price</p>
+</td>
+</tr>
+</table>
+</td>
+<td width="33%" style="padding:0 4px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;">
+<tr>
+<td style="padding:16px;text-align:center;">
+<p style="margin:0;font-size:24px;font-weight:700;color:#0d0d0d;">~$62B</p>
+<p style="margin:4px 0 0 0;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;">Market Cap</p>
+</td>
+</tr>
+</table>
+</td>
+<td width="33%" style="padding:0 0 0 8px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f9;border-radius:6px;">
+<tr>
+<td style="padding:16px;text-align:center;">
+<p style="margin:0;font-size:24px;font-weight:700;color:#0d0d0d;">~10x</p>
+<p style="margin:4px 0 0 0;font-size:12px;color:#888;text-transform:uppercase;letter-spacing:0.5px;">Trailing Sales</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<ul style="margin:0;padding:0 0 0 20px;font-size:15px;line-height:26px;color:#333;">
+<li style="margin-bottom:10px;">Rated <strong>Hold</strong> by Seeking Alpha due to execution risk, capital intensity, and heavy interest costs despite locked-in demand.</li>
+<li style="margin-bottom:10px;">Stock surged <strong>~30% in one week</strong> driven by Anthropic and Meta deals; founders' stakes rose by ~$4 billion.</li>
+<li style="margin-bottom:10px;">Significant <strong>insider selling</strong>: Brian Venturo entities sold 1.125M shares (~$110–118/share); Magnetar-affiliated funds sold ~643K+ shares; Brannin McBee sold 200K shares.</li>
+<li style="margin-bottom:10px;"><strong>Asset Management One</strong> made a new $4.8 million investment in CRWV.</li>
+<li style="margin-bottom:0;">Jim Cramer highlighted CoreWeave as a winner but warned investors to expect volatility.</li>
+</ul>
+</td>
+</tr>
+
+<!-- Broader AI Infrastructure Trends -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<h2 style="margin:0 0 20px 0;font-size:18px;font-weight:700;color:#0d0d0d;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0d0d0d;padding-bottom:10px;">Broader AI Infrastructure Trends</h2>
+<ul style="margin:0;padding:0 0 0 20px;font-size:15px;line-height:26px;color:#333;">
+<li style="margin-bottom:10px;">AI infrastructure borrowers have raised <strong>$17.9 billion in junk bonds</strong> in 2026 alone, underscoring the capital-intensive nature of the buildout.</li>
+<li style="margin-bottom:10px;">Neoclouds like CoreWeave and Nebius

@@ -1,0 +1,176 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Tech Brief</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f5;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#09090b;padding:40px 40px 32px 40px;">
+<p style="margin:0 0 4px 0;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#a1a1aa;">Daily Briefing</p>
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;line-height:1.2;">AI & Tech Infrastructure</h1>
+<p style="margin:12px 0 0 0;font-size:14px;color:#71717a;">April 7, 2026</p>
+</td>
+</tr>
+
+<!-- Summary Intro -->
+<tr>
+<td style="padding:32px 40px 0 40px;">
+<h2 style="margin:0 0 20px 0;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a1a1aa;border-bottom:1px solid #e4e4e7;padding-bottom:10px;">Summary</h2>
+</td>
+</tr>
+
+<!-- Section: Cloud Infrastructure & Data Centers -->
+<tr>
+<td style="padding:8px 40px 0 40px;">
+<h3 style="margin:0 0 16px 0;font-size:18px;font-weight:700;color:#09090b;">Cloud Infrastructure &amp; Data Centers</h3>
+</td>
+</tr>
+<tr>
+<td style="padding:0 40px 24px 40px;font-size:15px;line-height:1.7;color:#3f3f46;">
+<p style="margin:0 0 14px 0;"><strong>Anthropic</strong> significantly expanded its compute deal with <strong>Google Cloud</strong> and <strong>Broadcom</strong>, adding 3.5 gigawatts of TPU capacity (coming online in 2027) as part of its $50 billion U.S. compute infrastructure commitment. This follows skyrocketing demand for Claude AI models and Anthropic's recent $30 billion Series G at a $380 billion valuation.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Firmus</strong>, a Singapore-based data center company backed by <strong>Nvidia</strong>, raised $505 million at a $5.5 billion valuation (led by Coatue), bringing its six-month total to $1.35 billion. Firmus is building energy-efficient "AI factory" data centers in Australia using Nvidia's Vera Rubin next-gen platform (its "Project Southgate"), having pivoted from Bitcoin mining cooling.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Uber</strong> expanded its <strong>AWS</strong> contract to run more ride-sharing features on Amazon's Graviton chips and began trialing <strong>AWS's Trainium3</strong> AI chip—a notable shift given Uber's previous major cloud deals with <strong>Oracle</strong> and <strong>Google Cloud</strong> in 2023.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Iran</strong> threatened retaliatory strikes against U.S. tech infrastructure in the Middle East, specifically targeting the <strong>Stargate</strong> data center in the UAE (a $500B joint venture of <strong>OpenAI</strong>, <strong>SoftBank</strong>, and <strong>Oracle</strong>). Iranian missiles had already struck <strong>AWS</strong> data centers in Bahrain and an <strong>Oracle</strong> data center in Dubai.</p>
+
+<p style="margin:0 0 14px 0;"><strong>SpaceX</strong> is pursuing orbital data centers as part of its potential $1.75 trillion IPO narrative, while <strong>Intel</strong> joined Elon Musk's <strong>Terafab</strong> semiconductor project (alongside SpaceX and Tesla) to build a new U.S. chip fab in Texas, giving Intel's foundry business two major anchor customers.</p>
+
+<p style="margin:0;">Insurers are turning to catastrophe bonds to offload growing data center risks. <strong>Poolside</strong>, an AI coding startup, is hunting for new data center partners after its deal with <strong>CoreWeave</strong> fell through.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 40px;">
+<div style="border-top:1px solid #e4e4e7;"></div>
+</td>
+</tr>
+
+<!-- Section: AI Models & Products -->
+<tr>
+<td style="padding:24px 40px 0 40px;">
+<h3 style="margin:0 0 16px 0;font-size:18px;font-weight:700;color:#09090b;">AI Models &amp; Products</h3>
+</td>
+</tr>
+<tr>
+<td style="padding:0 40px 24px 40px;font-size:15px;line-height:1.7;color:#3f3f46;">
+<p style="margin:0 0 14px 0;"><strong>Anthropic</strong> previewed its powerful new frontier model <strong>Mythos</strong> through "Project Glasswing," a cybersecurity initiative with partners including <strong>Amazon</strong>, <strong>Apple</strong>, <strong>Broadcom</strong>, <strong>Cisco</strong>, <strong>CrowdStrike</strong>, <strong>Microsoft</strong>, the Linux Foundation, and Palo Alto Networks. The model reportedly found thousands of zero-day vulnerabilities in software. Anthropic faces tensions with the U.S. Defense Department, which labeled it a supply-chain risk, while the <strong>UK</strong> is courting Anthropic to expand in London.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Arcee</strong>, a 26-person startup, released its open-source 400B-parameter reasoning model "Trinity Large Thinking" on a $20M budget, positioning it as a Western alternative to Chinese open-source models, and gaining traction with OpenClaw users after Anthropic restricted Claude access for that tool.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Microsoft</strong> launched a "mid-class" AI model as compute limits bite, while its <strong>Copilot</strong> terms of use controversially state it is "for entertainment purposes only"—language Microsoft called "legacy" and promised to update.</p>
+
+<p style="margin:0 0 14px 0;"><strong>Google</strong> launched "AI Edge Eloquent," an offline-first Gemma-based dictation app, and added Gemini-powered photo captioning to Google Maps.</p>
+
+<p style="margin:0 0 14px 0;"><strong>OpenAI</strong> released ChatGPT app integrations (DoorDash, Spotify, Uber, etc.), published policy proposals for the AI economy (public wealth funds, robot taxes, four-day workweek), and acquired a popular tech talk show. Former OpenAI employees launched <strong>Zero Shot</strong>, a new ~$100M VC fund focused on AI.</p>
+
+<p style="margin:0;"><strong>Samsung</strong> forecast record profits driven by the AI boom.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 40px;">
+<div style="border-top:1px solid #e4e4e7;"></div>
+</td>
+</tr>
+
+<!-- Section: Investment & Market Trends -->
+<tr>
+<td style="padding:24px 40px 0 40px;">
+<h3 style="margin:0 0 16px 0;font-size:18px;font-weight:700;color:#09090b;">Investment &amp; Market Trends</h3>
+</td>
+</tr>
+<tr>
+<td style="padding:0 40px 32px 40px;font-size:15px;line-height:1.7;color:#3f3f46;">
+<p style="margin:0;">Family offices are increasingly bypassing VCs to invest directly in AI startups, with firms like Arena Private Wealth co-leading a $230M round in AI chip startup <strong>Positron</strong>. The AI gold rush is pulling private wealth into earlier, riskier bets. Spain's <strong>Xoople</strong> raised $130M Series B for AI-focused satellite data. Indian startup <strong>Rocket</strong> launched a platform generating McKinsey-style consulting reports via AI. <strong>Bezos's Project Prometheus</strong> poached an xAI co-founder from OpenAI. The UK is considering testing AI models used by banks.</p>
+</td>
+</tr>
+
+<!-- Sources Header -->
+<tr>
+<td style="background-color:#fafafa;padding:32px 40px 16px 40px;border-top:2px solid #e4e4e7;">
+<h2 style="margin:0;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a1a1aa;">Sources</h2>
+</td>
+</tr>
+
+<!-- Sources List -->
+<tr>
+<td style="background-color:#fafafa;padding:0 40px 32px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+
+<!-- TechCrunch Sources -->
+<tr>
+<td style="padding:8px 0 12px 0;">
+<p style="margin:0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#71717a;">TechCrunch</p>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/" style="color:#2563eb;text-decoration:none;">I can't help rooting for tiny open source AI model maker Arcee</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/firmus-the-southgate-ai-datacenter-builder-backed-by-nvidia-hits-5-5b-valuation/" style="color:#2563eb;text-decoration:none;">Firmus, the 'Southgate' AI data center builder backed by Nvidia, hits $5.5B valuation</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/intel-signs-on-to-elon-musks-terafab-chips-project/" style="color:#2563eb;text-decoration:none;">Intel signs on to Elon Musk's Terafab chips project</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/" style="color:#2563eb;text-decoration:none;">Anthropic debuts preview of powerful new AI model Mythos in new cybersecurity initiative</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/uber-is-the-latest-to-be-won-over-by-amazons-ai-chips/" style="color:#2563eb;text-decoration:none;">Uber is the latest to be won over by Amazon's AI chips</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/anthropic-compute-deal-google-broadcom-tpus/" style="color:#2563eb;text-decoration:none;">Anthropic ups compute deal with Google and Broadcom amid skyrocketing demand</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/google-maps-can-now-write-captions-for-your-photos-using-ai/" style="color:#2563eb;text-decoration:none;">Google Maps can now write captions for your photos using AI</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/4-days-left-to-save-close-to-500-on-techcrunch-disrupt-2026-passes/" style="color:#2563eb;text-decoration:none;">4 days left to save close to $500 on TechCrunch Disrupt 2026 passes</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/07/the-ai-gold-rush-is-pulling-private-wealth-into-riskier-earlier-bets/" style="color:#2563eb;text-decoration:none;">The AI gold rush is pulling private wealth into riskier, earlier bets</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/06/indian-startup-rocket-wants-its-ai-to-do-mckinsey-style-consulting-at-a-fraction-of-the-cost/" style="color:#2563eb;text-decoration:none;">AI startup Rocket offers vibe McKinsey-style reports at a fraction of the cost</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/06/openai-alums-have-been-quietly-investing-from-a-new-potentially-100m-fund/" style="color:#2563eb;text-decoration:none;">OpenAI alums have been quietly investing from a new, potentially $100M fund</a>
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 6px 0;font-size:13px;line-height:1.5;">
+<a href="https://techcrunch.com/2026/04/06/google-quietly-releases-an-offline-first-ai-dictation-app-

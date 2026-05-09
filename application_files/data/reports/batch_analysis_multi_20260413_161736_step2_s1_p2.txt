@@ -1,0 +1,46 @@
+exit_code: 0
+
+Profile: Marketing – Factual & Quantitative (5 topics)
+  Storage: namespace=webscrape, key_separator='\x00'
+  Extract concrete, verifiable facts from a company's website: corporate details, infrastructure specs, customer names, product listings, and quantitative claims.
+  Workers: 6 healthy, 6 idle, selected: http://127.0.0.1:7034 (active=0)
+
+Requesting batch plan from recommender skill ...
+Model: claude-opus-4-6 (1,000,000 token context window, source: probe)
+Content budget per batch: 2,797,732 chars (80% of 1,000,000 tokens × 3.5 chars/token – 2,268 prompt overhead)
+
+Fetching page content (748 pages) ...
+  Retrieved 748 pages.
+
+============================================================
+  Pages: 748 with content (4,461,018 total chars)
+  Batches: 2 (adaptively sized to ~2,797,732 chars each)
+  Phase 1: 2 AI calls (1 multi-topic call per batch)
+  Phase 2: up to 5 synthesis calls
+  Total AI calls: ~7 (vs ~15 with single-topic approach)
+  AI profile: agent
+============================================================
+
+── Batch 1/2 (pages 1–445/748, 2,790,455 chars) [elapsed 0s] ──
+  Sending 2,793,532 chars with 5 topics in one call ...
+  5/5 topics had findings | AI call: 81.7s | batch: 1m21s | avg 1m21s/batch | ETA phase 1: ~1m21s
+
+── Batch 2/2 (pages 446–748/748, 1,670,563 chars) [elapsed 1m21s] ──
+  AI: provider=anthropic, model=claude-opus-4-6
+  Sending 1,672,656 chars with 5 topics in one call ...
+  5/5 topics had findings | AI call: 84.7s | batch: 1m24s | avg 1m23s/batch | ETA phase 1: ~0s
+
+============================================================
+Phase 1 complete: 2 batches, 748 pages in 2m46s
+  5/5 topics have findings
+  5 topics need multi-batch synthesis
+============================================================
+  [1/5] Synthesising: Number of data centers, their locations, GPUs, and power capacity (2 batches) ... done (17.4s)
+  [2/5] Synthesising: Active and contracted megawatts, terawatts, and other measures of power (2 batches) ... done (9.6s)
+  [3/5] Synthesising: Installed, active and future number of GPUs (2 batches) ... done (11.7s)
+  [4/5] Synthesising: Teraflops and exaflops (2 batches) ... done (11.8s)
+  [5/5] Synthesising: Other Capacity and Performance (2 batches) ... done (20.8s)
+
+Report written to application_files/data/reports/operational_metrics/nebius.md
+
+Done. Phase 1: 2m46s (2 AI calls) | Phase 2: 1m11s (5 AI calls) | Total: 3m57s (7 AI calls)

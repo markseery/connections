@@ -1,0 +1,50 @@
+# Summary: CoreWeave and the AI Cloud Infrastructure Boom
+
+## CoreWeave's Massive Deal Pipeline & Financials
+
+**CoreWeave (CRWV)** is at the center of the AI infrastructure trade, with a rapidly expanding roster of landmark agreements. The company announced a **$21 billion expanded AI infrastructure deal with Meta** (on top of a prior $14.2 billion arrangement, running 2027–2032), a **multi-year agreement with Anthropic** to power Claude AI models, and a **$6 billion AI cloud agreement with Jane Street**. CoreWeave also holds a **$11.9 billion five-year contract with OpenAI**, which included a $350 million private placement giving OpenAI a stake in the company. CEO Mike Intrator described the demand as insatiable, noting that even hyperscalers like Meta who build their own facilities also rely on CoreWeave.
+
+For 2025, CoreWeave reported **$5.13 billion in revenue** (up from $1.92 billion the prior year) but a **net loss of $1.17 billion**. Its **revenue backlog stood at $66.8 billion**, having more than quadrupled during 2025. The company is targeting **$17–19 billion in ARR by 2026** and has a **$30 billion annual revenue objective** over time. It recently priced **$1 billion in 9.75% senior notes due 2031** and raised $3 billion in fresh debt.
+
+## Stock Performance & Analyst Activity
+
+CoreWeave stock surged ~6–8% on May 4, reaching ~$125–$130, with a market cap around $62–68 billion. **Citi raised its price target to $155 from $126** (Buy rating), projecting **35–40% quarter-over-quarter backlog growth** in Q1, driven by hyperscalers, AI labs, and enterprise clients. Other firms including **Oppenheimer and Wells Fargo** also maintained bullish ratings. The stock has high short interest (~21.87% of float, 64.65 million shares), adding volatility potential.
+
+**Cathie Wood's ARK Invest** bought CoreWeave shares while trimming AMD and Bitcoin ETF exposure. **Institutional buyers** included Wealthfront ($788K position), Pictet Asset Management (62,328 shares), Mitsubishi UFJ Trust & Banking, and Universal Beteiligungs. Conversely, major shareholder **Magnetar Financial reduced its position by 21.91%**, selling millions of shares and call options for hundreds of millions of dollars in total proceeds.
+
+## Q1 2026 Earnings on May 7
+
+CoreWeave's first quarterly earnings report is scheduled for **May 7 after market close**. Analysts expect Q1 revenue near **$1.96 billion**. Key focus areas include backlog conversion rates, data center capacity expansion, and whether the company can translate its massive contracted pipeline into recurring revenue. Options markets are pricing **double-digit post-earnings moves** for CoreWeave and other AI-linked stocks reporting that week (including Arm, AppLovin, and Arista Networks).
+
+## OpenAI Risk Factor
+
+A significant overhang is **OpenAI concentration risk**. Wells Fargo estimates roughly **a third of CoreWeave's contracted revenue is tied to OpenAI**. Reports that OpenAI missed recent user and revenue targets rattled AI infrastructure stocks, with CoreWeave dropping 2.8% and **Oracle** also declining. OpenAI CFO Sarah Friar reportedly voiced internal concerns about meeting future compute costs if revenue didn't improve, creating a "ripple effect" across AI suppliers.
+
+## Product & Platform Developments
+
+CoreWeave launched **SUNK (SLURM on Kubernetes)** and **SUNK Anywhere**, making it easier for AI researchers to deploy SLURM cluster management workloads on Kubernetes-based cloud infrastructure, even beyond CoreWeave's own data centers. The company earned **SemiAnalysis' Platinum ClusterMAX rating twice** and set records in MLPerf benchmarking for AI training and inference. It also launched **CoreWeave ARENA** for validating AI workloads before production.
+
+## Broader AI Infrastructure Context
+
+**Hyperscaler AI capital expenditure has surged to $700–725 billion**, reinforcing GPU supply constraints and pricing strength across the sector. On May 4, **Nebius (NBIS) surged 12%** alongside CoreWeave's ~7% gain, while **Micron (MU)** led chip stocks. **IREN** and **Applied Digital (APLD)** were also noted among AI cloud movers. **Google** led AI stock performance heading into a busy earnings week, with **Palantir, Arista Networks, and CoreWeave** among those reporting. **Microsoft, Oracle, and the SoftBank-backed Stargate** were referenced as part of OpenAI's broader infrastructure lineup.
+
+**CHAI AI**, backed by CoreWeave and AMD, reached **$80 million ARR** with a reported **$2.4 billion valuation**, underscoring the downstream ecosystem being built on CoreWeave infrastructure.
+
+Jim Cramer was broadly bullish on CoreWeave, calling it "a winner" and discussing short-seller dynamics, while noting the coming earnings week would be "more prone to disappointment" than the mega-cap tech results that preceded it.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [Palantir, Nvidia Partner CoreWeave Headline Earnings Calendar; Lithium Play In Spotlight](https://news.google.com/rss/articles/CBMiiAFBVV95cUxOV0hPZFpPTjJyN1VsN2Y4WDAzVmlCWEVOanhzQXg4X3BNZUF6SlRaQnNUUllCazVsS0NLQ1FUZm41X1ctRzMzSUJoN2s4bVRJalhfRFJINkZWSkNkVXhlNmZwWVQ3MndQOGFNcDdSM1h3V2VDcU5kT28weGZQQnFVT29SVzc5NUZX?oc=5) (Investor's Business Daily)
+- [CoreWeave's Anthropic Deal is Game Changing — The AI‑Infra Trade is Heating Up](https://news.google.com/rss/articles/CBMipgFBVV95cUxOVW1KMlZrT3QyWXJfTXY0TUIxdGJsWFdOLTVNUUVaa3RTUENnMHVmbFE4clc1SkxUVDlhTWo3OFFueG0xb0hzTWNxRnVFYjMxLS02RjdDbHo1b2dHaUw3OGhQN25hZk1kZVpkQVVVd1YxX29tbzFBaElvMm9RTWF1RmdpTzdCWnYtNTFSUVBzVUx0TTh5NHJsOHp1bHRhbVNIWTQ1bFN3?oc=5) (Yahoo Finance)
+- [Cathie Wood's Ark bets on Google, Meta and CoreWeave; cuts AMD and Bitcoin ETF](https://news.google.com/rss/articles/CBMiswFBVV95cUxNLXRVVElDTGRzc2h5dDdnY3pwSzBicXJVbFFLYUs0OWtFWnFlcjNuakFXbWg1anRRR3JfR1luMHo2RjBlU1FLTzhjUjk2WXEwNFBVWEtJVFZ3ZUhsSTVnZDQ0VnVyc2FWaV9rLUt6d0tSUWY3dUx0MThuWGQxN0xUeUxGM2M2U2JMNnNObnBNdWpPUFJTZXFmb2JocWpIa1Btc1psQ2o3dG54Y1htSzEzRTNWdw?oc=5) (Seeking Alpha)
+- [CoreWeave's Next Earnings Report: 3 Things That Could Make -- or Break -- the Stock](https://news.google.com/rss/articles/CBMilwFBVV95cUxNeHliMmhTaWlZUnJMMVE3QWZVTktVZ3JORW81ZnFCMnVYaTNEdHh4U1NoX1dlWWdibWp0V2FfMmtTZWRnRUFqUjE3eXhfb3pVTnJ6UVV2OUFUTkpWanJVblRYdnBUNWJzeW9MYW5KMWp2cVN2OWczV0V5N2ZHUVpTaF8zMmRnaFVvX2dzVW5jaXMxVWtYZ0hv?oc=5) (The Motley Fool)
+- [CoreWeave Gains as Citi Raises Price Target](https://news.google.com/rss/articles/CBMipgFBVV95cUxPdE1JUk1ONUhSUWs3WGYyb29ZS2RwUDZkck9oNzloOURyUGthRGhwVkg5OGxUa3dFb1lvdHVRVE9QbzlMaHJUeFBiYzZRX0Qxb1VyX054ZkFhdnRZQXRRa1o0NDVBMU51NVNEeVFxOXRPZDI2VTlzWnM1NVhKb3RkczN3aGFNbWlkT1ZGeUM1T1RCM2VrWlhjbTBvMERaY19mM18wenFB?oc=5) (TradingView)
+- [Why Is CoreWeave Stock Surging Monday?](https://news.google.com/rss/articles/CBMinwFBVV95cUxNOWhnLWF0SURoMlVyaHJMMUlOQkNIeWYxSjhSZVF5OEFrS21ubnU1OFNVVzJraG96anJnMURfckpUZlBrT0JLbXB4MkZRSnZBa1Yza0pUeGM0djBwSGdlem9aN2dxNElNa1U2SkhjelExbzZReFJyeldwbXZOUkVXTXp5dlc5eVVzQ1Rab2VFNklDemNrMFpLUGxvS3lOaFU?oc=5) (Benzinga)
+- [AI Stocks: Winners Shift As Google Leads With Palantir, Arista, CoreWeave Earnings On Deck](https://news.google.com/rss/articles/CBMitAFBVV95cUxNQ29aeTNlV1RwU21ydVNpTVRzbFNMRlpTVVBFdWlJX3FIZ0pSTGU1TDN1RUFKQUlJU1ZhN2pfZ2FPSUtoakE1Z0FGQU5rX29zZ2dwaWViRDVSUlNYWGF5c2VxM2FST3c0ZEJ4MzF3RjBxb1BUSHY2Y2RDM3kwQzlURl9Nb3NmMXlUTHlVb0VBMnlZUmI3WF93WFhFTjFhbzRsRE1tVHVndGNHa2pNcG1sdC1nVTc?oc=5) (Investor's Business Daily)
+- [CoreWeave Stock Jumps Before Earnings as OpenAI Risk Tests the $700 Billion AI Boom](https://news.google.com/rss/articles/CBMipgFBVV95cUxNVVgyVDdWZFdsWnN1ODhwZXlmVnZxQ3FJbWx2eF9NQmF6TzJVSlZqWjZmazIxR0VoRTZlOUh4MTlCVWpyOWZ4cXItMVAzTVZqRXpnS0djTGpaQjlqYWVYWHlqLU5UYzQ0dHNReTRLdWlaTXU3UDhfTUM2a3JWcXJMMjVIbGYzdWM0Q0liUldGWVlDcUZsVlFVbElhRS03RXRqM2VkcEdR?oc=5) (TechStock²)
+- [Wealthfront Advisers LLC Takes $788,000 Position in CoreWeave Inc.](https://news.google.com/rss/articles/CBMiyAFBVV95cUxPMVhRNDU2SkxOVDNwOEVIQnlqQllJV0MwWU1TeGFNWUNDUV9XbXphZUtmZnE5WlJCcWc3UU1kMms0SHZES25jV0NUOTN4WlN4MzhKR1ZUUnRLY3hMaGhzYkpuZEFJVkJ0U21nUUx4NGpZaHE0bHRfSm9QVWdweFhPc1VKeTZ6LWt3QlcxdHZMTmdtMnhjbE9jTUlwMjNyY2haVnZpS2Vzd0FMUnZMMXJEcWNybkxFLVBOUlFKVXE4d1ZHdkk5LVl1bQ?oc=5) (MarketBeat)
+- [CoreWeave stock hits 7% as its AI growth story intensifies](https://news.google.com/rss/articles/CBMifEFVX3lxTE13UlBJWk4xQXJYMnpnZGJFOGNudlhXSUdtaElKZUladFBfSWh5TUtaa2RHTjMtSzJxc2dVZzZJVnFSeUxVNDZNWXJZZEF0X2lGY2E5RUh6VGhLR2ZJcmNRMDc0UWs4blJ4RGt1THZfUU1NSVhfQ1loNngwLW8?oc=5) (Rolling Out)
+- [Earnings Volatility Watch: Arm, CoreWeave, AppLovin Lead AI Test](https://news.google.com/rss/articles/CBMitAFBVV95cUxQVDZxaVVBUmZjbXo3Q054UHA3SDlLVlJkZFFFZG81OFd0b0JoQXJUWkt4WDc5WDUyZnpaVFR0ZjU0aVVOc25WT0VtQTZnUmlyVjExYW1pYXc5YzhLX3l3RFdkOEo0TU1lUE1Fd0t3ZVo0UmJSZU1EZEtscU83YXFXZ3B5UDkyRlMzZVhqbXRBTHVCdF8tSVBiQ012N2RlY0w5YmdLa0Y3SmVzR081V1ZKM0N3Y1k?oc=5) (Benzinga)
+- [CoreWeave (NASDAQ:CRWV) Major Shareholder Magnetar Financial Llc Sells 209,157 Shares](https://news.google.com/rss/articles/CBMi0AFBVV95cUxPRmloMjBZLWhKX2R

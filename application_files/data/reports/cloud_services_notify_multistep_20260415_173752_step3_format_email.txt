@@ -1,0 +1,313 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoreWeave's Massive AI Infrastructure Deal Momentum</title>
+<style>
+body {
+margin: 0;
+padding: 0;
+background-color: #f4f4f7;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+color: #1a1a2e;
+line-height: 1.7;
+-webkit-text-size-adjust: 100%;
+}
+.email-wrapper {
+max-width: 680px;
+margin: 0 auto;
+background-color: #ffffff;
+}
+.header {
+background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+padding: 48px 40px 40px;
+text-align: left;
+}
+.header h1 {
+color: #ffffff;
+font-size: 26px;
+font-weight: 700;
+margin: 0 0 8px;
+letter-spacing: -0.3px;
+}
+.header p {
+color: rgba(255,255,255,0.65);
+font-size: 13px;
+margin: 0;
+text-transform: uppercase;
+letter-spacing: 1.5px;
+font-weight: 500;
+}
+.content {
+padding: 40px;
+}
+.section-label {
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: #6c63ff;
+margin: 0 0 12px;
+}
+h2 {
+font-size: 20px;
+font-weight: 700;
+color: #1a1a2e;
+margin: 0 0 20px;
+line-height: 1.3;
+}
+h3 {
+font-size: 16px;
+font-weight: 700;
+color: #302b63;
+margin: 28px 0 10px;
+padding-bottom: 6px;
+border-bottom: 2px solid #ededf5;
+}
+p {
+font-size: 15px;
+color: #3a3a4a;
+margin: 0 0 16px;
+}
+ul {
+padding-left: 20px;
+margin: 0 0 16px;
+}
+li {
+font-size: 15px;
+color: #3a3a4a;
+margin-bottom: 10px;
+}
+strong {
+color: #1a1a2e;
+}
+.deal-card {
+background: #f8f7ff;
+border-left: 4px solid #6c63ff;
+border-radius: 0 8px 8px 0;
+padding: 20px 24px;
+margin: 16px 0;
+}
+.deal-card h3 {
+margin: 0 0 10px;
+border: none;
+padding: 0;
+color: #302b63;
+font-size: 17px;
+}
+.deal-card ul {
+margin: 0;
+padding-left: 18px;
+}
+.deal-card li {
+margin-bottom: 6px;
+font-size: 14px;
+}
+.stat-row {
+display: flex;
+gap: 16px;
+margin: 24px 0;
+}
+.stat-box {
+flex: 1;
+background: #f4f4f7;
+border-radius: 8px;
+padding: 16px;
+text-align: center;
+}
+.stat-box .number {
+font-size: 22px;
+font-weight: 800;
+color: #6c63ff;
+display: block;
+margin-bottom: 4px;
+}
+.stat-box .label {
+font-size: 11px;
+color: #7a7a8a;
+text-transform: uppercase;
+letter-spacing: 1px;
+font-weight: 600;
+}
+.divider {
+border: none;
+height: 1px;
+background: #ededf5;
+margin: 32px 0;
+}
+.sources {
+background: #f8f7ff;
+border-radius: 8px;
+padding: 24px;
+margin-top: 8px;
+}
+.sources h3 {
+margin: 0 0 16px;
+border: none;
+padding: 0;
+font-size: 14px;
+color: #302b63;
+}
+.sources ul {
+padding-left: 0;
+list-style: none;
+margin: 0;
+}
+.sources li {
+margin-bottom: 10px;
+font-size: 13px;
+padding-left: 16px;
+position: relative;
+}
+.sources li::before {
+content: "→";
+position: absolute;
+left: 0;
+color: #6c63ff;
+font-weight: 700;
+}
+.sources a {
+color: #6c63ff;
+text-decoration: none;
+font-weight: 500;
+}
+.sources a:hover {
+text-decoration: underline;
+}
+.source-pub {
+color: #999;
+font-size: 12px;
+font-weight: 400;
+}
+.footer {
+padding: 32px 40px;
+text-align: center;
+background: #f4f4f7;
+}
+.footer p {
+font-size: 12px;
+color: #999;
+margin: 0;
+}
+@media only screen and (max-width: 600px) {
+.header, .content, .footer {
+padding-left: 24px;
+padding-right: 24px;
+}
+.header h1 {
+font-size: 22px;
+}
+.stat-row {
+flex-direction: column;
+gap: 10px;
+}
+}
+</style>
+</head>
+<body>
+<div class="email-wrapper">
+
+<div class="header">
+<p>Market Intelligence Brief</p>
+<h1>CoreWeave's Massive AI Infrastructure Deal Momentum</h1>
+</div>
+
+<div class="content">
+
+<p class="section-label">Overview</p>
+<h2>CoreWeave Dominates Headlines with Multi-Billion Dollar Deals</h2>
+<p><strong>CoreWeave</strong> has had an extraordinary April 2026, announcing three major deals in rapid succession that underscore its emergence as the leading specialized ("neocloud") AI infrastructure provider.</p>
+
+<!--[if mso]>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td>
+<![endif]-->
+<div class="stat-row">
+<div class="stat-box">
+<span class="number">$66.8B</span>
+<span class="label">Revenue Backlog</span>
+</div>
+<div class="stat-box">
+<span class="number">43</span>
+<span class="label">Active Data Centers</span>
+</div>
+<div class="stat-box">
+<span class="number">9/10</span>
+<span class="label">Top AI Providers</span>
+</div>
+</div>
+<!--[if mso]>
+</td></tr></table>
+<![endif]-->
+
+<div class="deal-card">
+<h3>🏦 Jane Street Deal — $7 Billion Total</h3>
+<ul>
+<li><strong>Jane Street</strong>, the quantitative trading firm, committed <strong>~$6 billion</strong> to use CoreWeave's AI cloud platform and made a separate <strong>$1 billion equity investment</strong> at <strong>$109 per share</strong>, making it one of CoreWeave's five largest shareholders.</li>
+<li>The deal provides Jane Street access to <strong>NVIDIA's next-generation Vera Rubin</strong> chips across multiple CoreWeave data centers.</li>
+<li>Jane Street described its needs in language akin to an AI research lab — training large, complex models on massive volumes of noisy financial data. CoreWeave's Max Hjelm called Jane Street "a frontier lab."</li>
+</ul>
+</div>
+
+<div class="deal-card">
+<h3>📘 Meta Deal — $21 Billion Expansion</h3>
+<ul>
+<li><strong>Meta</strong> expanded its commitment to CoreWeave to <strong>$21 billion</strong> (up from a prior $14.2 billion arrangement), running from 2027 to 2032. This brings Meta's total commitment to over <strong>$35 billion</strong>.</li>
+<li>The deal includes capacity from data centers powered by <strong>NVIDIA Rubin</strong> chips.</li>
+<li>Meta CEO-level commentary indicated they will continue building their own infrastructure while relying on CoreWeave to mitigate risk and meet insatiable AI compute demand.</li>
+<li>CoreWeave also serves <strong>Google, Microsoft, and OpenAI</strong>.</li>
+</ul>
+</div>
+
+<div class="deal-card">
+<h3>🤖 Anthropic Deal — Multi-Year, Undisclosed Value</h3>
+<ul>
+<li><strong>Anthropic</strong> signed a multi-year agreement with CoreWeave to power its <strong>Claude AI</strong> models, with a phased infrastructure rollout using various NVIDIA chip architectures.</li>
+<li>With this addition, <strong>nine of the top ten AI model providers</strong> now use CoreWeave's platform (only <strong>xAI</strong> is not yet a customer).</li>
+</ul>
+</div>
+
+<hr class="divider">
+
+<p class="section-label">Financials</p>
+<h2>Aggressive Capital Formation</h2>
+<p>CoreWeave's fundraising has been equally aggressive:</p>
+<ul>
+<li>Raised <strong>~$3.5 billion in convertible senior notes</strong></li>
+<li><strong>Upsized a high-yield bond offering</strong> due to heavy demand</li>
+<li>Secured an <strong>$8.5 billion delayed draw term loan</strong> at <strong>investment-grade ratings</strong> — a first for a neocloud</li>
+<li>CoreWeave now has a <strong>$66.8 billion revenue backlog</strong> and <strong>43 active data centers</strong>, though it posted a <strong>$1.17 billion net loss</strong> in 2025 while investing heavily in expansion</li>
+</ul>
+<p>Morningstar analyst Luke Yang noted that creditors are increasingly comfortable with neoclouds, with CoreWeave's latest facility being its first investment-grade debt at ~6% interest. Analysts see these take-or-pay deals from credible AI customers as de-risking the business model.</p>
+
+<hr class="divider">
+
+<p class="section-label">Industry Landscape</p>
+<h2>Broader Cloud and AI Infrastructure Context</h2>
+<ul>
+<li><strong>Tech giants plan to spend over $630 billion</strong> on capex in 2026, yet even that pace cannot meet demand for specialized GPU clusters, creating an opening for specialized providers like CoreWeave.</li>
+<li><strong>Nebius</strong> is referenced as a competitor to CoreWeave in the neocloud space, with analysts comparing Nebius's accelerating growth against CoreWeave's massive contract scale.</li>
+<li><strong>NVIDIA</strong> remains central to the entire ecosystem — CoreWeave's platform is built around NVIDIA GPUs (Blackwell, Hopper, and upcoming Vera Rubin architectures), and NVIDIA itself has <strong>$6.3 billion in capacity commitments</strong> with CoreWeave.</li>
+<li><strong>OpenAI</strong> has contracts with CoreWeave totaling up to <strong>$22.4 billion</strong>.</li>
+<li>CoreWeave's stock (CRWV) surged on the deals, with its RS rating jumping to 91 and its share price trading at a <strong>176% premium</strong> to its March 2025 IPO price. The stock was also upgraded by analysts and saw institutional buying from <strong>Sumitomo Mitsui Trust Group</strong>.</li>
+</ul>
+
+<hr class="divider">
+
+<p class="section-label">Market Moves</p>
+<h2>Investment Community Activity</h2>
+<ul>
+<li><strong>Billionaire Philippe Laffont</strong> (Coatue) sold CoreWeave and rotated into another AI stock.</li>
+<li><strong>Zacks</strong> highlighted CoreWeave alongside <strong>Nebius, Bloom Energy, Oracle, Meta, and NVIDIA</strong> as key investment ideas in the AI infrastructure theme.</li>
+<li><strong>Sandisk</strong> was announced as joining the Nasdaq-100 in the same week CoreWeave surged on its analyst upgrade.</li>
+</ul>
+
+<hr class="divider">
+
+<div class="sources">
+<h3>📎 Sources</h3>
+<ul>
+<li><a href="https://news.google.com/rss/articles/CBMitgFBVV95cUxNVjdLZXEwYmtMeTVyb2VzQVVmVjRyVjRCbFQxU0VvajgtZHJLajJOei1sQkpQem56dVY4NnVZdm55eGxDYUFwcGdiVWhBV3BLQ3JjMk5WaVpydFl1QWdGZGNHWE43d21nV0JGMFZ4SDlDblR6UFpyeE1RZEsydERVUldSS2R1S0xaaTFVNWl2Z1kwbUVlTWtOUHZfcEE1QTFUcmxkeGFSdE9pcHNkY2Y2eDhrQnpmQQ?oc=5">Jane Street Invests $1 Billion in CoreWeave, Boosts Spending Plans</a> <span class="source-pub">— Bloomberg</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMiqwFBVV95cUxQcHY1NWk1WXBrbERwUEI5RTJzN29mVHRiMDFBOVd1aVdnN3ZXMVJFZm11RXV5X1Z2cGxDRWc0SC1KX0VUck41blNILWJnZTF6VmpMNmxQOTBjbERTejU2TWIxLVBxVGZyRC0xOEh6T3NBVzRCMHVSenlDTkp0eXNhM1hmcVB6WmdOMTM4Rmp4M3l2bl9Gb2J5cXM0dWZkTUVmSG40WHJrZ3hxZEk?oc=5">Sandisk to join Nasdaq-100, CoreWeave stock surges on upgrade</a> <span class="source-pub">— Yahoo Finance</span></li>
+<li><a href="https://news.google.com/rss/articles/CBMiqgFBVV95cUxQdy0yZEV6bWxhcUk0bk1jcW55enVIZzREVmIzUFZkOTZHNXJvQlM3THlNM0NsYTVNamN2Y0k1OEVjODVyQ1JySmtGYXEyaXI0VktJQlBLQ3FxMGdSZUtEZ2dyRHdhZmFkVkRzaXA1X0h4MmhOdXE5SHM5ajNzNmgxcGxSem1INXJOejJFT3M2WGlVdXBCd0NpcDVQSFY1ckw0OFVtSzhVUlIwQQ?oc=5">Zacks Investment Ideas: United States Oil Fund, CoreWeave, Nebius, Bloom Energy and Oracle

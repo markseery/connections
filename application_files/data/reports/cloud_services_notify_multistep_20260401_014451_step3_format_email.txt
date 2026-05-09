@@ -1,0 +1,208 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Industry Summary</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 20px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0a0a0a;padding:48px 40px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI Industry Summary</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#888888;letter-spacing:0.3px;">The week's most important developments</p>
+</td>
+</tr>
+
+<!-- OpenAI's Major Moves -->
+<tr>
+<td style="padding:40px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">OpenAI's Major Moves</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>OpenAI closed a record $122 billion funding round</strong> at an $852 billion valuation, co-led by SoftBank, Andreessen Horowitz, D.E. Shaw Ventures, MGX, TPG, and T. Rowe Price, with participation from <strong>Amazon, Nvidia, and Microsoft</strong>. About $3 billion came from retail investors, and the company will be included in ARK Invest ETFs ahead of an expected IPO. OpenAI claims $2 billion/month in revenue, 900 million weekly active users, 50 million subscribers, and an ads pilot generating over $100 million ARR in under six weeks. The company expanded its revolving credit facility to $4.7 billion.</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>OpenAI shut down Sora</strong>, its AI video-generation tool, just six months after launch. User count had collapsed to under 500,000 while burning ~$1 million/day in compute costs. The decision was driven by a strategic refocus on enterprise/developer tools ahead of a possible IPO — partly in response to <strong>Anthropic's Claude Code</strong> gaining momentum. <strong>Disney's planned $1 billion partnership</strong> tied to Sora collapsed; Disney was reportedly blindsided, learning of the shutdown less than an hour before the public announcement. No money had changed hands.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;"><strong>OpenAI added plugin support to Codex</strong>, its agentic coding tool, enabling integrations with GitHub, Gmail, Cloudflare, Vercel, and others — catching up to similar features already available in Claude Code. OpenAI also <strong>indefinitely shelved plans for an erotic ChatGPT "adult mode"</strong> after backlash from investors, staff, and advisors who warned it could create a "sexy suicide coach."</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Anthropic -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Anthropic's Turbulent Month</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>Anthropic accidentally leaked the full source code of Claude Code</strong> — nearly 2,000 TypeScript files and 512,000+ lines of code — when version 2.1.88 of its npm package included a source map file. Security researcher Chaofan Shou discovered it immediately. Anthropic called it "a release packaging issue caused by human error, not a security breach." This came just days after Anthropic accidentally made ~3,000 internal files publicly available, including details of an unannounced model. The leak revealed Claude Code as "a production-grade developer experience, not just a wrapper around an API."</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>Claude Code gained new computer-control capabilities</strong>, allowing it to point, click, and navigate users' screens to complete tasks — available to Pro and Max subscribers on MacOS as a "research preview." Anthropic is also <strong>battling the Department of Defense</strong> over AI use, with the Trump administration blocked from punishing Anthropic over the Pentagon dispute. <strong>Google</strong> is reportedly nearing a deal to help finance a multibillion-dollar data center leased to Anthropic.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">Anthropic published a report on AI's labor market impact, claiming LLMs could theoretically perform 80%+ of tasks across many job categories, though the underlying methodology relied on speculative 2023-era assumptions.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Cloud Infrastructure -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Cloud Infrastructure &amp; Data Centers</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>Mistral AI raised $830 million in debt</strong> to build an Nvidia-powered data center near Paris (operational Q2 2026) and announced $1.4 billion in Swedish AI infrastructure investment, aiming to deploy 200MW of compute across Europe by 2027. CEO Arthur Mensch emphasized reducing dependence on third-party cloud providers.</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>Starcloud raised $170 million (Series A)</strong> at a $1.1 billion valuation to build data centers in space, backed by Benchmark and EQT Ventures. It launched its first satellite with an <strong>Nvidia H100 GPU</strong> in November 2025 and plans a version with <strong>Nvidia Blackwell</strong> chips and an <strong>AWS server blade</strong>. Cost competitiveness depends on SpaceX's Starship achieving frequent commercial launches (potentially 2028-2029).</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>ScaleOps raised $130 million</strong> at an $800 million valuation for software that automatically manages and reallocates computing resources (GPUs, memory, storage) in real time, claiming up to 80% reduction in cloud and AI infrastructure costs. The founder previously worked at <strong>Run:ai</strong> (acquired by <strong>Nvidia</strong>).</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>AI chip startup Rebellions</strong> (South Korea) raised $400 million in a pre-IPO round at a $2.34 billion valuation, bringing total funding to $850 million. It launched RebelRack and RebelPOD inference infrastructure platforms and is expanding to the U.S., Japan, Saudi Arabia, and Taiwan, targeting <strong>cloud providers, neoclouds</strong>, government agencies, and telecoms.</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;"><strong>Nvidia invested $2 billion in chipmaker Marvell</strong> to boost AI networking. UK chip startup <strong>Fractile</strong> is seeking to raise $200 million to challenge Nvidia.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;"><strong>U.S. Senators Warren and Hawley</strong> urged the Energy Information Administration to mandate annual electricity-use disclosures from data centers, amid growing consumer concerns about energy costs. 65% of Americans oppose building AI data centers in their communities. The <strong>FT</strong> asked whether the AI data center boom could become a "$9 trillion bust," and a top energy developer warned about overbuilding power supplies for AI.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Salesforce -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Salesforce / Slack AI Overhaul</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;"><strong>Salesforce unveiled 30 new AI features for Slack</strong>, highlighted by reusable AI-skills for Slackbot, MCP (Model Context Protocol) client capability enabling connection to external services including Salesforce's Agentforce platform, and meeting transcription/summarization.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Amazon -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Amazon / Ring / Alexa</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;"><strong>Amazon's Alexa+</strong> added conversational food ordering from Uber Eats and Grubhub, rolling out on Echo Show devices. <strong>Ring launched an app store</strong> leveraging its 100 million+ cameras for AI-powered use cases in elder care (SoftBank-backed Density), queue management (QueueFlow), and rental monitoring (Minut/Airbnb), while navigating surveillance privacy concerns.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Security -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Security Incidents &amp; Compliance</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;"><strong>Mercor</strong>, a $10 billion AI recruiting startup working with OpenAI and Anthropic, confirmed a cyberattack linked to a supply chain compromise of open-source project <strong>LiteLLM</strong>. Extortion group Lapsus$ claimed responsibility, sharing stolen Slack data and internal videos. <strong>LiteLLM subsequently dropped compliance startup Delve</strong> (accused of generating fake compliance data) and is re-certifying with Vanta after its open-source version was hit by credential-stealing malware.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Startup Funding -->
+<tr>
+<td style="padding:32px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Startup Funding &amp; Shutdowns</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:0 0 12px;">
+<p style="margin:0

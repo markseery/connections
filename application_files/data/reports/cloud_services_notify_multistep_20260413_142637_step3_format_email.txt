@@ -1,0 +1,174 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech & AI Weekly Summary</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 20px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0a0a0a;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Summary of All Items</h1>
+</td>
+</tr>
+
+<!-- Cloud Infrastructure & Compute -->
+<tr>
+<td style="padding:40px 48px 0 48px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;margin-bottom:24px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Cloud Infrastructure &amp; Compute</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 48px 0 48px;">
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Kepler Communications</strong> launched the largest orbital compute cluster — about 40 Nvidia Orin edge processors across 10 satellites linked by laser communications — and now has 18 customers, including <strong>Sophia Space</strong>, which will test passively-cooled space-computer software on the constellation. Large-scale orbital data centers (envisioned by <strong>SpaceX</strong> and <strong>Blue Origin</strong>) are not expected until the 2030s. Kepler sees itself as infrastructure for space and airborne applications, not a data center company.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Google Cloud and Intel</strong> expanded a multiyear partnership: Google Cloud will continue using Intel's Xeon 6 processors for AI, cloud, and inference, and the two will co-develop custom ASIC-based infrastructure processing units (IPUs) for data center workloads. The deal reflects growing industry demand for CPUs alongside GPUs. <strong>Arm Holdings</strong> (SoftBank-owned) also recently unveiled its own AGI CPU to address a worldwide CPU shortage. Arm chief Rene Haas is reportedly in line to lead much of SoftBank's international business.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Amazon CEO Andy Jassy's</strong> annual shareholder letter positioned <strong>AWS's</strong> homegrown <strong>Trainium</strong> AI chips as a challenger to <strong>Nvidia</strong>, claiming Trainium has hit a $20 billion ARR (and would be $50B if sold externally). Demand for Trainium3 and even the still-distant Trainium4 is nearly sold out. Jassy also took implicit aim at <strong>Intel</strong>, <strong>Starlink</strong>, and others across Amazon's businesses.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>OpenAI halted its Stargate UK data centre project</strong>, according to the Financial Times.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Google's TurboQuant</strong> algorithm raised questions about whether it could reduce AI demand for memory chips.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+The <strong>AI build-out is broadly powering global goods trade</strong>, per the FT, as hardware shipments for data centers surge worldwide.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:16px 48px;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- AI Models & Platforms -->
+<tr>
+<td style="padding:16px 48px 0 48px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">AI Models &amp; Platforms</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 48px 0 48px;">
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Anthropic's new Mythos model</strong> dominated headlines. It was released in a limited fashion to major enterprises (<strong>AWS, JPMorgan Chase, Goldman Sachs, Citigroup, Bank of America, Morgan Stanley</strong>) because of its exceptional ability to find software security vulnerabilities. <strong>Trump administration officials</strong> (Treasury Secretary Bessent and Fed Chair Powell) summoned bank executives to encourage testing Mythos for cyber defense. <strong>UK financial regulators</strong> are also assessing Mythos risks. Cybersecurity stocks fell on worries the model could disrupt the sector. Critics argued the limited release may be more about enterprise sales strategy and preventing model distillation by competitors than about safety alone. Anthropic is simultaneously battling the Trump administration in court over a DoD supply-chain risk designation.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Anthropic is closing in on OpenAI</strong> in US business usage, per the FT. At the <strong>HumanX conference</strong>, attendees and vendors consistently named <strong>Claude</strong> as the preferred AI chatbot, with many saying <strong>ChatGPT/OpenAI</strong> had "fallen off." OpenAI recently dropped side projects (Sora, a "sexy" ChatGPT variant) to refocus on business and coding, but negative press, advertising in ChatGPT, and the Trump administration partnership have hurt perception.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Anthropic temporarily banned OpenClaw creator Peter Steinberger</strong> (now at OpenAI) from Claude access, citing "suspicious" activity. The ban was reversed after it went viral. This followed Anthropic's new policy requiring OpenClaw users to pay via API rather than subscriptions — a "claw tax" — citing compute-intensive agentic usage patterns. Steinberger suggested this was a competitive move to benefit Anthropic's own <strong>Cowork</strong> agent.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>OpenAI launched a new $100/month ChatGPT Pro plan</strong> to compete directly with Anthropic's $100/month Claude tier, offering 5x more access to its <strong>Codex</strong> coding tool than the $20 Plus plan. The $200 tier remains available with 20x limits. Plans now range from free (with ads), $8 Go (with ads), $20 Plus, $100 Pro, and $200 Pro.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Meta's Muse Spark</strong> model — the first release under <strong>Alexandr Wang</strong> (recruited from <strong>Scale AI</strong> to lead Meta's Superintelligence Labs) — pushed the <strong>Meta AI app to #5 on the US App Store</strong> (87% daily download increase on iOS). Muse Spark accepts multimodal input, supports subagents, visual coding, and will expand to WhatsApp, Instagram, Facebook, Messenger, and Meta's AI glasses. Separately, <strong>Meta built an AI version of Mark Zuckerberg</strong> to interact with staff internally. Meta paused contracts with <strong>Mercor</strong> after that startup's data breach.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Alibaba</strong> is shifting its AI strategy toward revenue generation over open-source, per the FT.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>xAI</strong> (Elon Musk's company) sued Colorado over the first state AI anti-discrimination law.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:16px 48px;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- AI Safety, Legal & Societal Concerns -->
+<tr>
+<td style="padding:16px 48px 0 48px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">AI Safety, Legal &amp; Societal Concerns</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 48px 0 48px;">
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Sam Altman's San Francisco home was attacked with a Molotov cocktail</strong> days after a critical <strong>New Yorker profile</strong> by Ronan Farrow and Andrew Marantz questioned his trustworthiness. A suspect was arrested at OpenAI HQ. Altman called the article "incendiary" and blamed it for escalating dangers.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>A stalking victim sued OpenAI</strong>, alleging ChatGPT fueled her abuser's delusions and that OpenAI ignored three warnings (including an internal mass-casualty flag). She is seeking to force OpenAI to block the user, preserve chat logs, and notify her of new account attempts. OpenAI agreed only to suspend the account. The GPT-4o model cited in the case was retired in February. This follows other lawsuits involving AI-linked deaths. OpenAI is simultaneously backing an <strong>Illinois bill</strong> that would shield AI labs from liability even in mass-casualty cases.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Florida's attorney general</strong> announced an investigation into OpenAI over ChatGPT's alleged role in planning the 2025 <strong>Florida State University shooting</strong> that killed two. ChatGPT has been linked to a growing number of violent incidents and cases of "AI psychosis."
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+The FT reported on concerns that <strong>AI-generated legal queries</strong> from clients risk pushing up lawyers' fees, and examined how AI may reshape corporate organizational structures and cause job losses.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:16px 48px;">
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:0;">
+</td>
+</tr>
+
+<!-- Startups & Other Developments -->
+<tr>
+<td style="padding:16px 48px 0 48px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:3px solid #0a0a0a;padding-left:16px;">
+<h2 style="margin:0;font-size:20px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Startups &amp; Other Developments</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 48px 0 48px;">
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Mercor</strong> ($10B-valued AI data training startup) is reeling from a <strong>data breach</strong> caused by a hack of the open-source tool <strong>LiteLLM</strong>. Hackers claim to have stolen 4TB of data. Meta paused Mercor contracts; OpenAI is investigating its exposure. Mercor handles sensitive training data for major model makers.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Sierra</strong> (Bret Taylor, CEO; also OpenAI board chair) launched <strong>Ghostwriter</strong>, an agent that builds other agents via natural language, aiming to replace click-based enterprise software. Sierra reached $100M ARR in under 21 months and is valued at $10B.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Poke</strong>, a startup backed by Spark Capital and General Catalyst, launched an AI agent accessible via iMessage/SMS/Telegram/WhatsApp for everyday tasks (calendar, smart home, health tracking), raising $25M total at a $300M valuation.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Apple</strong> is testing four smart-glasses designs for a 2027 launch (no displays; camera, calls, music, Siri), stepping back from its earlier mixed-reality ambitions after the Vision Pro's lukewarm reception.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333333;">
+<strong>China is luring top AI talent home from Silicon Valley</strong>, and Asian startups are broadly reshaping industries with AI.
+</p>
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#333

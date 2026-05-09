@@ -1,0 +1,127 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Tech Brief</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f0f0f;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI &amp; Tech Brief</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#888888;font-weight:400;">Daily Summary</p>
+</td>
+</tr>
+
+<!-- Cloud Services & Infrastructure -->
+<tr>
+<td style="padding:40px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Cloud Services &amp; Infrastructure</h2>
+</td>
+</tr>
+<tr>
+<td style="padding:0 48px 32px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;"><strong>Microsoft</strong> is <a href="https://techcrunch.com/2026/04/13/microsoft-is-working-on-yet-another-openclaw-like-agent/" style="color:#2563eb;text-decoration:none;">developing an OpenClaw-like AI agent</a> to integrate into its Microsoft 365 Copilot for enterprise customers, adding to its growing roster of agentic tools including Copilot Cowork (which runs in the cloud and is powered partly by Anthropic's Claude) and Copilot Tasks. The new agent would offer better security controls than the open-source OpenClaw.</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;"><strong>Google</strong> <a href="https://techcrunch.com/2026/04/14/google-brings-its-gemini-personal-intelligence-feature-to-india/" style="color:#2563eb;text-decoration:none;">expanded its Gemini "Personal Intelligence" feature to India</a>, allowing AI Pro and AI Ultra users to connect Gmail, Google Photos, and YouTube for personalized answers. Google plans to extend it to free users soon. Google also launched Gemini in Chrome and enabled agentic restaurant booking via AI mode in India through partners like Zomato and Swiggy. Separately, the FT examined whether Google's <a href="https://www.ft.com/content/12eaae3a-e1b8-47a0-9006-70fe319b130a" style="color:#2563eb;text-decoration:none;">TurboQuant algorithm could reduce AI demand for memory chips</a>.</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;"><strong>Kepler Communications</strong> (Canada) launched the <a href="https://techcrunch.com/2026/04/13/the-largest-orbital-compute-cluster-is-open-for-business/" style="color:#2563eb;text-decoration:none;">largest orbital compute cluster</a> — roughly 40 Nvidia Orin edge processors across 10 satellites linked by laser communications — and now has 18 customers. Partner Sophia Space will test passively cooled space-computer software on Kepler's constellation. Large-scale orbital data centers (envisioned by SpaceX and Blue Origin) aren't expected until the 2030s. AWS speaker Rob Chu is <a href="https://techcrunch.com/2026/04/10/techcrunch-is-heading-to-tokyo-and-bringing-the-startup-battlefield-with-it/" style="color:#2563eb;text-decoration:none;">featured at the SusHi Tech Tokyo conference</a> alongside Nvidia, Google, and Microsoft.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#374151;">The <a href="https://www.ft.com/content/ad169119-4a62-437b-b6ec-70819b1e8b4f" style="color:#2563eb;text-decoration:none;">AI infrastructure build-out is powering global goods trade</a>, according to the FT.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- Anthropic / Claude Rising -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Anthropic / Claude Rising</h2>
+</td>
+</tr>
+<tr>
+<td style="padding:0 48px 32px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;">Anthropic's Claude <a href="https://techcrunch.com/2026/04/12/at-the-humanx-conference-everyone-was-talking-about-claude/" style="color:#2563eb;text-decoration:none;">emerged as the dominant AI chatbot at the HumanX conference</a> in San Francisco, with vendors and panelists consistently preferring it over ChatGPT. Anthropic is <a href="https://www.ft.com/content/abb93a6f-9060-4095-8045-84b97d394a4c" style="color:#2563eb;text-decoration:none;">closing in on OpenAI in U.S. business usage</a>. Its new Mythos model — noted for <a href="https://www.ft.com/content/4334460f-b599-4578-8840-d1c7ecf01e08" style="color:#2563eb;text-decoration:none;">exceptional vulnerability-detection capabilities</a> — prompted <a href="https://www.ft.com/content/397bf755-54cf-4018-a01d-8f714d8667c5" style="color:#2563eb;text-decoration:none;">Treasury Secretary Bessent and Fed Chair Powell to summon bank CEOs</a> (JPMorgan, Goldman Sachs, Citigroup, Bank of America, Morgan Stanley) to <a href="https://techcrunch.com/2026/04/12/trump-officials-may-be-encouraging-banks-to-test-anthropics-mythos-model/" style="color:#2563eb;text-decoration:none;">encourage testing</a>. <a href="https://www.ft.com/content/ec7bb366-9643-47ce-9909-fc5ad4864ae5" style="color:#2563eb;text-decoration:none;">UK financial regulators</a> are also rushing to assess Mythos's risks, and <a href="https://www.ft.com/content/f1205b22-ad87-43bb-bc63-da5b69a942ef" style="color:#2563eb;text-decoration:none;">cybersecurity stocks fell</a> on fears the model could disrupt the sector. Anthropic is simultaneously fighting the Trump administration in court over a DoD supply-chain risk designation.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#374151;">Anthropic <a href="https://techcrunch.com/2026/04/10/anthropic-temporarily-banned-openclaws-creator-from-accessing-claude/" style="color:#2563eb;text-decoration:none;">temporarily banned OpenClaw creator Peter Steinberger</a> (now at OpenAI) from accessing Claude, though the ban was quickly reversed. Anthropic had previously changed pricing so OpenClaw usage requires separate API billing — a so-called "claw tax" — since agentic compute patterns exceed normal subscription usage.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- OpenAI Under Pressure -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">OpenAI Under Pressure</h2>
+</td>
+</tr>
+<tr>
+<td style="padding:0 48px 32px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;"><strong>OpenAI</strong> faces mounting challenges: investors are <a href="https://www.ft.com/content/04ac7917-940b-4606-be5f-9eb895a7d982" style="color:#2563eb;text-decoration:none;">questioning its $852 billion valuation</a> as strategy shifts. The company <a href="https://techcrunch.com/2026/04/13/openai-has-bought-ai-personal-finance-startup-hiro/" style="color:#2563eb;text-decoration:none;">acquired Hiro Finance</a> (an AI personal finance startup) in what appears to be an acqui-hire. It launched a new <a href="https://techcrunch.com/2026/04/09/chatgpt-pro-plan-100-month-codex/" style="color:#2563eb;text-decoration:none;">$100/month Pro plan</a> for ChatGPT, explicitly targeting Anthropic's pricing, with 5× more Codex coding capacity than the $20 Plus plan. The $200 tier remains available.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#374151;">CEO Sam Altman responded to both a <a href="https://www.ft.com/content/46ec2fa5-834d-4e49-81ef-6fb736b7e81d" style="color:#2563eb;text-decoration:none;">Molotov cocktail attack on his home</a> and a critical <a href="https://techcrunch.com/2026/04/11/sam-altman-responds-to-incendiary-new-yorker-article-after-attack-on-his-home/" style="color:#2563eb;text-decoration:none;">New Yorker profile</a> questioning his trustworthiness. <a href="https://techcrunch.com/2026/04/09/florida-ag-investigation-openai-chatgpt-shooting/" style="color:#2563eb;text-decoration:none;">Florida's attorney general announced an investigation</a> into OpenAI over ChatGPT's alleged role in a deadly FSU shooting. A <a href="https://techcrunch.com/2026/04/10/stalking-victim-sues-openai-claims-chatgpt-fueled-her-abusers-delusions-and-ignored-her-warnings/" style="color:#2563eb;text-decoration:none;">stalking victim sued OpenAI</a>, claiming ChatGPT fueled her abuser's delusions and the company ignored three warnings. OpenAI is also backing an Illinois bill that would shield AI labs from liability.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- Apple & App Store Friction -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Apple &amp; App Store Friction</h2>
+</td>
+</tr>
+<tr>
+<td style="padding:0 48px 32px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#374151;"><strong>Apple</strong> <a href="https://techcrunch.com/2026/04/14/how-vibe-coding-app-anything-is-rebuilding-after-getting-booted-from-the-app-store-twice/" style="color:#2563eb;text-decoration:none;">removed vibe-coding app Anything twice from the App Store</a>, citing rules against downloading/executing code, part of a broader crackdown affecting Replit and Vibecode. Anything is pivoting to desktop.</p>
+
+<p style="margin:0;font-size:15px;line-height:1.7;color:#374151;">Separately, Apple is <a href="https://techcrunch.com/2026/04/12/apple-reportedly-testing-four-designs-for-upcoming-smart-glasses/" style="color:#2563eb;text-decoration:none;">testing four designs for smart glasses</a> planned for 2027 — no displays, but with camera, calls, music, and Siri integration, competing with Meta's Ray-Ban glasses.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- Other Notable Developments -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Other Notable Developments</h2>
+</td>
+</tr>
+<tr>
+<td style="padding:0 48px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f3f4f6;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#374151;"><strong>Vercel</strong> CEO <a href="https://techcrunch.com/2026/04/13/vercel-ceo-guillermo-rauch-signals-ipo-readiness-as-ai-agents-fuel-revenue-surge/" style="color:#2563eb;text-

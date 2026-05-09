@@ -1,0 +1,51 @@
+# Summary: Cloud Services Provider News (Late March – Early April 2026)
+
+## CoreWeave — Dominant Headlines
+
+**Financing & Debt:** CoreWeave closed an **$8.5 billion Delayed Draw Term Loan (DDTL 4.0)** backed by GPUs and a long-term Meta contract. The new facility carries a significantly lower interest rate (SOFR + 2.25% vs. 4.00% previously) and shifts from asset-based borrowing limits to an execution-based, project-style model incorporating power availability. The stock jumped ~12% on the news. However, CoreWeave's total debt now exceeds **$21 billion** (up from ~$8B in 2024), with quarterly interest expenses of $388 million consuming nearly a third of revenue.
+
+**Revenue & Growth:** CoreWeave reported **110% YoY revenue growth** in Q4 2025, with full-year 2025 revenue hitting **$5.1 billion** (up 168%). Its contractual backlog surged 300%+ to **$66.8 billion**. Management forecasts 2026 revenue of $12–13 billion. Despite top-line growth, the company operated at a loss for Q4 and the full year, with plans to spend up to **$35 billion in 2026** on infrastructure buildout. Analysts expect profitability within five years.
+
+**Poolside Deal Collapse:** CoreWeave and AI startup **Poolside** mutually terminated their partnership on **Project Horizon**, a planned 2 GW data center campus in West Texas. CoreWeave's new $8.5B loan gave it flexibility to shift away from fixed single-tenant commitments toward multi-partner leasing. Poolside is now seeking alternative partners, including reportedly **Google**, and also lost a planned Nvidia-backed $2 billion funding round.
+
+**Applied Digital Lease Deal:** CoreWeave amended an existing data center lease with **Applied Digital** (APLD), suspending terms on two of four data halls and entering a new lease covering those halls through a CoreWeave subsidiary, sending Applied Digital stock higher.
+
+**Customer Wins:** CoreWeave was selected by **Zonos** to power cross-border commerce solutions and by **Cline** to power autonomous engineering workloads. The company is now emphasizing **inference** alongside training, and earned SemiAnalysis' **Platinum ClusterMAX rating** twice.
+
+**Investor & Analyst Activity:** **Cathie Wood's ARK Invest** purchased ~83,000 shares (~$5.8M). **Coatue Management** (Philippe Laffont) fully exited its CoreWeave position before a significant stock decline, reportedly rotating into another AI stock. **Barclays** maintained a Hold rating with a $90 price target; **Northland Securities** reiterated Buy. The consensus analyst rating is "Moderate Buy." **Stratos Wealth Partners** boosted its position. Insider **Brian Venturo** sold over 1.4 million shares across multiple transactions; CEO **Michael Intrator** also sold shares. CoreWeave's stock is up ~62% over one year (~85% since IPO), though it experienced ~50% decline from October highs.
+
+**Risks:** Heavy customer concentration on **Microsoft**, **OpenAI** (projected $14B loss in 2026), and **Meta**; massive variable-rate debt exposure; potential for rising interest rates; and risk that hyperscaler customers could internalize compute needs.
+
+## Nebius — Emerging Rival
+
+**Nebius Group (NBIS)** stock jumped **15%** on a **$27 billion, five-year AI infrastructure deal with Meta** ($12B dedicated capacity + $15B option). **Nvidia** also took a **$2 billion strategic stake**, helping Nebius deploy 5+ GW of Nvidia systems through 2030. Nebius stock is up **~400% in 12 months**, outpacing CoreWeave's 109%. Q4 revenue surged **547% YoY to $228M**. The company had 170 MW live at end-2025, targeting 800 MW–1 GW by end-2026, and holds a separate deal with **Microsoft** worth up to **$19.4 billion**. It raised $4B in convertible notes and is building a 300 MW data center in Finland. Like CoreWeave, it remains unprofitable with heavy capex.
+
+## Other Cloud/Infrastructure Providers
+
+- **AWS:** Reported fire at a data center in Bahrain following an Iranian attack.
+- **Microsoft:** Committed **$1 billion to Thailand's AI future** and **$10 billion to AI and cybersecurity in Japan**. Remains a major CoreWeave customer.
+- **Google:** In talks with Poolside as a potential new partner for the Texas data center project after CoreWeave's exit. Launched **Gemma 4** open model family.
+- **Nvidia:** Revenue up 65% in fiscal 2026; stock up ~1,360% over 3.5 years. Market cap near $4.1 trillion. P/E ratio of 35. H100 GPU prices surged 40%. Nvidia is a major investor in both CoreWeave (12%+ stake) and Nebius ($2B stake).
+- **Iren:** Stock plunged **20% in 5 days**; Freedom Capital issued a Hold rating.
+- **Applied Digital (APLD):** Stock jumped on the restructured CoreWeave lease deal; Roth analyst called it a "Top Pick."
+- **Cloudflare:** Compared against CoreWeave for AI cloud upside potential.
+
+## Infrastructure Alternatives to CoreWeave
+
+Analysts highlighted **MasTec (MTZ)**, **Vertiv (VRT)**, and **nVent Electric (NVT)** as profitable AI infrastructure plays with sustainable business models, strong backlogs, and lower debt risk compared to CoreWeave's capital-intensive, debt-heavy model. Vertiv posted $10.2B full-year 2025 revenue with 26% organic growth; nVent generated $1B in data center sales (up 50% YoY).
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [Nebius Stock Jumped 15% on Its Meta Deal. Is This the Next CoreWeave -- or Something Better?](https://news.google.com/rss/articles/CBMimAFBVV95cUxQV3FSci1GbUtoTE5TdWtTdzRYNkVNX3lrbzA1emdNc0F6WnVJdjRKdmdna3dnaWs2WEFsWDAxbkhuRmNLOERjX3RxUFlCeGI4Z0piXzY1NUFqN09yTFR2b1NqcnVrRG9nYUcxQ2J1RzVqVDQyTzdnUzRTYWFLeGJINVIyblF0S3hvaDNDeTZIZy0yNmdNYUs4eg?oc=5) (The Motley Fool)
+- [Billionaire Philippe Laffont Sold CoreWeave and Bought This Artificial Intelligence (AI) Stock Instead](https://news.google.com/rss/articles/CBMirAFBVV95cUxOU0o5eEZucFh6UzRkNUVpM2R6U0lWNndFeVNCd3gzNXVqLWZUQ3QtX0ZROU42MGp3RmJaSmdvRjNkWHl1LUd5ejRsczF4UWVHWkduZEwyMVV4Tk4wYzEzalBvQy1IX0MySWtyM1RVcHRDY1NuN3VCR0pXVlRWNGdYZm1kX21pWFJ6S2x3b05pVWlpSmpRbm4yZ2lLS2VrRlJTRk5BX3hWOWtSZ0Ix?oc=5) (Yahoo Finance)
+- [Forget CoreWeave. 3 Profitable AI Stocks That Don't Burn $30B a Year](https://news.google.com/rss/articles/CBMirgFBVV95cUxNV0txVjJWYWk0R3JrTWtqVkRFZmlJWG13YnRyUXZCcUdLM3RaeUtiMEk0NTQwZG9RS0dQR2VtMlh5VXMtdkc2Y0NCbnpQempBMm9pR2IzeURqalhJNTlQamNRbWxBcmdoZ3hQYjBETnhuQTZUTTRqY0pPbVlmSXQtbnE3VjduanZFNmJvM0s1MS1sUzJ1ZzhjSU1ub1Q1SEFiMHY2dVY4bnJ5ajZMZXc?oc=5) (24/7 Wall St.)
+- [Poolside hunts data centre partners after CoreWeave deal falls through](https://news.google.com/rss/articles/CBMihAFBVV95cUxOQjBLVURHelVuRlByNExGelB1MzJZTXZwbVEzWG8yaEV4NDJMN0Etb251X3kxUlo2Wl84V1lycTU3bGVlYV80T1VqSnRqem9hZjVsMzAwUTBBRmlWN0tIX1hiUmdCY2JmdF84N0h6b1RwMHpNRkNFMFV2YUdwaVlkeGxzcGk?oc=5) (Financial Times)
+- [Applied Digital Stock Jumps As CoreWeave Lease Deal Locks In Massive Credit Support](https://news.google.com/rss/articles/CBMi0gFBVV95cUxQSl9uUDI1RXhpZlQ4LTlaYlljOU9fXzlZX0h5V3VWaUtfYnBVOWRIZ3hYUFpLQjNJN3Y5OWJENzV5NGMwVEFKSTlQb3NDWUhWTEVFUC1pUXgtdnNJOU5wck9SQXl5MWI2TlAyTW56WlJtT2ozWDVreTcxZ0VqbTRPaWdUbVFoSzQxWjZoV1hwMHlLODRoZ2tvYTViQ2d0cjhMYl9tbno3SDBLWGJfeGdiaHN5dWNsSEpsOUVTS1hfZEg5Mi04ZDNLR2hkc093dlZsWlE?oc=5) (Benzinga)
+- [Is It Too Early To Call CoreWeave (CRWV) Fully Priced After Its 62% One-Year Surge?](https://news.google.com/rss/articles/CBMimgFBVV95cUxOOUxSRkswTDJQcDJUY0V4dFBpWktmUmNFVFd3ZDRnN2RVbTZtT0oySHd5d2Q4dENEVmxQcVItYUVhMlRhTGlpdjRmV1JDdEwxVlRxZklYbkNJWlF1NW00UVhXSW1RRkNyUzZBT3owbHpUSEpRdmpuYmR2YVNKODE4SXJCM0hPal9xRGY4azZqMEY2OHZiOE00Q2pB?oc=5) (Yahoo Finance)
+- [Where Will CoreWeave Stock Be in 1 Year?](https://news.google.com/rss/articles/CBMiigFBVV95cUxPVncyd2JoN3lWbG5PMm5WMTNtUC1pVFktMHFFWWhZZzJ1RnBtSXdoakl1cFVuX0xpUVR3ZHBMbHNZSzNjdzdSRVk5MDdoNDkybVhmOGZJTzJaYVlPSGRsUmh6aXFhTjFiczhWQ1RaV2gxTVlxN0EzTmRGa1V5amdYcU84OW5GVWNzRHc?oc=5) (The Motley Fool)
+- [CoreWeave AI Cloud: 110% Revenue Growth Amid 2025 Losses](https://news.google.com/rss/articles/CBMijwFBVV95cUxNUlNwSlVTQjV0VUtFOUZpOVVOWWZpQUFRQmhoUjJMS01iVk5WLThKN1dTdU9oMTdDOEl0U2FidEgwSUJ5S2g0R0lTQVAtMTdBWDlQTFI4dFd2THhrd3lQVjk5ZHMzVkgwSUtIZy1TUzl5M3hVeUlRZjRDRlJyd0VMdy12bFphbnJsNHc0NFdNVQ?oc=5) (IndexBox)
+- [Stratos Wealth Partners LTD. Boosts Position in CoreWeave Inc.](https://news.google.com/rss/articles/CBMixAFBVV95cUxOWTBsd3ZjMmJxQzhTaS0tVncxWXlEM3hCUGMxNnNsdGRCNUhlR2F6cjM2UUE0UGJFQkVHdURITmQyeWI4bmEzT3AyRG9qN2E2Y2lkWkJvN0t1UVYxWERZdWVCeTQ2aE5zYm8zVElCZU5GOXJCQUgtbW0zME1ZZTZnMHdoUGtqNTc5Zmd3TjB3dkd5eTNvQ0lwTXJQNUtIalJ3ZFR0VC1EZFQzXzFNekpKRElvZ3lvdkx4VUhhY2Q0YTZyMGlI?oc=5) (MarketBeat)
+- [CoreWeave Ends 2 GW Texas Data Center Deal With Poolside](https://news.google.com/rss/articles/CBMigwFBVV95cUxPRWhVNzRyb2RaSFNwSGhlY0RwUEl0emxJYTlONkkzaldwcXNMaGNDQVgzeHo2UEFCNmVZU1JsVHZPeDRZTnN3U1l1UGZRTUJOSG5UR0JzcUZ0T1dnSkFBbkttLXl1Zk5QclNSRC1ReWpUS1VHVW9kZEktR2JycTlFdGhtdw?oc=5) (MLQ.ai)
+- [CoreWeave (CRWV) Receives a Hold from Barclays](https://news.google.com/rss/articles/CBMiyAFBVV95cUxQYXoyTXZBdGVHd1RCZ3RsMHZRT25OS0ZaRGZwTDFvMVVMQ2RpVmF6SXhGZDI3TG1VYmlHS0lMYTd3aFZ2b1M4dmhqTTUxOXVXeThuN1ZGTmZXbnhOWmJ0d1RRMHlrT2VQRkZWeWgyNXhGSE42YjhWUVdYTFhqbWpVNjFlYWE5R0cydnVEU3F

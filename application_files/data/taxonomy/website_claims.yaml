@@ -1,0 +1,60 @@
+# website_claims — derived from data/webscrape/facts/nebius.com_facts_20260322_230146.json
+# Use with: scripts/webscrape_site_facts.py ... --taxonomy website_claims
+#
+# The referenced fact export used three categorical dimensions plus a free-text field;
+# keys for the text varied (fact / content / claim). For new extractions, prefer one
+# consistent key (e.g. "statement") in your prompt or post-process to normalize.
+
+dimensions:
+  category:
+    values:
+      - product
+      - service
+      - solution
+      - support
+      - pricing
+      - metric
+      - compliance
+      - customer
+      - partnership
+      - person
+      - other
+
+  type:
+    values:
+      - name
+      - role
+      - amount
+      - quote
+
+  claim:
+    values:
+      - value
+
+  url:
+    values:
+      - page_url
+
+  site:
+    values:
+      - site_name
+
+  context:
+    values:
+      - description
+
+# Illustrative records (same enums as above). Text taken from the Nebius facts export.
+examples:
+  - category:metric
+    type:amount
+    claim:25 Gbps
+    url:https://nebius.com/...
+    site:https://nebius.com
+    context:"Infiniband offers 25 Gbps transfer speed"
+
+  - category:product
+    type:name
+    claim:Nebious Instatraining
+    url:https://nebius.com/...
+    site:https://nebius.com
+    context:"Nebius instatraining is a new product offering based on spot pricing"

@@ -1,0 +1,88 @@
+## Summary
+
+### Cloud Services & Major Provider Deals
+
+**AWS/Amazon** scored a major deal with **Meta**, which signed on to use millions of **AWS Graviton** ARM-based CPUs to power AI agent workloads (real-time reasoning, code generation, multi-step task coordination). This strategically pulls Meta's spending back toward AWS after Meta's prior $10B six-year deal with **Google Cloud** last August. Meta also uses **Microsoft Azure**. AWS timed the announcement to coincide with the end of **Google Cloud Next**. Separately, **Anthropic** committed $100B over 10 years to run workloads on AWS, focusing on Amazon's **Trainium** custom AI chips, while Amazon invested another $5B into Anthropic (totaling $13B).
+
+**Google** announced sweeping **Workspace** AI updates at Cloud Next, including "Workspace Intelligence" (an AI system drawing on Gmail, Calendar, Chat, Drive), Gemini-powered Google Sheets automation, and AI writing tools for Docs. Google also makes its own custom AI chips and unveiled new versions at the conference. Google is projected to spend $175B–$185B in capex, and is reportedly planning to invest up to **$40B in Anthropic**.
+
+**Microsoft** is offering voluntary redundancy to 7% of its US staff for the first time, amid shifts in its workforce as AI reshapes priorities.
+
+### AI Model Releases & Competition
+
+**DeepSeek** launched preview versions of **V4 Flash** (284B params) and **V4 Pro** (1.6T params — the largest open-weight model available), both mixture-of-experts models with 1M-token context windows. V4-Pro-Max claims to outperform OpenAI's GPT-5.2 and Gemini 3.0 Pro on some reasoning benchmarks and match GPT-5.4 in coding, though it trails GPT-5.4 and Gemini 3.1 Pro on knowledge tests by an estimated 3–6 months. DeepSeek is also targeting a **$20B valuation** to retain staff against poaching. **Cohere and Aleph Alpha** agreed a **$20B transatlantic AI tie-up**.
+
+**OpenAI** released **GPT-5.5**, described as its "smartest and most intuitive" model yet, advancing toward a "super app" combining ChatGPT, Codex, and AI browser. Co-founder Greg Brockman said it delivers more frontier AI for fewer tokens versus GPT-5.4.
+
+### Massive Capex & Infrastructure Spending
+
+**Tesla** raised its 2026 capex plan to **$25B** (3x prior years), driven by AI compute infrastructure, data centers, and robotics. Amazon projects **$200B** in 2026 capex across AI, chips, robotics, and satellites. AI and defense companies dominate US growth investment overall.
+
+### Hardware & GPU Crunch
+
+Apple's **M4 Mac mini** is sold out due to AI demand (running local models like OpenClaw), an industry-wide memory crunch, and planned refreshes — driving eBay markups of $100+ over retail. Astronomers' growing GPU needs (for NASA's Roman telescope, JWST, and Rubin Observatory data analysis) are adding to the **global GPU crunch**. **SK Hynix** (Nvidia supplier) reported another record quarter, citing a "structural shift" in AI-driven memory demand.
+
+### Acquisitions & Funding
+
+**SpaceX** (merged with xAI) preempted Cursor's $2B raise with a **$60B buyout option** (or $10B collaboration payment), bolstering Elon Musk's AI coding ambitions against Anthropic's Claude Code and OpenAI's Codex. **Sierra** (Bret Taylor's customer service AI startup, valued at $10B) acquired YC-backed French startup **Fragment**, its third acquisition. **Era** raised $11M to build a software platform powering next-gen AI gadgets. **Private equity** firms are courting OpenAI and Anthropic. The **UK** is in talks with Anthropic over Mythos access for banks. Anthropic also partnered with **Freshfields** to create legal AI tools.
+
+### Meta Workforce & AI Spending
+
+**Meta** plans to cut **10% of jobs** to "offset" Zuckerberg's massive AI spending.
+
+### Other Notable Developments
+
+- **X** launched Grok-powered Custom Timelines (75+ topics) while shutting down Communities; also exploring "super app" ambitions.
+- **Nothing** launched "Essential Voice," a system-level AI dictation tool supporting 100+ languages.
+- **Noscroll**, a new startup, offers an AI bot that doomscrolls X for you and texts relevant news.
+- The **White House** accused China of "industrial-scale" theft of AI technology, while a Republican senator warned of the "political cost" of supporting AI.
+- **Beehiiv** expanded beyond newsletters into webinars, AI podcast analytics, and metered paywalls.
+- A security chain-of-failures linked compliance startup **Delve** to breaches at Context AI and **Vercel**.
+- India's app market hit $300M in Q1 in-app purchases (+33% YoY), led partly by generative AI apps like ChatGPT.
+
+---
+
+### CONTENT SOURCE SUMMARY
+
+- [Marked-up Mac minis flood eBay amid shortages driven by AI](https://techcrunch.com/2026/04/24/mac-mini-price-expensive-ebay-shortage-ai-memory/) (TechCrunch)
+- [Uber CTO Praveen Neppalli Naga joins stacked StrictlyVC SF lineup for April 30 event](https://techcrunch.com/2026/04/24/uber-cto-praveen-neppalli-naga-joins-stacked-strictlyvc-sf-lineup-for-april-30-event/) (TechCrunch)
+- [Nothing introduces an AI-powered dictation tool](https://techcrunch.com/2026/04/24/nothing-introduces-an-ai-powered-dictation-tool/) (TechCrunch)
+- [DeepSeek previews new AI model that 'closes the gap' with frontier models](https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/) (TechCrunch)
+- [In another wild turn for AI chips, Meta signs deal for millions of Amazon AI CPUs](https://techcrunch.com/2026/04/24/in-another-wild-turn-for-ai-chips-meta-signs-deal-for-millions-of-amazon-ai-cpus/) (TechCrunch)
+- [Bret Taylor's Sierra buys YC-backed AI startup Fragment](https://techcrunch.com/2026/04/23/bret-taylors-sierra-buys-yc-backed-ai-startup-fragment/) (TechCrunch)
+- [Meet Noscroll, an AI bot that does your doomscrolling for you](https://techcrunch.com/2026/04/23/meet-noscroll-an-ai-bot-that-does-your-doomscrolling-for-you/) (TechCrunch)
+- [OpenAI releases GPT-5.5, bringing company one step closer to an AI 'super app'](https://techcrunch.com/2026/04/23/openai-chatgpt-gpt-5-5-ai-model-superapp/) (TechCrunch)
+- [Era raises $11M to build a software platform for AI gadgets](https://techcrunch.com/2026/04/23/era-computer-raises-11m-to-build-a-software-platform-for-ai-gadgets/) (TechCrunch)
+- [Grab a ticket today: The first StrictlyVC of 2026 kicks off in just a week in San Francisco](https://techcrunch.com/2026/04/23/grab-a-ticket-today-the-first-strictlyvc-of-2026-kicks-off-in-just-a-week-in-san-francisco/) (TechCrunch)
+- [Another customer of troubled startup Delve suffered a big security incident](https://techcrunch.com/2026/04/23/another-customer-of-troubled-startup-delve-suffered-a-big-security-incident/) (TechCrunch)
+- [AI galaxy hunters are adding to the global GPU crunch](https://techcrunch.com/2026/04/23/ai-galaxy-hunters-are-adding-to-the-global-gpu-crunch/) (TechCrunch)
+- [Beehiiv rolls out new creator tools, including webinars and customizable paywalls](https://techcrunch.com/2026/04/23/beehiiv-rolls-out-new-creator-tools-including-webinars-and-customizable-paywalls/) (TechCrunch)
+- [India's app market is booming — but global platforms are capturing most of the gains](https://techcrunch.com/2026/04/22/indias-app-market-is-booming-but-global-platforms-are-capturing-most-of-the-gains/) (TechCrunch)
+- [Tesla just increased its spending plan to $25B — here's where the money is going](https://techcrunch.com/2026/04/22/tesla-just-increased-its-capex-to-25b-heres-where-the-money-is-going/) (TechCrunch)
+- [Google updates Workspace to make AI your new office intern](https://techcrunch.com/2026/04/22/google-updates-workspace-to-make-ai-your-new-office-intern/) (TechCrunch)
+- [Hands on with X's new AI-powered custom feeds](https://techcrunch.com/2026/04/22/hands-on-with-xs-new-ai-powered-custom-feeds/) (TechCrunch)
+- [How SpaceX preempted a $2B fundraise with a $60B buyout offer](https://techcrunch.com/2026/04/22/how-spacex-preempted-a-2b-fundraise-with-a-60b-buyout-offer/) (TechCrunch)
+- [Google to invest up to $40bn in Anthropic](https://www.ft.com/content/366c73dd-4006-4ce6-9816-5004447d30b8) (Financial Times)
+- [White House accuses China of 'industrial-scale' theft of AI technology](https://www.ft.com/content/abde4e1e-c69a-4cc4-ad96-d88308314298) (Financial Times)
+- [The companies thriving in turbulent times for IT and software](https://www.ft.com/content/44729a26-8615-4371-8830-7d135f7e1a86) (Financial Times)
+- [AI and defence companies dominate US growth investment](https://www.ft.com/content/c65bae99-5ea7-49c4-81a7-e119ca745174) (Financial Times)
+- [Cohere and Aleph Alpha agree $20bn transatlantic AI tie-up](https://www.ft.com/content/4492c0d6-855b-4164-9ae5-f4d855a95f1e) (Financial Times)
+- [Consumers turn to AI for investment decisions](https://www.ft.com/content/b4144509-b1f3-4b28-b6b0-5a463462c3dd) (Financial Times)
+- [China's own Mythos is coming — America must prepare](https://www.ft.com/content/ea8c8161-5b86-409b-93cf-5e778300d87e) (Financial Times)
+- [UK in talks with Anthropic over Mythos access for banks](https://www.ft.com/content/fe563a8e-e269-4a6b-a577-8ed16a805a7b) (Financial Times)
+- [Meta to cut 10% of jobs to 'offset' Zuckerberg's AI spending](https://www.ft.com/content/fe875f6c-f45c-4dbd-9d18-168d1fdbfd5f) (Financial Times)
+- [Microsoft to offer 7% of US staff voluntary redundancy for the first time](https://www.ft.com/content/f5776fd6-22f3-43d1-806b-9858b64cfd18) (Financial Times)
+- [What does AI really mean for your work? You asked, we answered](https://www.ft.com/content/0a1cd640-abb9-4b6e-9576-307768f80933) (Financial Times)
+- [Will AI widen inequality between workers?](https://www.ft.com/content/81d56337-1f9c-4378-bfcc-4a4caf5b9b25) (Financial Times)
+- [Anthropic and Freshfields agree deal to create legal AI tools](https://www.ft.com/content/99c6303e-f8d0-441e-b869-6d9496874b64) (Financial Times)
+- [Can the carbon removals market keep pace with the AI boom?](https://www.ft.com/content/790585d4-30e7-4acb-acf2-44965042e6e8) (Financial Times)
+- [DeepSeek targets $20bn valuation to stop poaching of staff](https://www.ft.com/content/f7c65d8e-aed1-4767-9ea3-9715cb8a24e0) (Financial Times)
+- [Private equity courts OpenAI and Anthropic](https://www.ft.com/content/693d3077-7416-4bb7-8826-31e4692db4d2) (Financial Times)
+- [Quant pioneer Martin Lueck warns against handing over trading to AI](https://www.ft.com/content/48afd7b9-43b7-4776-8b65-7f5bb2f97c3a) (Financial Times)
+- [Republican US senator warns of 'political cost' for supporting AI](https://www.ft.com/content/3fd0a5d9-99cd-41a1-af79-7987c73d9fd3) (Financial Times)
+- [High earners race ahead on AI as workplace divide widens](https://www.ft.com/content/0873e3cb-cb02-4b47-941f-14da74149670) (Financial Times)
+- [The AI digital divide](https://www.ft.com/content/f3e8765e-2947-4f48-8aca-2b069f2aeaf8) (Financial Times)
+- [Nvidia supplier SK Hynix hails 'structural shift' after another record quarter](https://www.ft.com/content/eea7a8dd-9fe1-44c2-8848-e0730e02c6d5) (Financial Times)
+- [Tesla boosts spending plans to $25bn as Musk doubles down on AI bet](https://www.ft.com/content/7ce83108-9f2d-48b4-8ce1-28865045bd67) (Financial Times)
+- [Builder.ai founder Sachin Dev Duggal accused of receiving siphoned funds](https://www.ft.com/content/ea32d3f2-2cc2-44a6-9bed-db0f783df9bc) (Financial Times)
+- [AI should not drive today's interest rate decisions](https://www.ft.com/content/8a921fda-8e13-4f75-84a1-c43c3ce24136) (Financial Times)

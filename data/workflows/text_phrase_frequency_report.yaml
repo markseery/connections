@@ -1,0 +1,162 @@
+# Run phrase frequency analysis across all .md files in a directory,
+# then collate every result into one JSON report.
+#
+# CLI:
+#   python3 scripts/workflow_run.py data/workflows/text_phrase_frequency_report.yaml \
+#     --local --set dir=data/webscrape/sites
+#
+# Submit:
+#   POST /workflows/submit
+#   {
+#     "config": "text_phrase_frequency_report.yaml",
+#     "vars": { "dir": "data/webscrape/sites" }
+#   }
+
+id: text_phrase_frequency_report
+description: Phrase frequency analysis for every .md in {dir} → collated JSON report.
+
+vars:
+  dir: data/webscrape/sites
+  top: "5"
+
+steps:
+  - id: run_all
+    type: subprocess
+    timeout: 7200
+    command:
+      - python3
+      - "-c"
+      - |
+        import json, subprocess, sys
+        from pathlib import Path
+
+        site_dir = Path(sys.argv[1])
+        top = sys.argv[2]
+        files = sorted(site_dir.glob("*.md"))
+        if not files:
+            print(json.dumps({"error": f"No .md files in {site_dir}"}))
+            sys.exit(1)
+
+        report = {}
+        for f in files:
+            print(f">>> Analyzing {f.name} ...", flush=True)
+            proc = subprocess.run(
+                [
+                    sys.executable, "scripts/workflow_run.py",
+                    "data/workflows/text_phrase_frequency.yaml",
+                    "--local",
+                    "--set", f"file={f}",
+                    "--set", f"top={top}",
+                ],
+                capture_output=True, text=True, timeout=600,
+            )
+            if proc.returncode != 0:
+                print(f"    FAILED (exit {proc.returncode})", flush=True)
+                report[f.stem] = {"error": proc.stderr.strip() or proc.stdout.strip()}
+                continue
+
+            output = proc.stdout
+            marker = "--- final_output ---"
+            idx = output.find(marker)
+            if idx >= 0:
+                output = output[idx + len(marker):]
+
+            try:
+                report[f.stem] = json.loads(output.strip())
+            except json.JSONDecodeError:
+                report[f.stem] = {"raw": output.strip()}
+            print(f"    OK", flush=True)
+
+        out_dir = Path("data/webscrape/analysis")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{site_dir.name}_phrase_frequency_report.json"
+        out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"\nSaved collated report to {out_path}")
+        print(f"Sites analyzed: {len(report)}")
+      - "{dir}"
+      - "{top}"
+
+  - id: to_csv
+    type: subprocess
+    depends_on: [run_all]
+    command:
+      - python3
+      - "-c"
+      - |
+        import ast, csv, json, re, sys
+        from pathlib import Path
+
+        site_dir_name = Path(sys.argv[1]).name
+        top = int(sys.argv[2])
+        json_path = Path("data/webscrape/analysis") / f"{site_dir_name}_phrase_frequency_report.json"
+        report = json.loads(json_path.read_text(encoding="utf-8"))
+
+        def parse_company(entry):
+            """Extract the n-word phrase dicts from whatever shape the entry arrived in."""
+            if not isinstance(entry, dict):
+                return {}
+            src = entry
+            if "raw" in entry and isinstance(entry["raw"], str):
+                raw = entry["raw"]
+                brace_start = raw.find("{")
+                brace_end = raw.rfind("}")
+                if brace_start >= 0 and brace_end > brace_start:
+                    try:
+                        src = json.loads(raw[brace_start:brace_end + 1])
+                    except json.JSONDecodeError:
+                        return {}
+            result = {}
+            for key, val in src.items():
+                if not re.match(r"^\d+-word phrases$", key):
+                    continue
+                if isinstance(val, list):
+                    result[key] = val
+                elif isinstance(val, str):
+                    try:
+                        parsed = ast.literal_eval(val)
+                        if isinstance(parsed, list):
+                            result[key] = parsed
+                    except Exception:
+                        pass
+            return result
+
+        parsed = {}
+        for co, entry in report.items():
+            p = parse_company(entry)
+            if p:
+                parsed[co] = p
+
+        companies = sorted(parsed.keys())
+        if not companies:
+            print("No successful analyses to flatten.")
+            sys.exit(1)
+
+        ngram_keys = set()
+        for co in companies:
+            ngram_keys.update(parsed[co].keys())
+        ngram_sizes = sorted(int(k.split("-")[0]) for k in ngram_keys)
+
+        out_dir = json_path.parent
+
+        def write_csv(path, extractor):
+            with open(path, "w", newline="", encoding="utf-8") as f:
+                w = csv.writer(f)
+                w.writerow(["num_of_words"] + companies)
+                for n in ngram_sizes:
+                    key = f"{n}-word phrases"
+                    row = [n]
+                    for co in companies:
+                        items = parsed[co].get(key, [])
+                        vals = [extractor(it) for it in items[:top]]
+                        row.append("; ".join(str(v) for v in vals))
+                    w.writerow(row)
+
+        phrases_path = out_dir / f"{site_dir_name}_phrase_frequency_phrases.csv"
+        write_csv(phrases_path, lambda it: it.get("phrase", "") if isinstance(it, dict) else str(it))
+        print(f"Saved {phrases_path}")
+
+        counts_path = out_dir / f"{site_dir_name}_phrase_frequency_counts.csv"
+        write_csv(counts_path, lambda it: it.get("count", 0) if isinstance(it, dict) else str(it))
+        print(f"Saved {counts_path}")
+      - "{dir}"
+      - "{top}"

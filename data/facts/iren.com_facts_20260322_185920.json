@@ -1,0 +1,210 @@
+{
+  "facts": [
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Mackenzie data center located in British Columbia, Canada with 80 MW capacity and 11 acres"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Sweetwater data center located in Texas, USA with 2,000 MW capacity and over 1,800 acres, currently under construction"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Canal Flats data center located in British Columbia, Canada with 30 MW capacity and 10 acres"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Childress data center located in Texas, USA with 750 MW capacity and 576 acres"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Prince George data center located in British Columbia, Canada with 50 MW capacity and 12 acres"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "Oklahoma data center located in Oklahoma, USA with 1,600 MW capacity and 2,000 acres, currently in development"
+    },
+    {
+      "category": "location",
+      "type": "data_center",
+      "fact": "IREN operates 6 data center locations across North America"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "IREN has secured over 4.5 GW of power across all locations"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Total operational power capacity of 810 MW"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Total power capacity under construction of 2,100 MW"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Total power capacity in development of 1,600 MW"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Data centers powered by 100% renewable energy from clean or renewable sources or through the purchase of RECs"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Data centers are grid-connected for continuous and reliable service"
+    },
+    {
+      "category": "real_estate",
+      "type": "land",
+      "fact": "Total land area across all IREN locations is 4,500 acres"
+    },
+    {
+      "category": "offering",
+      "type": "GPUs",
+      "fact": "AI Cloud solution built on NVIDIA reference architecture designed for demanding AI training and inference workloads"
+    },
+    {
+      "category": "offering",
+      "type": "solution",
+      "fact": "Colocation service providing turnkey data center solutions for infrastructure needs"
+    },
+    {
+      "category": "offering",
+      "type": "solution",
+      "fact": "Build-To-Suit offering providing custom-built data centers designed to exact specifications"
+    },
+    {
+      "category": "offering",
+      "type": "customer_support",
+      "fact": "24/7 onsite customer support team available to respond anytime for critical workloads"
+    },
+    {
+      "category": "offering",
+      "type": "product",
+      "fact": "Vertical integration infrastructure providing greater flexibility, operational efficiency and reliability"
+    },
+    {
+      "category": "community",
+      "type": "other",
+      "fact": "Community Grants program focused on putting ESG features front and center"
+    },
+    {
+      "category": "governance",
+      "type": "policy",
+      "fact": "Supplier Code of Conduct governing supplier relationships"
+    },
+    {
+      "category": "governance",
+      "type": "policy",
+      "fact": "Modern Slavery Statement addressing ethical labor practices"
+    },
+    {
+      "category": "governance",
+      "type": "policy",
+      "fact": "Privacy Policy governing data protection and privacy practices"
+    },
+    {
+      "category": "governance",
+      "type": "policy",
+      "fact": "Terms of Use governing website and service usage"
+    },
+    {
+      "category": "governance",
+      "type": "policy",
+      "fact": "Cookies Notice regarding website cookie usage"
+    },
+    {
+      "category": "other",
+      "type": "other",
+      "fact": "GPU Cloud Buyer's Guide resource available covering cost, networking, SLAs, and scaling"
+    },
+    {
+      "category": "other",
+      "type": "other",
+      "fact": "Investor Hub providing access to presentations, news, reports, SEC filings, stock analyst information and governance details"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "IREN has secured over 4.5 GW of power across 6 North American locations"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "810 MW of data center capacity is currently operational"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "2,100 MW of data center capacity is currently under construction"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "1,600 MW of data center capacity is currently in development"
+    },
+    {
+      "category": "energy",
+      "type": "power",
+      "fact": "Data centers are powered by 100% renewable energy from clean or renewable sources or through the purchase of RECs"
+    },
+    {
+      "category": "real_estate",
+      "type": "land",
+      "fact": "Total secured land area across all IREN locations is 4,500 acres"
+    },
+    {
+      "category": "offering",
+      "type": "solution",
+      "fact": "AI Cloud solution built on NVIDIA reference architecture for demanding AI training and inference workloads"
+    },
+    {
+      "category": "offering",
+      "type": "solution",
+      "fact": "Turnkey colocation data center solutions for infrastructure needs"
+    },
+    {
+      "category": "offering",
+      "type": "solution",
+      "fact": "Build-To-Suit custom-built data centers designed to exact client specifications"
+    },
+    {
+      "category": "offering",
+      "type": "customer_support",
+      "fact": "24/7 onsite customer support team available for critical workloads"
+    },
+    {
+      "category": "community",
+      "type": "other",
+      "fact": "Community Grants program focuses on putting ESG features front and center"
+    },
+    {
+      "category": "compliance",
+      "type": "policy",
+      "fact": "Modern Slavery Statement published as part of compliance framework"
+    },
+    {
+      "category": "compliance",
+      "type": "policy",
+      "fact": "Supplier Code of Conduct governs partner relationships"
+    },
+    {
+      "category": "governance",
+      "type": "other",
+      "fact": "Investor Hub provides access to presentations, SEC filings, stock information and governance documents"
+    }
+  ],
+  "count": 41
+}

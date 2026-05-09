@@ -1,0 +1,214 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Services & AI Infrastructure News — Late April 2026</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f7;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f7;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+
+<!-- Header -->
+<tr>
+<td style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);padding:40px 40px 32px 40px;">
+<h1 style="margin:0 0 8px 0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">Cloud Services &amp; AI Infrastructure News</h1>
+<p style="margin:0;font-size:14px;color:#94a3b8;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;">Late April 2026 Summary</p>
+</td>
+</tr>
+
+<!-- CoreWeave Section -->
+<tr>
+<td style="padding:36px 40px 0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:4px solid #3b82f6;padding-left:16px;">
+<h2 style="margin:0 0 4px 0;font-size:21px;font-weight:700;color:#0f172a;">CoreWeave Dominates Headlines</h2>
+<p style="margin:0;font-size:13px;color:#64748b;font-weight:600;letter-spacing:0.3px;">CRWV</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:20px 40px 0 40px;">
+<p style="margin:0 0 16px 0;font-size:15px;line-height:1.7;color:#334155;"><strong>CoreWeave (CRWV)</strong> is at the center of a wave of AI infrastructure deal-making and intense investor scrutiny.</p>
+
+<!-- Major Contracts -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Major Contracts</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">CoreWeave expanded its deal with <strong>Meta</strong> to <strong>$21 billion</strong> (up from $14.2B), signed a <strong>$6 billion AI cloud agreement with Jane Street</strong>, and entered a <strong>multi-year agreement with Anthropic</strong> to power its Claude AI models. With Anthropic onboard, CoreWeave now serves 9 of the top 10 AI model providers (only xAI excluded). Analyst estimates suggest its operational backlog could reach <strong>$100 billion by Q2 2026</strong>.</p>
+</td>
+</tr>
+</table>
+
+<!-- Debt & Capital Raising -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Debt &amp; Capital Raising</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">CoreWeave announced a <strong>$1 billion offering of 9.75% senior notes due 2031</strong> and raised <strong>$3 billion in fresh debt</strong> to fund aggressive data center expansion. Concerns persist about a &ldquo;capex treadmill&rdquo; &mdash; the need to continuously reinvest in next-gen NVIDIA GPUs &mdash; and whether distributable cash flow will remain elusive despite GAAP profits.</p>
+</td>
+</tr>
+</table>
+
+<!-- Stock Volatility -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Stock Volatility</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">After falling over 60% from highs, CRWV surged <strong>61% from late-March lows</strong> and gained <strong>~70% in April</strong>, driven by mega-deals and analyst upgrades (price targets of $125–$156). However, on April 28, CoreWeave, <strong>Oracle</strong>, and <strong>AMD</strong> shares sank after a report that <strong>OpenAI missed its sales and user growth targets</strong>, sparking a broader AI stock selloff.</p>
+</td>
+</tr>
+</table>
+
+<!-- Valuation Debate -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Valuation Debate</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">The stock trades around $112 with analyst targets near $127. The most-followed community narrative values CoreWeave at just <strong>$70 (60% overvalued)</strong>, citing capital intensity and hardware aging risks. Revenue grew <strong>110% YoY in Q4</strong> with a <strong>342% YoY backlog increase</strong>. CoreWeave reports Q1 2026 results on <strong>May 7</strong>.</p>
+</td>
+</tr>
+</table>
+
+<!-- Insider Activity -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Insider Activity</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">Insider selling was noted alongside the stock&rsquo;s spike, and <strong>Calamos Advisors</strong> invested $716K while <strong>Renaissance Capital</strong> holds CRWV as its 3rd-largest position.</p>
+</td>
+</tr>
+</table>
+
+<!-- Platform & Products -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;background-color:#f8fafc;border-radius:8px;">
+<tr>
+<td style="padding:18px 20px;">
+<p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:0.5px;">Platform &amp; Products</p>
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">CoreWeave highlighted its <strong>Mission Control operating system</strong>, <strong>cross-cloud AI capabilities</strong>, dual <strong>Platinum ClusterMAX&trade; ratings</strong> from SemiAnalysis, and MLPerf benchmarking leadership. CEO Michael Intrator published a 2025 shareholder letter emphasizing the company&rsquo;s AI-native cloud platform.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<div style="border-top:1px solid #e2e8f0;"></div>
+</td>
+</tr>
+
+<!-- Nebius Group -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:4px solid #8b5cf6;padding-left:16px;">
+<h2 style="margin:0 0 4px 0;font-size:21px;font-weight:700;color:#0f172a;">Nebius Group</h2>
+<p style="margin:0;font-size:13px;color:#64748b;font-weight:600;letter-spacing:0.3px;">NBIS</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:16px 40px 0 40px;">
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;"><strong>Nebius (NBIS)</strong> is in active talks to <strong>acquire Israeli AI firm AI21 Labs</strong> (after Nvidia exited earlier negotiations), which would add large language model and enterprise AI software to its GPU infrastructure stack. Nebius is also expanding data center capacity through new contracts with <strong>CoreWeave</strong> and has reserved NVIDIA clusters via <strong>TD SYNNEX</strong>. Shares are up <strong>61% YTD</strong> and ~7x over the past year ($144.96). Analysts note Nebius is positioning against <strong>AWS, Microsoft Azure, and Google Cloud</strong> but faces funding and execution risks from simultaneous acquisitions and infrastructure buildouts.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<div style="border-top:1px solid #e2e8f0;"></div>
+</td>
+</tr>
+
+<!-- Galaxy Digital -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:4px solid #10b981;padding-left:16px;">
+<h2 style="margin:0 0 4px 0;font-size:21px;font-weight:700;color:#0f172a;">Galaxy Digital</h2>
+<p style="margin:0;font-size:13px;color:#64748b;font-weight:600;letter-spacing:0.3px;">GLXY</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:16px 40px 0 40px;">
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;"><strong>Galaxy Digital (GLXY)</strong> narrowed its <strong>Q1 net loss to $216 million</strong> and delivered its <strong>first data center hall at the Helios campus in Texas to CoreWeave</strong>, marking the start of revenue under a long-term AI workload lease. The Helios facility targets <strong>133 MW by end of Q2</strong> and has secured approval to expand total power capacity to over <strong>1.6 GW</strong> &mdash; signaling a major strategic pivot from bitcoin mining to AI infrastructure.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<div style="border-top:1px solid #e2e8f0;"></div>
+</td>
+</tr>
+
+<!-- Hyperscalers -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:4px solid #f59e0b;padding-left:16px;">
+<h2 style="margin:0;font-size:21px;font-weight:700;color:#0f172a;">Hyperscalers (AWS, Azure, Google)</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:16px 40px 0 40px;">
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;"><strong>Meta</strong> continues to ramp AI spending both internally (a <strong>$10 billion Texas data center</strong>) and externally through CoreWeave. <strong>Microsoft</strong> and <strong>Google</strong> are also named as CoreWeave clients. The broader narrative is that hyperscalers &mdash; while building their own facilities &mdash; still need third-party capacity from neoclouds like CoreWeave to meet surging AI compute demand.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<div style="border-top:1px solid #e2e8f0;"></div>
+</td>
+</tr>
+
+<!-- OpenAI Growth Concerns -->
+<tr>
+<td style="padding:28px 40px 0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="border-left:4px solid #ef4444;padding-left:16px;">
+<h2 style="margin:0;font-size:21px;font-weight:700;color:#0f172a;">OpenAI Growth Concerns</h2>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding:16px 40px 0 40px;">
+<p style="margin:0;font-size:14px;line-height:1.7;color:#334155;">A report that <strong>OpenAI missed sales and user targets</strong> triggered a selloff across AI infrastructure stocks on April 28, hitting Oracle, CoreWeave, and AMD hardest and raising questions about the sustainability of AI demand growth that underpins massive infrastructure investments.</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 40px 0 40px;">
+<div style="border-top:2px solid #e2e8f0;"></div>
+</td>
+</tr>
+
+<!-- Sources -->
+<tr>
+<td style="padding:28px 40px 36px 40px;">
+<h3 style="margin:0

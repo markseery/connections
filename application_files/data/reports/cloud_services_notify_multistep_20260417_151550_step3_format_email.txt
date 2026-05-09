@@ -1,0 +1,197 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Industry Brief</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:40px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f0f0f;padding:36px 40px;">
+<h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI Industry Brief</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#999999;letter-spacing:0.3px;">Today's top developments in artificial intelligence</p>
+</td>
+</tr>
+
+<!-- AI Products & Platform Competition -->
+<tr>
+<td style="padding:36px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 1</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">AI Products &amp; Platform Competition</h2>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Anthropic</strong> launched <strong>Claude Design</strong>, an experimental visual creation tool powered by <strong>Claude Opus 4.7</strong>, aimed at non-designers (founders, PMs) who need to quickly prototype slides, one-pagers, and app mockups. Outputs can be exported to Canva, PDF, PPTX, or URLs. The tool reads a company's codebase and design files to enforce brand consistency. This move prompted Anthropic CPO <strong>Mike Krieger</strong> to resign from <strong>Figma's</strong> board due to competitive conflicts — fueling "SaaSpocalypse" fears that major AI labs will displace established SaaS companies. Anthropic is reportedly turning away investors wanting to buy in at an <strong>$800 billion</strong> valuation. Separately, Anthropic is in talks to give the <strong>US government</strong> access to its <strong>Mythos</strong> model, and a UK minister warned that British companies "should be worried" about Anthropic's latest capabilities. CEO <strong>Dario Amodei</strong> stated he doesn't want AI "turned on our own people."
+</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>OpenAI</strong> revamped <strong>Codex</strong> with the ability to run background agents on a user's Mac — opening apps, clicking, and typing in parallel without interrupting the user's work — directly competing with Anthropic's Claude Code desktop control features. OpenAI also updated its <strong>Agents SDK</strong> with sandboxing, in-distribution harnesses for frontier models, enabling enterprises to build safer, long-horizon agents. Separately, OpenAI released a <strong>cybersecurity model</strong> to a limited customer group. Meanwhile, <strong>OpenAI investors are questioning its $852 billion valuation</strong> as its strategy shifts.
+</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Google</strong> rolled out a side-by-side web browsing experience within <strong>AI Mode</strong> on Chrome, letting users click links that open alongside the AI conversation for follow-up questions. Google also introduced cross-tab search in AI Mode. On enforcement, Google blocked a record <strong>8.3 billion ads</strong> in 2025 using <strong>Gemini</strong> models, catching 99%+ of violating ads before display, though it suspended fewer advertiser accounts — signaling a shift toward blocking bad ads rather than banning bad actors.
+</p>
+
+<p style="margin:0 0 4px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Canva</strong> upgraded its AI assistant to act as an agentic design tool that calls various internal tools based on text prompts, creating layered, editable designs. COO Cliff Obrecht emphasized Canva works well with Anthropic, Google, and OpenAI as the "final mile" for editing and publishing.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- AI Coding & Enterprise Tools -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 2</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">AI Coding &amp; Enterprise Tools</h2>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Factory</strong>, an AI coding agent startup for enterprise engineering teams, raised <strong>$150M at a $1.5B valuation</strong> led by Khosla Ventures (with Sequoia, Insight, and Blackstone). Its differentiator is switching between foundation models (e.g., Claude, DeepSeek). Customers include Morgan Stanley, EY, and Palo Alto Networks. The broader AI coding race remains intense among Anthropic (Claude Code), Cursor, Cognition, and OpenAI (Codex).
+</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Hightouch</strong> reached <strong>$100M ARR</strong>, with $70M added in the 20 months since launching AI-powered marketing content creation for brands like Domino's, Spotify, and PetSmart — enabling marketers to generate on-brand assets without design teams.
+</p>
+
+<p style="margin:0 0 4px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>InsightFinder AI</strong> raised <strong>$15M Series B</strong> for AI agent observability — monitoring AI models, data, and infrastructure together to diagnose issues like model drift caused by infrastructure problems (e.g., outdated server cache).
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- AI Infrastructure & Data Centers -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 3</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">AI Infrastructure &amp; Data Centers</h2>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Data centre delays threaten to choke AI expansion</strong>, per the FT, highlighting infrastructure bottlenecks. <strong>Maine became the first US state to pass a data centre construction ban.</strong> <strong>Allbirds</strong> (the shoe company) is pivoting to become an <strong>AI compute provider</strong> — emblematic of the gold-rush dynamics in GPU/cloud infrastructure.
+</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Upscale AI</strong>, an AI infrastructure startup focused on custom chips and full-stack solutions, is reportedly in talks to raise <strong>$180–200M at a ~$2B valuation</strong> — its third round in seven months despite having no released product. Investors include Tiger Global and Premji Invest.
+</p>
+
+<p style="margin:0 0 4px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Meta</strong> raised prices on <strong>Quest 3 and Quest 3S</strong> headsets ($50–$100 increases) due to the global <strong>RAM/memory chip shortage</strong>, joining Samsung, Microsoft, and Sony in passing component costs to consumers.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- AI in Media & Content -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 4</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">AI in Media &amp; Content</h2>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Runway</strong> CEO Cristóbal Valenzuela suggested Hollywood should use AI to produce <strong>50 films</strong> with a $100M budget instead of one blockbuster — framing filmmaking as a "quantity problem." <strong>Luma AI</strong> launched <strong>Innovative Dreams</strong>, an AI production company with Wonder Project, debuting "The Old Stories: Moses" (starring Ben Kingsley) on <strong>Amazon Prime Video</strong>.
+</p>
+
+<p style="margin:0 0 4px;font-size:15px;line-height:1.7;color:#333333;">
+AI-referred traffic to US retailers rose <strong>393% in Q1 2026</strong> year-over-year (per Adobe), with AI visitors now converting <strong>42% better</strong> than regular customers — a reversal from a year earlier.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- Robotics & Physical AI -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 5</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">Robotics &amp; Physical AI</h2>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Physical Intelligence</strong> published research on its <strong>π0.7</strong> model, which demonstrates <strong>compositional generalization</strong> — robots combining previously learned skills to handle novel tasks (e.g., using an air fryer seen only twice in training data), suggesting robotic AI may be approaching an LLM-like scaling inflection point.
+</p>
+
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Antioch</strong> raised <strong>$8.5M seed</strong> at a $60M valuation to build simulation tools closing the "sim-to-real gap" for robot developers.
+</p>
+
+<p style="margin:0 0 4px;font-size:15px;line-height:1.7;color:#333333;">
+<strong>Roblox</strong> enhanced its AI Assistant with agentic <strong>Planning Mode</strong>, plus new mesh and procedural model generation tools to help developers plan, build, and test games collaboratively.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:28px 40px 0;">
+<div style="border-top:1px solid #e5e7eb;"></div>
+</td>
+</tr>
+
+<!-- Other Notable Developments -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280;">Section 6</p>
+<h2 style="margin:0 0 20px;font-size:21px;font-weight:700;color:#111111;letter-spacing:-0.3px;">Other Notable Developments</h2>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• <strong>DeepL</strong> launched a <strong>voice-to-voice translation</strong> suite with Zoom/Microsoft Teams integrations and a developer API.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• <strong>Crypto and AI PACs</strong> raised <strong>$250M</strong> ahead of US midterm elections; Big Tech's <strong>$300M election war chest</strong> is rattling Democrats.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• <strong>China's chip tool imports from Southeast Asia are surging</strong>, potentially circumventing export controls.
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• China is probing <strong>Meta's $2B Manus deal</strong> as "conspiratorial."
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• The FT explored AI agent reliability concerns, AI regulation skepticism, AI's public image problem, and whether AI "wants to be free."
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 12px 0;font-size:15px;line-height:1.7;color:#333333;">
+• <strong>a16z's Martin Casado</strong> argued it's "not that hard to build AI models."
+</td>
+</tr>
+<tr>
+<td style="padding:0 0 4px 0;font-size:15px;line-height:1.7;color:#333333;">
+• The

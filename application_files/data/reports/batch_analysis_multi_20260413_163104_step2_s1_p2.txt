@@ -1,0 +1,41 @@
+exit_code: 0
+
+Profile: Marketing – Factual & Quantitative (5 topics)
+  Storage: namespace=webscrape, key_separator='\x00'
+  Extract concrete, verifiable facts from a company's website: corporate details, infrastructure specs, customer names, product listings, and quantitative claims.
+  Workers: 6 healthy, 6 idle, selected: http://127.0.0.1:7033 (active=0)
+
+Requesting batch plan from recommender skill ...
+Model: claude-opus-4-6 (1,000,000 token context window, source: probe)
+Content budget per batch: 2,797,732 chars (80% of 1,000,000 tokens × 3.5 chars/token – 2,268 prompt overhead)
+
+Fetching page content (103 pages) ...
+  Retrieved 103 pages.
+
+============================================================
+  Pages: 103 with content (461,758 total chars)
+  Batches: 1 (adaptively sized to ~2,797,732 chars each)
+  Phase 1: 1 AI calls (1 multi-topic call per batch)
+  Phase 2: up to 5 synthesis calls
+  Total AI calls: ~6 (vs ~10 with single-topic approach)
+  AI profile: agent
+============================================================
+
+── Batch 1/1 (pages 1–103/103, 461,758 chars) [elapsed 0s] ──
+  Sending 462,466 chars with 5 topics in one call ...
+  5/5 topics had findings | AI call: 51.4s | batch: 51s | avg 51s/batch | ETA phase 1: ~0s
+
+============================================================
+Phase 1 complete: 1 batches, 103 pages in 51s
+  5/5 topics have findings
+  0 topics need multi-batch synthesis
+============================================================
+  [1/5] Number of data centers, their locations, GPUs, and power capacity — single batch, no synthesis needed
+  [2/5] Active and contracted megawatts, terawatts, and other measures of power — single batch, no synthesis needed
+  [3/5] Installed, active and future number of GPUs — single batch, no synthesis needed
+  [4/5] Teraflops and exaflops — single batch, no synthesis needed
+  [5/5] Other Capacity and Performance — single batch, no synthesis needed
+
+Report written to application_files/data/reports/operational_metrics/iren.md
+
+Done. Phase 1: 51s (1 AI calls) | Phase 2: 0s (0 AI calls) | Total: 51s (1 AI calls)

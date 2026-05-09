@@ -1,0 +1,49 @@
+## Summary: CoreWeave and the AI Cloud Infrastructure Buildout
+
+**CoreWeave (CRWV)** is at the epicenter of the accelerating AI infrastructure buildout, rapidly signing massive contracts and raising capital to fund GPU-centric cloud capacity.
+
+### Major Customer Deals
+- **Meta** expanded its commitment to CoreWeave by $21 billion (running 2027–2032), on top of a prior $14.2 billion arrangement, totaling ~$35 billion. The infrastructure will span multiple locations including NVIDIA Vera Rubin deployments.
+- **Anthropic** signed a multi-year agreement with CoreWeave to power its Claude AI models, sending the stock up ~11%. CoreWeave now serves 9 of the top 10 AI model providers (only xAI excluded).
+- **Jane Street** signed a $6 billion AI cloud agreement with CoreWeave.
+- CoreWeave's total backlog stands at **$66.8 billion** with pre-sold capacity.
+
+### Cross-Cloud & Google Cloud Partnership
+CoreWeave launched **"CoreWeave Interconnect,"** a fiber-based direct link to **Google Cloud** enabling cross-cloud AI training and inference. It leverages Google Cloud's Partner Cross-Cloud Interconnect. Additionally, CoreWeave introduced **SUNK Anywhere** (supports multi-cloud training across Google Cloud, AWS, Azure, and on-premises) and **LOTA Cross-Cloud** (cross-cloud data storage/workload portability). This aligns with the broader **AWS–Google Cloud multicloud interoperability initiative**, which Microsoft Azure plans to join later in 2026.
+
+### Debt & Capital Raises
+- CoreWeave completed a **$1.0 billion add-on offering of 9.750% Senior Notes due 2031** at 102%, bringing total outstanding notes to $2.75 billion. Total debt stands at ~$21.6 billion.
+- **Core Scientific (CORZ)** is raising **$3.3 billion via junk bonds** to fund six AI data centers leased to CoreWeave under a 12-year agreement potentially generating ~$10 billion in revenue. Core Scientific pivoted from bitcoin mining to AI hosting. A separate firm, **Edged Compute**, is marketing $1.3 billion in bonds for facilities leased to CoreWeave and an Alibaba unit.
+
+### Nebius
+- **Meta** also committed up to **$27 billion in AI capacity with Nebius**, another neocloud provider. Motley Fool articles compared CoreWeave vs. Nebius as investment options, with Meta spending a combined ~$48 billion across both neoclouds.
+
+### Stock & Insider Activity
+- CoreWeave trades at ~$122/share (~10x trailing sales, ~$62 billion market cap), rated **Hold** by Seeking Alpha due to execution risk, capital intensity, and heavy interest costs despite locked-in demand.
+- Stock surged ~30% in one week driven by the Anthropic and Meta deals; founders' stakes rose by ~$4 billion.
+- Significant **insider selling**: Brian Venturo entities sold 1.125 million shares (~$110–118/share); Magnetar-affiliated funds sold ~643,000+ shares; Brannin McBee sold 200,000 shares.
+- **Asset Management One** made a new $4.8 million investment in CRWV.
+- Jim Cramer highlighted CoreWeave as a winner but warned investors to expect volatility.
+
+### Broader AI Infrastructure Trends
+- AI infrastructure borrowers have raised **$17.9 billion in junk bonds** in 2026 alone, underscoring the capital-intensive nature of the buildout.
+- Neoclouds like CoreWeave and Nebius are emerging as a **critical layer** alongside hyperscalers (AWS, Google Cloud, Microsoft Azure), with hyperscalers increasingly relying on external GPU-centric platforms to scale faster.
+- CoreWeave's Q1 2026 earnings call is scheduled for **May 7, 2026**.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [CoreWeave: Demand Is Locked, The Buildout Race Starts Now (NASDAQ:CRWV)](https://news.google.com/rss/articles/CBMinAFBVV95cUxOSHM5WmJlVkI1Y1dQcTRVYmg0ajRJTTFuOHk3Umtqa3ZJN1U0clZSY0tnWkYza2txSTBHVVJkMl91Ui11THNwMHRNR2FMSE1mY2Y3UkpKTkhzWXdfUzNGamZ2VjZzNXZOakxFWkZxMGxEZWh1WVFqbzBOMFhlNHlmR2NsRGJRekZqVDlvOWQwZG9LM2l4blRwUkNXMzM?oc=5) (Seeking Alpha)
+- [Jim Cramer Says "Understand That You're in for Volatility When You Own the Stock of CoreWeave"](https://news.google.com/rss/articles/CBMipAFBVV95cUxQQlhFZ0Vtdkg4YjE4Zjh6ZWU0Q1EwRG0tbVpGcl9adk9PeDRPdGwyVFY5RWtobGJRS0hCQ1ItZzhxUG5BUjN0QVhjdUdPVlRRREExdUk5bVRRRm5NTTEwVVV0Y2dPanJKRkg1enNtODR0STJ4SFZmZDdHblBTekVFd0ZUQ081RlVMdVlHdGdyRWpLRHRZRUdncURpT2JHTHNuRGZMNQ?oc=5) (Yahoo Finance)
+- [CEO Michael Intrator's 2025 Letter to Shareholders](https://news.google.com/rss/articles/CBMihAFBVV95cUxOSVE2YTdHeks4UUQ0eU9XdnJuVjRScW9sV2oxX1o1Yy1BS1NKSjlVb3Uyd1FGbkVCRFpGVTZvZDV5bDU0ZUJyRVVNdjhscVZuZnNDZDdKS2U5YmdkMmQ4eE5fcE53dlhiS0l3Sm5TWGFYTFBCTDhUa2w4SDc0MjZiM2tEV2U?oc=5) (CoreWeave)
+- [Better Buy: CoreWeave vs. Nebius Stock](https://news.google.com/rss/articles/CBMihgFBVV95cUxNb2lZSlFlOEtBdUdfQXN5d3hUYzYwVkZCSEFsdWl4X2pPU3Z4Rlo0U3UxTFR4RW5UcnMtZ2JaRDJzcktqNDUyX2VWWE9xaHMtQURBdlBJeDZjcEJoWkwtRi1lU0RpZzVCOXBYWlhpbTJpZ1RwX2lYc2ZHempqcHdBY09iV2NWQQ?oc=5) (The Motley Fool)
+- [CoreWeave partners with Google Cloud on cross-cloud training and inference](https://news.google.com/rss/articles/CBMiugFBVV95cUxQdFVVNGR0MTFOODA3TFlqdTBZMXJja1NhZi15QkpKN01yeWdwRWljRnlmVU83UTRROGFKbXJsTDZ1a3Q0T1ViR080cGlQV0tjamVuajU5dTFQUWFUNU00VFdZTmxUbTE1SkdhZ3lwQl9PT21JUGlwYVBSSWZ2aWRTamxVZkdEWk5NUGZfZDRxTE5VVjV0NkxEaDJWbFpEN2liQWNjMTQwaTRHeTZwUWNlX1huaXJpX1g0WlE?oc=5) (Data Center Dynamics)
+- [CoreWeave Completes $1.0 Billion Add-On 9.750% Notes Due 2031 at 102% for Liquidity](https://news.google.com/rss/articles/CBMi2gFBVV95cUxQRURVWXloUTRVU29SeUIySWY3UHpxNlV5V2JOV1YtaTFoTVpSbTBZR0lsYTFfaFJfOVIwdmxQeldKZi1DMmJ1VkNVVkIzci15SHFiQ2tDNE1USncwQVZvZGxTZDAyNXFYOU5rRXltQWVfVDFRNjNkdEp4VEE5bUFzcjFaaDBUZ2hYZ3RZVkExbzZvMXlzN19mUno4Nk1TSEQ2bDlLSXRIUTlHRHJOWkwyQzZJWlExeDl3cEh3aUQ1OEIwblNzc0NMLUpIa1ZWQ3RKRVZQTGRvdUYtQQ?oc=5) (TradingView)
+- [Core Scientific seeks $3.3 billion bond sale to further AI data center pivot](https://news.google.com/rss/articles/CBMiwAFBVV95cUxPS0xlLUpQQXRhWXlvTmtFbF9iMGw5RmpaSDdnQXAxX0NfbTB5NFZPOGRqa0FiaGRxWUpKRk14MThCLVBYRDgtME5ZdlRUNFdXNjNsOTNHUFVhUlp3Q0xxdUJZLTdBOUwtcGNRZXRZVTg1bGNrTWE3cnZhcVphdkFpNU1KVTlkZHpiVW4wSzVBY25ZcmlLUTZSSnlfRjByWWZXZllSOEFKeTJ1WW9iV2FCbWk3LXhBU05ITlhncGlZZ0o?oc=5) (CoinDesk)
+- [Asset Management One Co. Ltd. Makes New $4.80 Million Investment in CoreWeave Inc.](https://news.google.com/rss/articles/CBMi2wFBVV95cUxQcW0zZE9SS01iZ2s4ZEhZT0ZMdzVPQ3hsRThKR21sLVp6S0ZfQ3d4ZGxLNUk4TjdhWEIzMkFrVXhfUXV6SExxQW44emNOREE0SlN0eUxLM1ZWa1Nubjk5RFNCejJmclozTGNjX2tZcC1vUTlKR3l6UWpRTk5PS2VMSFZ0cDQxbHNKanBDMGZ5bDZNamRoYWZxVFh6b1BFMDB3aVFYQ0pzMFVJM2N5UUU4OFBFSnRiYl9NTDEwQWtfdmNrSXcyMGtrSnBZdlFoaUkzY3ZpRkN0TmR5XzA?oc=5) (MarketBeat)
+- [Meta commits $21B to CoreWeave, signaling neoclouds as core AI infrastructure layer](https://news.google.com/rss/articles/CBMiswFBVV95cUxNd281M3h5eVdVSllSOWJoV1NVbm13dnBMTy00T1BzcUhUcGVvVl9JVDNmSWt1Y05wcEpBQUoyd3d3YmFPUk9yMzFuQzRLejhQWkwtM3RjR3FKN3FZUDFILXBtOW0tRVExWWh5Q1RfaVlfOEVGVUZFdzhVRmRBZEM0dkVqWWtkVTR3Uy1GYjNnemE0VW1GNmdUcjBQSFRKd2wxcjRZZVhTc3pDeDI3b1JiXzBtVQ?oc=5) (EdgeIR)
+- [Jim Cramer Shares Why CoreWeave's (CRWV) a Winner](https://news.google.com/rss/articles/CBMinAFBVV95cUxQNV94V2wxRmQ5QjNCRXUxUDNydmg4d2wtMGNTVFNkRmxZQlhVa3F0SDdkOURBSU9xVWN5azUxSWxiRUhHVDBIcFNMLTEwYkNmRDIyaG9heDUwOTBDN0RKTHI5V0h0RnppQVl3SV84aXZrT0dpbE9INXNSdk95MUhYWWZxcWw0MG5xS1FPdGZxQzNjQU56WDlla0o1ZzM?oc=5) (Yahoo Finance)
+- [Jane Street Signs $6 Billion AI Cloud Agreement with CoreWeave](https://news.google.com/rss/articles/CBMilwFBVV95cUxOOS1fSG9RYlFxU2tyWk5KVTF6dWcwaWYzT3VRSlk0bkpLa1A4VDIwU09jNW00STEwcGctd3B4WThxYklkWEsyclY0cVlCSGFtMGRYS0s3bnhVcUU5UUdqd1ZJSDJfQVBKeXhVTUVxZksxeFd2VjhvbG5kNkxvZ1lCRnpmTFR1UVRCUVBERFFFMXA0dl9VVHJz?oc=5) (CoreWeave)
+- [Magnetar Financial Llc Sells 323,452 Shares of CoreWeave](https://news.google.com/rss/articles/CBMixAFBVV95cUxNc0lWcnk5S3h0VlNKbWtWRFRxUV9vaTZqQnBuMWQwQ2ZmRk9JYk5sazFXaDhDZ1djVFZzVGRfeUw2Wll3WHVsN1F1NU5NeWRXWDVJYmlNNTd4SXlHMHR6cFFrT09TMWI4Rzg3TnhqNlBnWFd1MlhxR1JSNXF5Yk15R25rUUxxV0xyOE9SbnRHbS1zZkdIQTVlSG1VdHQ0OVhkTHBsQVFxZDBuVGN4c2hFNnZRbm9TWXNDZl9ETjNaSzljcTBU?oc=5) (MarketBeat)
+- [CoreWeave Announces Multi-Year Agreement With Anthropic](https://news

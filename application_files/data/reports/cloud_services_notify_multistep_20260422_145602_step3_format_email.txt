@@ -1,0 +1,205 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Industry Brief</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f0f0f;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI Industry Brief</h1>
+<p style="margin:8px 0 0;font-size:14px;color:#888888;font-weight:400;">Today's top developments in artificial intelligence</p>
+</td>
+</tr>
+
+<!-- Cloud Infrastructure & Mega-Deals -->
+<tr>
+<td style="padding:40px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Cloud Infrastructure &amp; Mega-Deals</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 24px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Amazon/AWS &amp; Anthropic</strong> struck a landmark deal: Amazon is investing a fresh <strong>$5 billion</strong> in Anthropic (bringing its total to $13B), and Anthropic committed to spending <strong>over $100 billion on AWS over 10 years</strong>, securing up to 5 GW of compute capacity. The deal centers on Amazon's custom <strong>Trainium2 through Trainium4</strong> chips, with options on future chip generations. Anthropic also separately signed an agreement with <strong>Google and Broadcom</strong> for multiple gigawatts of TPU capacity. VCs are reportedly offering Anthropic capital at an <strong>$800B+ valuation</strong>.
+</p>
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Google Cloud</strong> made major moves at <strong>Cloud Next 2026</strong> in Las Vegas. It earmarked a new <strong>$750 million budget</strong> to help partners (from startups to consulting firms) sell AI agents to enterprises—covering Gemini proof-of-concept projects, cloud credits, forward-deployed engineers, and deployment rebates. Google highlighted startups expanding on its cloud, including <strong>Lovable</strong> ($400M ARR track), <strong>Notion</strong> ($11B valuation, using Gemini), <strong>Gamma</strong> ($2.1B valuation, using Nano Banana 2 image model), and <strong>Inferact</strong> (vLLM creators, accessing Nvidia GPUs through Google Cloud).
+</p>
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Google &amp; Thinking Machines Lab</strong> (Mira Murati's startup, formerly OpenAI CTO): A new <strong>multi-billion-dollar deal</strong> (single-digit billions) gives Thinking Machines access to Google Cloud AI infrastructure including systems with <strong>Nvidia GB300 chips</strong> for model training and deployment. This is the startup's first cloud provider deal (non-exclusive). Thinking Machines previously raised a <strong>$2B seed at $12B valuation</strong> and launched its first product, <strong>Tinker</strong>, which automates custom frontier AI model creation using reinforcement learning.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e8e8e8;"></div>
+</td>
+</tr>
+
+<!-- AI Company Partnerships -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">AI Company Partnerships &amp; Enterprise Expansion</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 24px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">OpenAI partnered with Infosys</strong> to integrate its tools (including coding assistant <strong>Codex</strong>) into Infosys's Topaz AI platform, targeting software engineering, legacy modernization, and DevOps. This is part of OpenAI's broader <strong>Codex Labs</strong> initiative, with partners including Accenture, Capgemini, CGI, Cognizant, PwC, and TCS. Codex now has <strong>4M+ weekly active users</strong>. Infosys's AI services generated ~$267M in its December quarter (~5.5% of revenue). OpenAI is also reportedly in talks to commit <strong>up to $1.5 billion</strong> to a private-equity joint venture.
+</p>
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">SpaceX struck a deal with Cursor</strong> (the AI coding tool) to develop next-generation "coding and knowledge work AI," including a provision to <strong>acquire Cursor for $60 billion</strong> later this year—or pay $10B for its work. The partnership leverages SpaceX's Colossus supercomputer (equivalent of 1M Nvidia H100s). This follows xAI renting compute to Cursor and two senior Cursor engineers departing to join xAI under Elon Musk. Cursor's valuation has surged from $2.5B (Jan 2025) → $9B → $29.3B → potentially $50B+ in upcoming rounds.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e8e8e8;"></div>
+</td>
+</tr>
+
+<!-- Google Cloud AI Product Launches -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Google Cloud AI Product Launches</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 24px;">
+<p style="margin:0 0 16px;font-size:15px;line-height:1.7;color:#333333;">
+Google unveiled <strong>generative AI features for Google Maps</strong> and geospatial tools at Cloud Next: <strong>Maps Imagery Grounding</strong> (using Gemini to visualize projects in Street View), <strong>Aerial and Satellite Insights</strong> (analyzing satellite imagery via BigQuery), and two new <strong>Earth AI Imagery models</strong> for identifying objects like bridges, roads, and power lines. Partners include Airbus and Boston Children's Hospital.
+</p>
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+Google expanded <strong>Gemini in Chrome</strong> to APAC countries (Australia, Indonesia, Japan, Philippines, Singapore, South Korea, Vietnam), adding sidebar-based AI assistant features, personal intelligence integration, and image transformation using Nano Banana 2. Agentic browser-control features remain US-only for paid plans.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e8e8e8;"></div>
+</td>
+</tr>
+
+<!-- Anthropic's Mythos -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Anthropic's Mythos Security Concerns</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 24px;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+Anthropic's powerful cybersecurity model <strong>Mythos</strong> faced an unauthorized access incident: a group accessed it through a <strong>third-party vendor environment</strong>, guessing the model's online location based on Anthropic's naming conventions. The group (from a Discord channel focused on unreleased AI models) demonstrated access to Bloomberg. Mythos was released only to select vendors (including <strong>Apple</strong>) under <strong>Project Glasswing</strong> due to concerns it could be weaponized. Anthropic's CEO also met with the <strong>White House chief of staff</strong> as the US government sought access to Mythos. Sam Altman called Anthropic's restricted release approach <strong>"fear-based marketing"</strong>, arguing it keeps AI in elite hands.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e8e8e8;"></div>
+</td>
+</tr>
+
+<!-- Data Center -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Data Center &amp; Infrastructure Turbulence</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 24px;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+Shares in data center company <strong>Fermi</strong> plunged after top executives quit. Separately, <strong>Jeff Bezos's Project Prometheus AI lab</strong> is nearing a <strong>$38 billion valuation</strong> in a funding deal.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:0 48px;">
+<div style="border-top:1px solid #e8e8e8;"></div>
+</td>
+</tr>
+
+<!-- Other Notable Developments -->
+<tr>
+<td style="padding:32px 48px 0;">
+<p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b6b6b;">Section</p>
+<h2 style="margin:0 0 24px;font-size:22px;font-weight:700;color:#0f0f0f;letter-spacing:-0.3px;">Other Notable Developments</h2>
+</td>
+</tr>
+
+<tr>
+<td style="padding:0 48px 32px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Meta</strong> plans to record employee <strong>keystrokes and mouse movements</strong> on certain applications to train AI agents for computer-use tasks.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Apple CEO transition:</strong> John Ternus succeeds Tim Cook, inheriting AI strategy challenges, antitrust battles, and privacy obligations.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">NeoCognition</strong> raised <strong>$40M seed</strong> to build self-learning AI agents that specialize like humans; backed by Intel CEO Lip-Bu Tan and Databricks co-founder Ion Stoica.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">OpenAI's ChatGPT Images 2.0</strong> dramatically improved text rendering in AI-generated images.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">YouTube</strong> expanded AI <strong>deepfake likeness detection</strong> to celebrities and entertainment industry, with support from CAA, UTA, WME.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="margin:0;font-size:15px;line-height:1.7;color:#333333;">
+<strong style="color:#0f0f0f;">Clarifai</strong> deleted 3M OkCupid photos used to train facial recognition AI, following an FTC settlement with Match Group.
+</p>
+</td>
+</tr>
+<tr>
+<td style="padding:12px 0;border-bottom:1px solid #f0f0f0;">
+<p style="

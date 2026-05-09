@@ -10,10 +10,12 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# Runtime data — lives in user dir (application_files/ logs + data still ignored below)
+# Runtime data — logs + local app dir still ignored; data/ is versioned on request
 logs/
-data/
 application/
+
+# Fernet-encrypted storage blobs: GitHub push protection often flags ciphertext as secrets
+data/storage/**/*.enc
 
 .DS_Store
 

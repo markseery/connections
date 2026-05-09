@@ -1,0 +1,134 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI & Tech Weekly Briefing</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#1a1a1a;line-height:1.6;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:32px 16px;">
+<table width="640" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;max-width:640px;width:100%;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0a0a0a;padding:40px 48px;">
+<h1 style="margin:0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI &amp; Tech Weekly Briefing</h1>
+<p style="margin:8px 0 0 0;font-size:14px;color:#888888;letter-spacing:0.3px;">The biggest moves in cloud, AI, hardware &amp; deals</p>
+</td>
+</tr>
+
+<!-- Cloud Services & Major Provider Deals -->
+<tr>
+<td style="padding:40px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Cloud Services &amp; Major Provider Deals</h2>
+
+<p style="margin:0 0 16px 0;font-size:15px;color:#374151;">
+<strong>AWS/Amazon</strong> scored a major deal with <strong>Meta</strong>, which signed on to use millions of <strong>AWS Graviton</strong> ARM-based CPUs to power AI agent workloads (real-time reasoning, code generation, multi-step task coordination). This strategically pulls Meta's spending back toward AWS after Meta's prior $10B six-year deal with <strong>Google Cloud</strong> last August. Meta also uses <strong>Microsoft Azure</strong>. AWS timed the announcement to coincide with the end of <strong>Google Cloud Next</strong>. Separately, <strong>Anthropic</strong> committed $100B over 10 years to run workloads on AWS, focusing on Amazon's <strong>Trainium</strong> custom AI chips, while Amazon invested another $5B into Anthropic (totaling $13B).
+</p>
+
+<p style="margin:0 0 16px 0;font-size:15px;color:#374151;">
+<strong>Google</strong> announced sweeping <strong>Workspace</strong> AI updates at Cloud Next, including "Workspace Intelligence" (an AI system drawing on Gmail, Calendar, Chat, Drive), Gemini-powered Google Sheets automation, and AI writing tools for Docs. Google also makes its own custom AI chips and unveiled new versions at the conference. Google is projected to spend $175B–$185B in capex, and is reportedly planning to invest up to <a href="https://www.ft.com/content/366c73dd-4006-4ce6-9816-5004447d30b8" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>$40B in Anthropic</strong></a>.
+</p>
+
+<p style="margin:0 0 0 0;font-size:15px;color:#374151;">
+<a href="https://www.ft.com/content/f5776fd6-22f3-43d1-806b-9858b64cfd18" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Microsoft</strong></a> is offering voluntary redundancy to 7% of its US staff for the first time, amid shifts in its workforce as AI reshapes priorities.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:0;">
+</td>
+</tr>
+
+<!-- AI Model Releases & Competition -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">AI Model Releases &amp; Competition</h2>
+
+<p style="margin:0 0 16px 0;font-size:15px;color:#374151;">
+<a href="https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>DeepSeek</strong></a> launched preview versions of <strong>V4 Flash</strong> (284B params) and <strong>V4 Pro</strong> (1.6T params — the largest open-weight model available), both mixture-of-experts models with 1M-token context windows. V4-Pro-Max claims to outperform OpenAI's GPT-5.2 and Gemini 3.0 Pro on some reasoning benchmarks and match GPT-5.4 in coding, though it trails GPT-5.4 and Gemini 3.1 Pro on knowledge tests by an estimated 3–6 months. DeepSeek is also targeting a <a href="https://www.ft.com/content/f7c65d8e-aed1-4767-9ea3-9715cb8a24e0" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>$20B valuation</strong></a> to retain staff against poaching. <a href="https://www.ft.com/content/4492c0d6-855b-4164-9ae5-f4d855a95f1e" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Cohere and Aleph Alpha</strong></a> agreed a <strong>$20B transatlantic AI tie-up</strong>.
+</p>
+
+<p style="margin:0 0 0 0;font-size:15px;color:#374151;">
+<a href="https://techcrunch.com/2026/04/23/openai-chatgpt-gpt-5-5-ai-model-superapp/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>OpenAI</strong></a> released <strong>GPT-5.5</strong>, described as its "smartest and most intuitive" model yet, advancing toward a "super app" combining ChatGPT, Codex, and AI browser. Co-founder Greg Brockman said it delivers more frontier AI for fewer tokens versus GPT-5.4.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:0;">
+</td>
+</tr>
+
+<!-- Massive Capex & Infrastructure Spending -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Massive Capex &amp; Infrastructure Spending</h2>
+
+<p style="margin:0 0 0 0;font-size:15px;color:#374151;">
+<a href="https://techcrunch.com/2026/04/22/tesla-just-increased-its-capex-to-25b-heres-where-the-money-is-going/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Tesla</strong></a> raised its 2026 capex plan to <strong>$25B</strong> (3x prior years), driven by AI compute infrastructure, data centers, and robotics. Amazon projects <strong>$200B</strong> in 2026 capex across AI, chips, robotics, and satellites. <a href="https://www.ft.com/content/c65bae99-5ea7-49c4-81a7-e119ca745174" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;">AI and defense companies dominate US growth investment</a> overall.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:0;">
+</td>
+</tr>
+
+<!-- Hardware & GPU Crunch -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Hardware &amp; GPU Crunch</h2>
+
+<p style="margin:0 0 16px 0;font-size:15px;color:#374151;">
+Apple's <a href="https://techcrunch.com/2026/04/24/mac-mini-price-expensive-ebay-shortage-ai-memory/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>M4 Mac mini</strong></a> is sold out due to AI demand (running local models like OpenClaw), an industry-wide memory crunch, and planned refreshes — driving eBay markups of $100+ over retail. <a href="https://techcrunch.com/2026/04/23/ai-galaxy-hunters-are-adding-to-the-global-gpu-crunch/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;">Astronomers' growing GPU needs</a> (for NASA's Roman telescope, JWST, and Rubin Observatory data analysis) are adding to the <strong>global GPU crunch</strong>. <a href="https://www.ft.com/content/eea7a8dd-9fe1-44c2-8848-e0730e02c6d5" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>SK Hynix</strong></a> (Nvidia supplier) reported another record quarter, citing a "structural shift" in AI-driven memory demand.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:0;">
+</td>
+</tr>
+
+<!-- Acquisitions & Funding -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22px;font-weight:700;color:#0a0a0a;letter-spacing:-0.3px;">Acquisitions &amp; Funding</h2>
+
+<p style="margin:0 0 16px 0;font-size:15px;color:#374151;">
+<a href="https://techcrunch.com/2026/04/22/how-spacex-preempted-a-2b-fundraise-with-a-60b-buyout-offer/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>SpaceX</strong></a> (merged with xAI) preempted Cursor's $2B raise with a <strong>$60B buyout option</strong> (or $10B collaboration payment), bolstering Elon Musk's AI coding ambitions against Anthropic's Claude Code and OpenAI's Codex. <a href="https://techcrunch.com/2026/04/23/bret-taylors-sierra-buys-yc-backed-ai-startup-fragment/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Sierra</strong></a> (Bret Taylor's customer service AI startup, valued at $10B) acquired YC-backed French startup <strong>Fragment</strong>, its third acquisition. <a href="https://techcrunch.com/2026/04/23/era-computer-raises-11m-to-build-a-software-platform-for-ai-gadgets/" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Era</strong></a> raised $11M to build a software platform powering next-gen AI gadgets. <a href="https://www.ft.com/content/693d3077-7416-4bb7-8826-31e4692db4d2" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Private equity</strong></a> firms are courting OpenAI and Anthropic. The <a href="https://www.ft.com/content/fe563a8e-e269-4a6b-a577-8ed16a805a7b" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>UK</strong></a> is in talks with Anthropic over Mythos access for banks. Anthropic also partnered with <a href="https://www.ft.com/content/99c6303e-f8d0-441e-b869-6d9496874b64" style="color:#2563eb;text-decoration:none;border-bottom:1px solid #2563eb;"><strong>Freshfields</strong></a> to create legal AI tools.
+</p>
+</td>
+</tr>
+
+<!-- Divider -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<hr style="border:none;border-top:1px solid #e5e7eb;margin:0;">
+</td>
+</tr>
+
+<!-- Meta Workforce & AI Spending -->
+<tr>
+<td style="padding:32px 48px 0 48px;">
+<p style="margin:0 0 4px 0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;">Section</p>
+<h2 style="margin:0 0 20px 0;font-size:22

@@ -1,0 +1,80 @@
+## Summary
+
+**Cloud Infrastructure & Data Centers**
+
+**Anthropic** significantly expanded its compute deal with **Google Cloud** and **Broadcom**, adding 3.5 gigawatts of TPU capacity (coming online in 2027) as part of its $50 billion U.S. compute infrastructure commitment. This follows skyrocketing demand for Claude AI models and Anthropic's recent $30 billion Series G at a $380 billion valuation.
+
+**Firmus**, a Singapore-based data center company backed by **Nvidia**, raised $505 million at a $5.5 billion valuation (led by Coatue), bringing its six-month total to $1.35 billion. Firmus is building energy-efficient "AI factory" data centers in Australia using Nvidia's Vera Rubin next-gen platform (its "Project Southgate"), having pivoted from Bitcoin mining cooling.
+
+**Uber** expanded its **AWS** contract to run more ride-sharing features on Amazon's Graviton chips and began trialing **AWS's Trainium3** AI chip—a notable shift given Uber's previous major cloud deals with **Oracle** and **Google Cloud** in 2023.
+
+**Iran** threatened retaliatory strikes against U.S. tech infrastructure in the Middle East, specifically targeting the **Stargate** data center in the UAE (a $500B joint venture of **OpenAI**, **SoftBank**, and **Oracle**). Iranian missiles had already struck **AWS** data centers in Bahrain and an **Oracle** data center in Dubai.
+
+**SpaceX** is pursuing orbital data centers as part of its potential $1.75 trillion IPO narrative, while **Intel** joined Elon Musk's **Terafab** semiconductor project (alongside SpaceX and Tesla) to build a new U.S. chip fab in Texas, giving Intel's foundry business two major anchor customers.
+
+Insurers are turning to catastrophe bonds to offload growing data center risks. **Poolside**, an AI coding startup, is hunting for new data center partners after its deal with **CoreWeave** fell through.
+
+**AI Models & Products**
+
+**Anthropic** previewed its powerful new frontier model **Mythos** through "Project Glasswing," a cybersecurity initiative with partners including **Amazon**, **Apple**, **Broadcom**, **Cisco**, **CrowdStrike**, **Microsoft**, the Linux Foundation, and Palo Alto Networks. The model reportedly found thousands of zero-day vulnerabilities in software. Anthropic faces tensions with the U.S. Defense Department, which labeled it a supply-chain risk, while the **UK** is courting Anthropic to expand in London.
+
+**Arcee**, a 26-person startup, released its open-source 400B-parameter reasoning model "Trinity Large Thinking" on a $20M budget, positioning it as a Western alternative to Chinese open-source models, and gaining traction with OpenClaw users after Anthropic restricted Claude access for that tool.
+
+**Microsoft** launched a "mid-class" AI model as compute limits bite, while its **Copilot** terms of use controversially state it is "for entertainment purposes only"—language Microsoft called "legacy" and promised to update.
+
+**Google** launched "AI Edge Eloquent," an offline-first Gemma-based dictation app, and added Gemini-powered photo captioning to Google Maps.
+
+**OpenAI** released ChatGPT app integrations (DoorDash, Spotify, Uber, etc.), published policy proposals for the AI economy (public wealth funds, robot taxes, four-day workweek), and acquired a popular tech talk show. Former OpenAI employees launched **Zero Shot**, a new ~$100M VC fund focused on AI.
+
+**Microsoft** launched a "mid-class" AI model responding to compute constraints. **Samsung** forecast record profits driven by the AI boom.
+
+**Investment & Market Trends**
+
+Family offices are increasingly bypassing VCs to invest directly in AI startups, with firms like Arena Private Wealth co-leading a $230M round in AI chip startup **Positron**. The AI gold rush is pulling private wealth into earlier, riskier bets. Spain's **Xoople** raised $130M Series B for AI-focused satellite data. Indian startup **Rocket** launched a platform generating McKinsey-style consulting reports via AI. **Bezos's Project Prometheus** poached an xAI co-founder from OpenAI. The UK is considering testing AI models used by banks.
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [I can't help rooting for tiny open source AI model maker Arcee](https://techcrunch.com/2026/04/07/i-cant-help-rooting-for-tiny-open-source-ai-model-maker-arcee/) (TechCrunch)
+- [Firmus, the 'Southgate' AI data center builder backed by Nvidia, hits $5.5B valuation](https://techcrunch.com/2026/04/07/firmus-the-southgate-ai-datacenter-builder-backed-by-nvidia-hits-5-5b-valuation/) (TechCrunch)
+- [Intel signs on to Elon Musk's Terafab chips project](https://techcrunch.com/2026/04/07/intel-signs-on-to-elon-musks-terafab-chips-project/) (TechCrunch)
+- [Anthropic debuts preview of powerful new AI model Mythos in new cybersecurity initiative](https://techcrunch.com/2026/04/07/anthropic-mythos-ai-model-preview-security/) (TechCrunch)
+- [Uber is the latest to be won over by Amazon's AI chips](https://techcrunch.com/2026/04/07/uber-is-the-latest-to-be-won-over-by-amazons-ai-chips/) (TechCrunch)
+- [Anthropic ups compute deal with Google and Broadcom amid skyrocketing demand](https://techcrunch.com/2026/04/07/anthropic-compute-deal-google-broadcom-tpus/) (TechCrunch)
+- [Google Maps can now write captions for your photos using AI](https://techcrunch.com/2026/04/07/google-maps-can-now-write-captions-for-your-photos-using-ai/) (TechCrunch)
+- [4 days left to save close to $500 on TechCrunch Disrupt 2026 passes](https://techcrunch.com/2026/04/07/4-days-left-to-save-close-to-500-on-techcrunch-disrupt-2026-passes/) (TechCrunch)
+- [The AI gold rush is pulling private wealth into riskier, earlier bets](https://techcrunch.com/2026/04/07/the-ai-gold-rush-is-pulling-private-wealth-into-riskier-earlier-bets/) (TechCrunch)
+- [AI startup Rocket offers vibe McKinsey-style reports at a fraction of the cost](https://techcrunch.com/2026/04/06/indian-startup-rocket-wants-its-ai-to-do-mckinsey-style-consulting-at-a-fraction-of-the-cost/) (TechCrunch)
+- [OpenAI alums have been quietly investing from a new, potentially $100M fund](https://techcrunch.com/2026/04/06/openai-alums-have-been-quietly-investing-from-a-new-potentially-100m-fund/) (TechCrunch)
+- [Google quietly launched an AI dictation app that works offline](https://techcrunch.com/2026/04/06/google-quietly-releases-an-offline-first-ai-dictation-app-on-ios/) (TechCrunch)
+- [Iran threatens 'Stargate' AI data centers](https://techcrunch.com/2026/04/06/iran-threatens-stargate-ai-data-centers/) (TechCrunch)
+- [OpenAI's vision for the AI economy: public wealth funds, robot taxes, and a four-day workweek](https://techcrunch.com/2026/04/06/openais-vision-for-the-ai-economy-public-wealth-funds-robot-taxes-and-a-four-day-work-week/) (TechCrunch)
+- [Startup Battlefield 200 applications open: a chance for VC access, TechCrunch coverage, and $100K](https://techcrunch.com/2026/04/06/startup-battlefield-200-applications-open-get-vc-access-techcrunch-coverage-and-100k/) (TechCrunch)
+- [How to use the new ChatGPT app integrations, including DoorDash, Spotify, Uber, and others](https://techcrunch.com/2026/04/06/how-to-use-chatgpt-apps-doordash-spotify-uber/) (TechCrunch)
+- [Ticket savings of up to $500 this week for TechCrunch Disrupt 2026](https://techcrunch.com/2026/04/06/massive-ticket-savings-of-up-to-500-this-week-for-techcrunch-disrupt-2026/) (TechCrunch)
+- [Spain's Xoople raises $130 million Series B to map the Earth for AI](https://techcrunch.com/2026/04/06/spains-xoople-raises-130-million-series-b-to-map-the-earth-for-ai/) (TechCrunch)
+- [Copilot is 'for entertainment purposes only,' according to Microsoft's terms of use](https://techcrunch.com/2026/04/05/copilot-is-for-entertainment-purposes-only-according-to-microsofts-terms-of-service/) (TechCrunch)
+- [Can orbital data centers help justify a massive valuation for SpaceX?](https://techcrunch.com/2026/04/05/can-orbital-data-centers-help-justify-a-massive-valuation-for-spacex/) (TechCrunch)
+- [Anthropic rolls out cyber AI model days after source code leak](https://www.ft.com/content/59249643-a221-4494-bcb5-62e5f4fedc8e) (Financial Times)
+- [Lessons for the AI revolutionaries from Francis Bacon](https://www.ft.com/content/0a8fbd81-6129-467e-9941-a1fc73cf10c6) (Financial Times)
+- [Don't forget the Mag 7](https://www.ft.com/content/d033ce6d-9a19-4a9b-98c7-c7b023949c4f) (Financial Times)
+- [Top record labels and start-up Suno hit impasse in AI-generated music talks](https://www.ft.com/content/b066a226-4871-4669-97a8-f9617cdbf48b) (Financial Times)
+- [Bezos's Project Prometheus poaches xAI co-founder from OpenAI](https://www.ft.com/content/e03c235d-8637-41e5-9e63-a872e398897a) (Financial Times)
+- [UK considers testing AI models used by banks](https://www.ft.com/content/3053b547-5e55-4520-9b95-828c417a5d79) (Financial Times)
+- [Samsung forecasts record profit on AI boom](https://www.ft.com/content/82f8d137-49db-446a-8945-f98bcda42628) (Financial Times)
+- [AI has arrived in auditing. Are regulators ready?](https://www.ft.com/content/14062aaa-251d-414f-8978-8d7d8f5311e3) (Financial Times)
+- [AI dolls offer companionship to the elderly](https://www.ft.com/content/88911383-2a17-42e1-aef4-36daac1bd9dd) (Financial Times)
+- [Is AI the new fracking?](https://www.ft.com/content/525cc89e-1ee9-4039-a588-5039565053f9) (Financial Times)
+- [UK courts Anthropic to expand in London after US defence clash](https://www.ft.com/content/6bfd7b59-5e63-4a4d-ab55-7c2bd39b05a5) (Financial Times)
+- [What's the point of an AI novel?](https://www.ft.com/content/b83fbd97-e85d-4e67-90de-bfb7bf8c8cde) (Financial Times)
+- [Investors are betting on AI chaos. History suggests otherwise](https://www.ft.com/content/76ea6878-d11c-4118-ad98-3b361fcdbb01) (Financial Times)
+- [Turbulent markets fuel record year for Alex Gerko's XTX](https://www.ft.com/content/4bd40966-8f9c-4d8a-ae1e-7919316b23c2) (Financial Times)
+- [Insurers turn to catastrophe bonds to offload data centre risks](https://www.ft.com/content/6aa06e07-b881-4a6c-bfcb-f1ac413cf353) (Financial Times)
+- [OpenAI acquires popular tech talk show for 'low hundreds of millions'](https://www.ft.com/content/4fe4972a-3d24-45be-b9fa-a429c432b08e) (Financial Times)
+- [Microsoft launches 'mid-class' AI model as compute limits bite](https://www.ft.com/content/e511dfce-555d-4bce-90fd-d09db7529d96) (Financial Times)
+- [A spokesperson could not be reached for comment (possibly because she doesn't exist)](https://www.ft.com/content/05c9515a-d183-4e9f-aab9-8b3c6899ff25) (Financial Times)
+- [Will AI make it harder for non-graduates to climb the jobs ladder?](https://www.ft.com/content/becb8ed5-ffaa-4c08-ba56-c4d3e468de09) (Financial Times)
+- [Everything rises and BYD capitalises on oil crisis](https://www.ft.com/content/b0d7a10a-bb14-46bc-b943-55ca5c65964c) (Financial Times)
+- [Poolside hunts data centre partners after CoreWeave deal falls through](https://www.ft.com/content/24168508-e2a1-447d-b1a0-44a0be0c0550) (Financial Times)
+- [Does it really make sense to retrain as a plumber?](https://www.ft.com/content/df4236df-957a-4b4e-aa64-86cf65134355) (Financial Times)

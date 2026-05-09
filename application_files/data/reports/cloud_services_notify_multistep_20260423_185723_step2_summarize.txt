@@ -1,0 +1,90 @@
+## Summary
+
+### Cloud Services & AI Infrastructure
+
+**Google Cloud** dominated this news cycle with announcements at **Google Cloud Next**. The company launched its 8th-generation custom AI chips, split into two variants — **TPU 8t** (training) and **TPU 8i** (inference) — claiming up to 3x faster training and 80% better performance per dollar, while still offering Nvidia's latest **Vera Rubin** chips. Google also unveiled the **Gemini Enterprise Agent Platform** (competing with Amazon's Bedrock AgentCore and Microsoft Foundry), which supports both Google's Gemini models and **Anthropic's Claude** (including the new Opus 4.7). Google introduced **Workspace Intelligence** with deep AI integration across Gmail, Sheets, Docs, and Chrome — including AI Overviews for enterprise Gmail, agentic "auto browse" capabilities in Chrome, and Gemini-powered spreadsheet automation.
+
+**Thinking Machines Lab** (Mira Murati's startup) signed a **multibillion-dollar deal with Google Cloud** for AI infrastructure, including access to Nvidia's GB300 chips for model training and deployment. This follows **Anthropic** signing agreements with both Google/Broadcom for TPU capacity and **Amazon** for up to 5 gigawatts of training/deployment capacity.
+
+**Tesla** raised its 2026 capital expenditure plan to **$25 billion** (up from $8.5B in 2025), largely for AI compute infrastructure, data centers, and robotics. Musk noted that **Amazon** has projected $200B in 2026 capex across AI, chips, robotics, and satellites, while **Google** plans $175-185B in capital spending.
+
+### AI Models & Products
+
+**OpenAI** released **GPT-5.5**, described as its smartest model yet, advancing toward a unified "superapp" combining ChatGPT, Codex, and AI browser for enterprise customers. OpenAI also **partnered with Infosys** to integrate Codex into Infosys's Topaz AI platform, and launched **Codex Labs** with partners including Accenture, Capgemini, Cognizant, PwC, and TCS. OpenAI is also in talks to commit up to **$1.5B to a private equity joint venture**, while private equity firms are courting both OpenAI and Anthropic.
+
+**SpaceX** (merged with xAI) secured an option to **acquire Cursor for $60 billion**, preempting Cursor's planned $2B funding round at a $50B valuation. The deal, delayed until after SpaceX's summer IPO, includes a $10B payment regardless. This aims to bolster Musk's AI coding capabilities against Anthropic's Claude Code and OpenAI's Codex.
+
+**X** (owned by xAI) launched **Grok-powered Custom Timelines** — AI-curated topic feeds available to Premium subscribers, where Grok reads and labels every post. X simultaneously shut down its Communities feature.
+
+**Anthropic** partnered with law firm **Freshfields** to create legal AI tools, while separately investigating **unauthorized access to its powerful Mythos AI model**. **DeepSeek** is targeting a **$20B valuation** to retain staff amid poaching pressure.
+
+### GPU Demand & Compute Crunch
+
+Astronomers are contributing to the global **GPU shortage** as NASA's upcoming Roman Space Telescope, the James Webb Space Telescope, and the Vera Rubin Observatory generate unprecedented data volumes. Researchers are transitioning galaxy-identification AI models from CNNs to transformer architectures, requiring significantly more compute. **Nvidia supplier SK Hynix** reported another record quarter, citing a "structural shift" in demand.
+
+### Microsoft
+
+**Microsoft** is offering **voluntary redundancy to 7% of staff** for the first time — a notable move as the company continues massive AI investments.
+
+### Security & Compliance
+
+Compliance startup **Delve's** troubles deepened: **Context AI**, a Delve customer, suffered a security breach that cascaded into a data breach at **Vercel** (hosted on Google). Context AI has since switched to **Vanta** for compliance. Previously, Delve customer **LiteLLM** was also compromised. **Y Combinator** severed ties with Delve. Separately, **insurers are moving to cap cyber payouts** related to AI and "LLMjacking" attacks. **Sullivan & Cromwell** admitted to AI "hallucinations" in legal work.
+
+### Other Notable Items
+
+- **Era** raised $11M for a software platform powering AI hardware devices
+- **10x Science** raised $4.8M to accelerate drug characterization using AI and mass spectrometry
+- **Beehiiv** expanded beyond newsletters with webinars, AI podcast analytics, and metered paywalls
+- India's app market hit record revenue ($300M+ in Q1), with **Google One, ChatGPT, and YouTube** capturing most spending
+- The **White House accused China** of "industrial-scale" theft of AI technology
+- A Republican senator warned of **political costs for supporting AI**
+- Reports examined the widening **AI digital divide** between high and low earners in the workplace
+- **Eclipse Ventures** raised $1.3B for "physical AI" startups
+
+---
+
+## CONTENT SOURCE SUMMARY
+
+- [OpenAI releases GPT-5.5, bringing company one step closer to an AI 'superapp'](https://techcrunch.com/2026/04/23/openai-chatgpt-gpt-5-5-ai-model-superapp/) (TechCrunch)
+- [Era raises $11M to build a software platform for AI gadgets](https://techcrunch.com/2026/04/23/era-computer-raises-11m-to-build-a-software-platform-for-ai-gadgets/) (TechCrunch)
+- [Grab a ticket today: The first StrictlyVC of 2026 kicks off in just a week in San Francisco](https://techcrunch.com/2026/04/23/grab-a-ticket-today-the-first-strictlyvc-of-2026-kicks-off-in-just-a-week-in-san-francisco/) (TechCrunch)
+- [Another customer of troubled startup Delve suffered a big security incident](https://techcrunch.com/2026/04/23/another-customer-of-troubled-startup-delve-suffered-a-big-security-incident/) (TechCrunch)
+- [AI galaxy hunters are adding to the global GPU crunch](https://techcrunch.com/2026/04/23/ai-galaxy-hunters-are-adding-to-the-global-gpu-crunch/) (TechCrunch)
+- [Beehiiv rolls out new creator tools, including webinars and customizable paywalls](https://techcrunch.com/2026/04/23/beehiiv-rolls-out-new-creator-tools-including-webinars-and-customizable-paywalls/) (TechCrunch)
+- [India's app market is booming — but global platforms are capturing most of the gains](https://techcrunch.com/2026/04/22/indias-app-market-is-booming-but-global-platforms-are-capturing-most-of-the-gains/) (TechCrunch)
+- [Tesla just increased its spending plan to $25B — here's where the money is going](https://techcrunch.com/2026/04/22/tesla-just-increased-its-capex-to-25b-heres-where-the-money-is-going/) (TechCrunch)
+- [Google updates Workspace to make AI your new office intern](https://techcrunch.com/2026/04/22/google-updates-workspace-to-make-ai-your-new-office-intern/) (TechCrunch)
+- [Hands on with X's new AI-powered custom feeds](https://techcrunch.com/2026/04/22/hands-on-with-xs-new-ai-powered-custom-feeds/) (TechCrunch)
+- [How SpaceX preempted a $2B fundraise with a $60B buyout offer](https://techcrunch.com/2026/04/22/how-spacex-preempted-a-2b-fundraise-with-a-60b-buyout-offer/) (TechCrunch)
+- [Google Cloud launches two new AI chips to compete with Nvidia](https://techcrunch.com/2026/04/22/google-cloud-next-new-tpu-ai-chips-compete-with-nvidia/) (TechCrunch)
+- [Google turns Chrome into an AI co-worker for the workplace](https://techcrunch.com/2026/04/22/google-turns-chrome-into-an-ai-coworker-for-the-workplace/) (TechCrunch)
+- [Google makes an interesting choice with its new agent-building tool for enterprises](https://techcrunch.com/2026/04/22/google-makes-an-interesting-choice-with-its-new-agent-building-tool-for-enterprises/) (TechCrunch)
+- [AI Overviews are coming to your Gmail at work](https://techcrunch.com/2026/04/22/ai-overviews-are-coming-to-your-gmail-at-work/) (TechCrunch)
+- [OpenAI teams up with Infosys to bring AI tools to more businesses](https://techcrunch.com/2026/04/22/openai-teams-up-with-infosys-to-bring-ai-tools-to-more-businesses/) (TechCrunch)
+- [AI is spitting out more potential drugs than ever. This startup wants to figure out which ones matter.](https://techcrunch.com/2026/04/22/ai-is-spitting-out-more-potential-drugs-than-ever-this-start-up-wants-to-figure-out-which-ones-matter/) (TechCrunch)
+- [Exclusive: Google deepens Thinking Machines Lab ties with new multibillion-dollar deal](https://techcrunch.com/2026/04/22/exclusive-google-deepens-thinking-machines-lab-ties-with-new-multi-billion-dollar-deal/) (TechCrunch)
+- [Microsoft to offer 7% of staff voluntary redundancy for the first time](https://www.ft.com/content/f5776fd6-22f3-43d1-806b-9858b64cfd18) (Financial Times)
+- [White House accuses China of 'industrial-scale' theft of AI technology](https://www.ft.com/content/abde4e1e-c69a-4cc4-ad96-d88308314298) (Financial Times)
+- [What does AI really mean for your work? You asked, we answered](https://www.ft.com/content/0a1cd640-abb9-4b6e-9576-307768f80933) (Financial Times)
+- [Will AI widen inequality between workers?](https://www.ft.com/content/81d56337-1f9c-4378-bfcc-4a4caf5b9b25) (Financial Times)
+- [Anthropic and Freshfields agree deal to create legal AI tools](https://www.ft.com/content/99c6303e-f8d0-441e-b869-6d9496874b64) (Financial Times)
+- [Can the carbon removals market keep pace with the AI boom?](https://www.ft.com/content/790585d4-30e7-4acb-acf2-44965042e6e8) (Financial Times)
+- [DeepSeek targets $20bn valuation to stop poaching of staff](https://www.ft.com/content/f7c65d8e-aed1-4767-9ea3-9715cb8a24e0) (Financial Times)
+- [Private equity courts OpenAI and Anthropic](https://www.ft.com/content/693d3077-7416-4bb7-8826-31e4692db4d2) (Financial Times)
+- [Quant pioneer Martin Lueck warns against handing over trading to AI](https://www.ft.com/content/48afd7b9-43b7-4776-8b65-7f5bb2f97c3a) (Financial Times)
+- [Republican US senator warns of 'political cost' for supporting AI](https://www.ft.com/content/3fd0a5d9-99cd-41a1-af79-7987c73d9fd3) (Financial Times)
+- [High earners race ahead on AI as workplace divide widens](https://www.ft.com/content/0873e3cb-cb02-4b47-941f-14da74149670) (Financial Times)
+- [The AI digital divide](https://www.ft.com/content/f3e8765e-2947-4f48-8aca-2b069f2aeaf8) (Financial Times)
+- [Nvidia supplier SK Hynix hails 'structural shift' after another record quarter](https://www.ft.com/content/eea7a8dd-9fe1-44c2-8848-e0730e02c6d5) (Financial Times)
+- [Tesla boosts spending plans to $25bn as Musk doubles down on AI bet](https://www.ft.com/content/7ce83108-9f2d-48b4-8ce1-28865045bd67) (Financial Times)
+- [Builder.ai founder Sachin Dev Duggal accused of receiving siphoned funds](https://www.ft.com/content/ea32d3f2-2cc2-44a6-9bed-db0f783df9bc) (Financial Times)
+- [AI should not drive today's interest rate decisions](https://www.ft.com/content/8a921fda-8e13-4f75-84a1-c43c3ce24136) (Financial Times)
+- [AI robot outplays humans in table tennis milestone](https://www.ft.com/content/9860f042-3332-4534-9b1a-fa9f57b8347e) (Financial Times)
+- [Apple controls the tech sector's Strait of Hormuz](https://www.ft.com/content/a2d7f523-753e-4ea0-8efd-cb52640ce97b) (Financial Times)
+- [OpenAI in talks to commit up to $1.5bn to private equity joint venture](https://www.ft.com/content/87727c4e-05c4-4d84-a9de-4190a9d681a6) (Financial Times)
+- [Insurers move to cap cyber payouts related to AI and 'LLMjacking'](https://www.ft.com/content/12e36e02-7ff9-4a45-9544-872822fe9c97) (Financial Times)
+- [SpaceX obtains right to buy AI start-up Cursor for $60bn](https://www.ft.com/content/d23bd03a-92ac-4e81-8460-3b867a833860) (Financial Times)
+- [Anthropic investigating unauthorised access of powerful Mythos AI model](https://www.ft.com/content/56d65763-69fe-4756-baf4-c8192b7aadaf) (Financial Times)
+- [Elite law firm Sullivan & Cromwell admits to AI 'hallucinations'](https://www.ft.com/content/657d86df-5e0d-4d03-bf0c-cb768a58e758) (Financial Times)
+- [Europe's AI endgame? Bet on reliability](https://www.ft.com/content/bc29b61f-4007-4fd4-be53-07eea41f3fa5) (Financial Times)
+- [Is Ternus the leader Apple needs for the AI era?](https://www.ft.com/content/ef888edd-d12e-41d0-b38d-3d6465cf280c) (Financial Times)

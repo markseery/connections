@@ -1,0 +1,12 @@
+subprocess exited with code 1
+exit_code: 1
+
+Profile: Marketing – Factual & Quantitative (8 topics)
+  Storage: namespace=webscrape, key_separator='\x00'
+  Extract concrete, verifiable facts from a company's website: corporate details, infrastructure specs, customer names, product listings, and quantitative claims.
+  Workers: 6 healthy, 6 idle, selected: http://127.0.0.1:7034 (active=0)
+
+Requesting batch plan from recommender skill ...
+No stored content found for https://batch_analysis_single_profile.yaml in namespace 'webscrape'.
+Run a scrape first, e.g.:
+  python3 webscrape_fetch.py https://batch_analysis_single_profile.yaml --namespace webscrape

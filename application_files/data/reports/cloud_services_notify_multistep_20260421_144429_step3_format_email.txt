@@ -1,0 +1,144 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Weekly Briefing</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;">
+<tr>
+<td align="center" style="padding:24px 16px;">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;">
+
+<!-- Header -->
+<tr>
+<td style="background-color:#0f0f0f;padding:32px 40px;">
+<h1 style="margin:0;font-size:24px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">AI Weekly Briefing</h1>
+<p style="margin:8px 0 0;font-size:13px;color:#888888;">The biggest stories in AI this week</p>
+</td>
+</tr>
+
+<!-- Amazon/AWS & Anthropic -->
+<tr>
+<td style="padding:36px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Mega-Deal</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Amazon/AWS &amp; Anthropic</h2>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">Amazon is investing a fresh <strong>$5 billion in Anthropic</strong>, bringing its total commitment to $13 billion. In return, Anthropic has pledged to spend <strong>over $100 billion on AWS over the next 10 years</strong>, securing up to 5 GW of computing capacity to train and run Claude.</p>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">The deal centers on Amazon's custom chips — <strong>Graviton (CPU) and Trainium (AI accelerator)</strong> — covering Trainium2 through Trainium4 (the latter not yet available). This mirrors a similar structure Amazon used when it joined OpenAI's $110 billion funding round two months earlier, contributing $50 billion.</p>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">Anthropic may also be eyeing a new fundraising round at an <strong>$800 billion+ valuation</strong>.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Anthropic — Government Relations & Mythos -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Security &amp; Policy</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Anthropic — Government Relations &amp; Mythos Model</h2>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">Anthropic's <strong>Mythos Preview</strong>, a frontier cybersecurity model deemed too capable for public release, has been restricted to ~40 organizations. The <strong>NSA is reportedly using Mythos</strong> to scan for vulnerabilities, and the <strong>UK's AI Security Institute</strong> also has access — despite the Pentagon having labeled Anthropic a "supply-chain risk" after the company refused unrestricted military access to its models.</p>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">Relations with the Trump administration appear to be <strong>thawing</strong>: CEO <strong>Dario Amodei</strong> met with White House Chief of Staff Susie Wiles and Treasury Secretary Scott Bessent in what both sides called a "productive" meeting. Amodei has publicly stated he doesn't want AI "turned on our own people."</p>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">The UK government warned that companies "should be worried" about Mythos's cybersecurity implications. Multiple FT analyses frame Mythos as testing the limits of global cyber defenses and signaling new "economics of AI scarcity."</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Anthropic — Products -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Product Launch</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Anthropic — Products</h2>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">Anthropic launched <strong>Claude Design</strong>, an experimental visual creation tool (prototypes, slides, one-pagers) powered by <strong>Claude Opus 4.7</strong>, available to Pro, Max, Team, and Enterprise subscribers. It complements rather than competes with Canva, with export options including PPTX and direct Canva integration.</p>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">The company also reported a <strong>$50 billion deal with data center startup Fluidstack</strong>.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Cerebras -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Chips &amp; Hardware</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Cerebras Systems &amp; AWS</h2>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">AI chip startup <strong>Cerebras Systems</strong> filed for an IPO (planned for mid-May) after withdrawing a previous 2024 filing. The company raised a $1 billion Series H at a <strong>$23 billion valuation</strong> in February and reported $510 million in 2025 revenue.</p>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">Notably, Cerebras struck an agreement with <strong>AWS to deploy its chips in Amazon data centers</strong> and landed a deal with <strong>OpenAI reportedly worth over $10 billion</strong>, taking fast-inference business from Nvidia.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Google -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Search &amp; Browser</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Google</h2>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">Google expanded its <strong>Gemini in Chrome</strong> feature to multiple APAC markets (Australia, Indonesia, Japan, Philippines, Singapore, South Korea, Vietnam) on both desktop and iOS. The sidebar-based AI assistant integrates with Gmail, Google Photos, Calendar, and Maps, and uses <strong>Nano Banana 2</strong> for image transformation. The agentic browser-control feature remains US-only for paid AI Pro/Ultra subscribers.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- OpenAI -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Strategy Shift</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">OpenAI</h2>
+<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#333333;">OpenAI is shedding "side quests" and refocusing on enterprise AI and its forthcoming "superapp." <strong>Kevin Weil</strong> (science research lead) and <strong>Bill Peebles</strong> (Sora creator) departed, along with CTO of enterprise applications <strong>Srinivas Narayanan</strong>.</p>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;"><strong>Sora was shut down</strong> after losing an estimated $1M/day in compute. OpenAI acquired personal finance startup <strong>Hiro</strong> and media company <strong>TBPN</strong> as small acqui-hires. The company is also working on an AI hardware device with Jony Ive.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Bezos -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Funding</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Bezos's Project Prometheus</h2>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">Jeff Bezos's AI lab <strong>Project Prometheus</strong> is nearing a <strong>$38 billion valuation</strong> in a new funding deal, per the Financial Times.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Fermi -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Energy &amp; Infrastructure</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Fermi — AI Nuclear Power/Data Centers</h2>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">AI nuclear power startup <strong>Fermi</strong> saw its CEO (Toby Neugebauer) and CFO (Miles Everson) suddenly depart, sending shares down <strong>22%</strong>. The company's nuclear-powered AI data center campus in Amarillo, Texas ("Project Matador") has faced friction with a key customer. The company attempted to frame the changes as "Fermi 2.0."</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Data Center Delays -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Infrastructure</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Data Center Delays</h2>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">The FT reports that <strong>data centre construction delays threaten to choke AI expansion</strong>, a constraint affecting cloud providers and AI infrastructure buildouts broadly.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Cursor -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Dev Tools</p>
+<h2 style="margin:0 0 16px;font-size:20px;font-weight:700;color:#111111;line-height:1.3;">Cursor (AI Coding)</h2>
+<p style="margin:0;font-size:15px;line-height:1.65;color:#333333;">AI coding startup <strong>Cursor</strong> is raising <strong>$2B+ at a $50 billion valuation</strong>, led by Thrive and Andreessen Horowitz, with Nvidia and Battery Ventures also expected to participate. Revenue is forecast to exceed <strong>$6 billion ARR</strong> by end of 2026. The company recently achieved slight gross margin profitability through its proprietary Composer model.</p>
+</td>
+</tr>
+
+<tr><td style="padding:28px 40px 0;"><hr style="border:none;border-top:1px solid #e5e7eb;margin:0;"></td></tr>
+
+<!-- Tokenmaxxing -->
+<tr>
+<td style="padding:28px 40px 0;">
+<p style="margin:0 0 6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#6366f1;">Analysis</p>
+<h2 style="margin:0 0 16px;font-size:20px;font
