@@ -1,0 +1,21 @@
+# Analysis profile: Datacenter Messaging
+
+name: Datacenter Messaging
+description: >
+  Extract all messaging at the datacenter level.
+
+# ── Storage source ──
+namespace: webscrape
+key_separator: "\x00"
+
+# ── AI settings ──
+ai_profile: agent
+context_pct: 0.80
+chars_per_token: 3.5
+ai_timeout: 660
+
+topics:
+
+  - name: All data center messaging
+    guidance: >
+      Extract all messaging at the datacenter level.

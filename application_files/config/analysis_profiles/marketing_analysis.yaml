@@ -1,0 +1,292 @@
+# Analysis profile: Marketing – Strategic & Interpretive
+#
+# Used by batch_analysis.py via --profile marketing_strategic
+# Extracts softer, interpretive insights that require reading
+# between the lines: positioning, brand identity, strategy.
+# Uses a lower context_pct to create more, smaller batches so the
+# model has better attention bandwidth for inferential topics.
+
+name: Marketing – Strategic & Interpretive
+description: >
+  Analyse a company's website for strategic positioning, brand
+  identity, value propositions, and competitive strategy.  These
+  topics require interpreting tone, patterns, and implied intent
+  rather than extracting explicit facts.
+
+# ── Storage source ──
+namespace: webscrape
+key_separator: "\x00"
+
+# ── AI settings ──
+# Lower context_pct creates more batches, giving the model better
+# focus on each chunk of content for interpretive analysis.
+ai_profile: agent
+context_pct: 0.50
+chars_per_token: 3.5
+ai_timeout: 660
+
+topics:
+
+  - name: Positioning statements
+    guidance: >
+      Extract taglines, hero copy, "we are the X of Y" statements,
+      competitive differentiators, and any language that positions the company
+      relative to competitors or market categories.
+
+  - name: Overall brand identity
+    guidance: >
+      Look for brand values, mission statements, vision statements, tone of
+      voice patterns, and how the company describes its culture and ethos.
+
+  - name: Value proposition statements
+    guidance: >
+      Extract explicit value propositions: "we help X do Y by Z", benefit
+      statements, ROI claims, and any quantified customer outcomes.
+
+  - name: Ideal customer profile
+    guidance: >
+      Look for language describing who the company targets: company size,
+      industry, use case, technical maturity, geographic focus.  Infer from
+      case studies and marketing language if not stated explicitly.
+
+      Match to the customer profile descriptions:
+
+      Persona Profile: Alice, AI Platform Leader
+
+        ## Overview
+        * **Role:** AI Platform Leader
+        * [cite_start]**Alternative Titles:** VP / Head of Machine Learning Platform, Head of Data & AI/ML Engineering (platform remit), Principal / Staff Platform Engineer (AI/ML), VP of ML Infrastructure, VP of AI Infrastructure, Head of ML Systems / ML Systems Engineering[cite: 1].
+        * **Who I Am:** Alice is responsible for the infrastructure supporting models, agents, and AI features. She owns the AI platform end to end, balancing speed with reliability, latency, cost, and compliance. [cite_start]She sets the technical vision, is hands-on with architecture decisions (deployment, scale, monitoring), evaluates new tech vendors, and partners with cross-functional teams (Product, Infra, Data, Security, Finance)[cite: 1]. 
+        * [cite_start]**How I Am Evaluated:** Her success is primarily evaluated based on model performance quality and deployment speed/time to market[cite: 1]. [cite_start]Success also means on-time launches, measurable impact, and trustworthy outcomes[cite: 1].
+
+        ---
+
+        ## Responsibilities & Challenges
+        * [cite_start]**Primary Responsibilities:** Cross-functional collaboration and foundation/specialized model R&D (especially among AI Natives)[cite: 1].
+        * [cite_start]**Biggest Challenges:** Compute and GPU resource scarcity is a common overarching challenge[cite: 1]. [cite_start]Governance and the heavy regulatory burden (e.g., stalled deployments for documentation, auditors pushing for explainability) combined with cost management make AI investments hard to justify[cite: 1]. [cite_start]She also struggles with brittle scaling and being locked into proprietary stacks[cite: 1].
+
+        ---
+
+        ## Motivations & Excitements
+        * [cite_start]**What Excites Me:** Rapid innovation and having a technical edge are the most exciting aspects overall[cite: 1]. [cite_start]AI Natives are additionally excited by operational efficiency, cost optimization, and turning frontier AI into a lean, portable platform[cite: 1]. [cite_start]AI Enterprises are driven by building scalable, flexible AI platforms that stay audit-ready and move business outcomes[cite: 1].
+        * [cite_start]**What Motivates Me:** Security is top of mind across the board[cite: 1]. [cite_start]AI Natives are highly motivated by cost efficiency, ROI pressures, and boosting developer velocity[cite: 1].
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * [cite_start]**Why I Buy:** Infrastructure and capacity limitations are the top overall buying triggers, alongside cost management and budget optimization challenges[cite: 1]. [cite_start]AI Natives also buy for innovation and new features, whereas AI Enterprises buy to meet compliance, security, and governance requirements[cite: 1].
+        * [cite_start]**Biggest Concerns:** Security risks are the top concern, followed closely by vendor lock-in and flexibility limits[cite: 1]. [cite_start]She worries about getting trapped in a managed stack where prices shift, GPUs go scarce, and migration turns into massive tech debt[cite: 1].
+        * [cite_start]**Must-Have Features:** Security and scalability are the top two features for AI Enterprises, while AI Natives also require rapid experimentation[cite: 1]. 
+        * [cite_start]**Needs Beyond Features:** Vendor financial and roadmap stability is the top factor overall[cite: 1]. [cite_start]She needs transparent and predictable pricing, contract flexibility, professional services implementation and support, and cultural alignment as a co-innovation partner[cite: 1].
+        * [cite_start]**Top Factors to Switch Vendors:** Both AI Natives and Enterprises would switch for: 1) Performance & Scalability, 2) Guaranteed Capacity & Availability, and 3) Transparent & Predictable Pricing[cite: 1].
+        * [cite_start]**Vendors Top of Mind:** AWS, Azure, and GCP are top of mind overall (especially for standardizing security in AI Enterprises)[cite: 1]. [cite_start]AI Natives additionally think of open-source and specialized tooling like OpenAI, Hugging Face, Databricks, and Weights & Biases[cite: 1].
+        * [cite_start]**Information Sources:** Internal colleagues (engineers, researchers) are her primary go-to inputs[cite: 1]. [cite_start]She also relies heavily on peer companies for "plain-spoken stories," industry reports for future trends, and executive leadership (especially within AI Enterprises)[cite: 1].
+        * [cite_start]**Most Impactful Infrastructure Factors:** Cost efficiency with visibility/showback is the top infrastructure factor[cite: 1]. [cite_start]Other highly impactful factors include guaranteed capacity and scheduler efficiency, security (for Enterprises), and developer experience (self-service and templates)[cite: 1].
+
+      Persona Profile: Carter, CTO/Technical Buyer [cite: 1]
+
+        ## Overview
+        * [cite_start]**Role:** CTO/Technical Buyer[cite: 1].
+        * [cite_start]**Alternative Titles:** Chief Product & Technology Officer (CPTO), Executive Vice President (EVP) of Engineering, Senior Vice President (SVP) of Engineering, Chief Architect, Chief Scientist, Chief Digital Officer (CDO), Global Head of Engineering, Chief AI Officer, VP of Software, VP of Infrastructure, and VP of AI/ML[cite: 1].
+        * [cite_start]**Who I Am:** Carter leads the enterprise technology and AI agenda by translating business goals into roadmaps, establishing engineering and governance standards, and ensuring platforms are secure, reliable, and cost-effective[cite: 1]. [cite_start]He balances strategy and delivery through architectural decision-making, AI/data capability building, build-vs-buy evaluations, and Service Level Objective and risk-driven operations[cite: 1]. [cite_start]He aligns closely with Product and Finance, develops technical leaders, and communicates trade-offs and decisions to stakeholders[cite: 1]. 
+        * [cite_start]**How I Am Evaluated:** Success is defined by predictable delivery, measurable business impact, and systems that scale[cite: 1]. [cite_start]AI model performance and strategic impact are key evaluators[cite: 1].
+
+        ---
+
+        ## Responsibilities & Challenges
+        * [cite_start]**Primary Responsibilities:** Infrastructure, strategic AI leadership, and cross-functional leadership top his list of responsibilities[cite: 1].
+        * [cite_start]**Biggest Challenges:** AI Enterprises struggle heavily with security, compliance, and governance, while AI Natives see a lack of talent and safe deployment as their biggest hurdles[cite: 1]. [cite_start]Shared major challenges across both groups include GPU capacity scarcity and access, unpredictable and high AI infrastructure costs, and infrastructure and model performance optimization[cite: 1].
+
+        ---
+
+        ## Motivations & Excitements
+        * [cite_start]**What Excites Me:** Both AI Natives and AI Enterprises value research breakthroughs[cite: 1]. [cite_start]AI Enterprises are eager for a competitive edge and seeing AI drive revenue growth, while AI Natives are particularly excited by improving AI infrastructure scaling that allows them to move from notebook to production in days[cite: 1].
+        * [cite_start]**What Motivates Me:** When investing in AI, AI Natives are primarily motivated by GPU access and model performance, whereas AI Enterprises look to balance cost, compliance, and integration[cite: 1]. 
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * [cite_start]**Why I Buy:** For AI infrastructure, performance optimization and GPU capacity are the top buying triggers[cite: 1]. [cite_start]For AI developer tools, developer productivity and faster time-to-market are the primary drivers[cite: 1]. [cite_start]When buying dev tools, AI Enterprises lean more toward governance and safety, while AI Natives focus on guaranteed GPU access and taking tests to production quickly[cite: 1].
+        * [cite_start]**Biggest Concerns:** His top concerns are inflexibility due to vendor ecosystem lock-in, GPU capacity constraints, and GPU cost volatility[cite: 1]. [cite_start]System fragmentation, lack of 24/7 support, and integration complexity with legacy systems are also major pain points[cite: 1].
+        * [cite_start]**Must-Have Features:** GPU capacity is the universally most important feature for AI infrastructure, though AI Natives also heavily value cost management tools[cite: 1]. [cite_start]For AI developer tools, AI Natives optimize for speed and differentiation (Playgrounds, Model Customization), while AI Enterprises optimize for control and reliability (Guardrails, Monitoring, Prompt Management)[cite: 1].
+        * [cite_start]**Needs Beyond Features:** Capacity assurance and SLA reliability are universally important needs beyond standard features[cite: 1]. [cite_start]AI Natives also require efficiency pricing systems, and both groups emphasize the need for transparent pricing, dedicated support, and built-in security and governance[cite: 1].
+        * [cite_start]**Top Factors to Switch Vendors:** AI Natives would switch primarily for: 1) Open-Source Compatibility & Portability, 2) Guaranteed High-Performance GPU Capacity, and 3) Ecosystem Integration & Dev Velocity[cite: 1]. [cite_start]AI Enterprises would switch for: 1) Price-Performance Gains, 2) Guaranteed High-Performance GPU Capacity, and 3) Robust Security & Compliance[cite: 1].
+        * [cite_start]**Vendors Top of Mind:** For developer tools, Hugging Face is the clear #1 for AI Natives, while AI Enterprises have stronger recall for managed platforms like Databricks and AWS/Azure ML[cite: 1]. [cite_start]For infrastructure, NVIDIA, CoreWeave, AWS, and Google Cloud all display high awareness[cite: 1]. [cite_start]AI Natives frequently mention specialized GPU clouds, whereas AI Enterprises are steadier on hyperscalers[cite: 1].
+        * [cite_start]**Information Sources:** When evaluating vendors, peer proof is paramount[cite: 1]. [cite_start]He relies heavily on external professional peer networks and internal technical teams to get the unfiltered truth on scale, stability, and rollback pain before making a purchase[cite: 1].
+
+      Persona Profile: Cedric, CEO
+
+        ## Overview
+        * **Role:** CEO
+        * **Alternative Titles:** Chief Executive Officer (CEO), President / Co-Founder / Founder-CEO, Managing Director / General Manager.
+        * **Who I Am:** Cedric sets the AI vision and culture, translating the overarching company strategy into resourced roadmaps that outpace competitors. He allocates technical budgets and talent, removes organizational blockers, and governs risk, compliance, and financial performance across AI initiatives. He aligns boards, investors, and executives, and orchestrates Product, Platform/Infra, Data, Security, and Finance to turn innovation into shipped products. He makes build/partner/buy decisions—including AI infrastructure and developer tools—to achieve reliable scale.
+        * **How I Am Evaluated:** Success is measured by technical performance and accuracy, followed by showcasing financial ROI and board-ready revenue impact.
+
+        ---
+
+        ## Responsibilities & Challenges
+        * **Primary Responsibilities:** AI Strategy & Innovation is his top priority, followed by Technical Infrastructure & Operations, and Financial & Cost Management. 
+        * **Biggest Challenges:** AI Enterprise CEOs struggle heavily to keep costs under control, while AI Natives struggle more with Talent Wars, Measuring ROI, Regulatory Uncertainty, IP Protection, and Market Adoption. Shared challenges include compute infrastructure cost and scalability, as well as data and model quality assurance.
+
+        ---
+
+        ## Motivations & Excitements
+        * **What Excites Me:** He is primarily excited by innovation, market growth, and competitive advantage. AI Enterprise CEOs place a higher value on operational efficiency, cost optimization, and infrastructure scalability. 
+        * **What Motivates Me:** Both AI Natives and AI Enterprises are highly motivated to gain a competitive market edge and demonstrate sustainable revenue growth through innovation. 
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * **Why I Buy:** Board scrutiny and mission-critical launches trigger CEOs to buy AI infrastructure. For AI developer tools, Enterprise AI CEOs are most motivated to buy when facing cost and budget pressures. Shared buying triggers across both groups include performance and scalability needs, amplified by rising compute costs, compliance pressure, and vendor sprawl during launches.
+        * **Biggest Concerns:** Security is the top concern for both groups, but Enterprise CEOs are more concerned with staying within budget. Boardroom risks dominate AI decisions, specifically security and compliance, brutal cost management, integration complexity, and IP liability.
+        * **Must-Have Features:** When launching AI products, he heavily values model performance and accuracy. For AI infrastructure, security and compliance are the most important criteria overall, though AI Natives also highly value advanced hardware access and model customization. For AI developer tools, scalable high performance, security, and seamless integration are his top criteria.
+        * **Needs Beyond Features:** Both groups seek partners who showcase security,
+
+      Persona Profile: Diana, AI Leader
+
+        ## Overview
+        * **Role:** AI Leader
+        * **Alternative Titles:** Director of AI/ML, Manager of AI/ML, Head of AI/ML.
+        * **Who I Am:** Diana leads AI strategy and execution—turning research into shipped models, agents, and features. She owns R&D, technical governance, performance (latency/reliability/cost), vendor/tool selection, and compliance risk. She partners closely with Product, Platform/Infra, Data, Security, and Finance while mentoring teams, and she typically recommends and co-decides on AI infrastructure and dev-tool purchases.
+        * **How I Am Evaluated:** Her success is primarily evaluated by technical performance metrics (e.g., cost-per-inference, speed) and regulatory excellence. Success is also defined by on-time delivery, measurable business impact, trustworthy/compliant outcomes, and scalable spend.
+
+        ---
+
+        ## Responsibilities & Challenges
+        * **Primary Responsibilities:** Innovation and R&D oversight are her top responsibilities. For AI Natives, technical strategy and architecture are also highly important.
+        * **Biggest Challenges:** AI Natives struggle heavily with compute capacity, cost predictability, and scalability/deployment hurdles (e.g., bottlenecks in production deployment at scale). AI Enterprises face major challenges in proving regulatory compliance and overcoming talent/skills shortages. 
+
+        ---
+
+        ## Motivations & Excitements
+        * **What Excites Me:** She is most excited by innovation and gaining a competitive edge. AI Enterprises are particularly excited to see AI align with overall business strategy and cut operational costs, while AI Natives are energized by exploring emerging technologies and optimizing operational efficiency.
+        * **What Motivates Me:** Strategic business value alignment and innovation/technology advancement are her top motivators for leading AI initiatives.
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * **Why I Buy:** Hardware availability and compute constraints are the top buying triggers for AI Natives. For AI Enterprises, the primary trigger is demand for innovation and emerging use-cases. Both groups share regulatory compliance and policy shifts as a strong reason to buy AI model building tools.
+        * **Biggest Concerns:** Security and data privacy are her top overall concerns. AI Enterprises are highly concerned about regulatory compliance, legal risks, and validation requirements. Other concerns include vendor lock-in, talent gaps, and environmental/sustainability impacts (ESG commitments).
+        * **Must-Have Features:** Open architecture and portability are the top must-haves for AI Natives. Both groups strongly require advanced model development/orchestration capabilities and strict security/compliance assurances.
+        * **Needs Beyond Features:** Vendor reputation and social proof (case studies, peer references at scale) are universally important. She also requires seamless integration and system compatibility, cost transparency (flexible pricing, unit economics), and clear regulatory compliance and auditability.
+        * **Top Factors to Switch Vendors:** AI Natives would switch primarily for: 1) Open-Source Transparency and Control, 2) Cost Efficiency and Savings, and 3) Integrated Deployment, Tracking & Monitoring. AI Enterprises would switch for: 1) Specialized Hardware Availability, 2) Cost Efficiency and Savings, and 3) Regulatory Compliance & Data Sovereignty.
+        * **Vendors Top of Mind:** AWS is top of mind overall. AI Natives focus more on model/API and open-source software companies like OpenAI, Hugging Face, and NVIDIA. AI Enterprises prefer cloud-centric, integrated platforms and most frequently recall Microsoft Azure and Google Cloud Platform (GCP).
+        * **Information Sources:** AI Natives rely most heavily on online communities and forums. AI Enterprises use a variety of sources, with their #1 source being internal colleagues, though they also lean heavily on industry reports (like Gartner) and the C-suite/executive leadership to navigate specialized compliance landscapes.
+        * **Most Impactful Infrastructure Factors:** Cost efficiency and predictable pricing are the top factors overall. Low latency for deployed applications is highly important for AI Natives, while AI Enterprises see compute availability (reliable access to GPUs/TPUs when needed) as the most impactful factor.
+
+      Persona Profile: Malik, AI Researcher
+
+        ## Overview
+        * **Role:** AI Researcher
+        * **Alternative Titles:** Research Scientist (AI/ML), Applied Research Scientist (AI/ML), Senior Research Scientist (AI/ML), Machine Learning Scientist, AI Research Scientist, Applied Scientist (ML / AI), Distinguished / Principal ML Engineer.
+        * **Who I Am:** Malik leads the end-to-end development of foundation models. He designs architectures, curates and governs training data, plans compute, and runs large-scale training. He improves quality through rapid experimentation (ablations, evals, alignment/safety) and hardens models for production—handling optimization, compression/serving, monitoring, and cost controls. He works cross-functionally to deploy reliable, compliant, and economically scalable models. AI Enterprise researchers in this role skew toward productionization and coordination, while AI Natives stay more research-centric.
+        * **How I Am Evaluated:** His success is primarily evaluated based on delivery speed and team leadership over innovation or governance.
+
+        ---
+
+        ## Responsibilities & Challenges
+        * **Primary Responsibilities:** Cross-functional collaboration and technical leadership are core. He is also responsible for designing model architectures and training recipes, preparing models for serving, post-deployment monitoring, curating training data, building evaluation suites, planning/allocating compute, and model alignment/safety.
+        * **Biggest Challenges:** AI Enterprises struggle heavily with security, regulatory complexity, and data quality concerns. AI Natives, on the other hand, see a lack of talent and safe deployment as their biggest hurdles. Infrastructure scalability, compute costs, and tool integration are also major shared challenges.
+
+        ---
+
+        ## Motivations & Excitements
+        * **What Excites Me:** Both AI Natives and AI Enterprises value research breakthroughs. However, AI Enterprises are eager for a competitive edge and real-world technological impact, while AI Natives are particularly excited about access to better infrastructure and creating real business impact through innovation and experimentation.
+        * **What Motivates Me:** Intellectual stimulation, problem-solving, and creativity are the most motivating factors for AI Natives. AI Enterprises are highly motivated by career growth, learning, and team collaboration.
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * **Why I Buy:** Compute-intensive projects and the inability of current setups to handle increasingly large and complex training push organizations to evaluate new AI dev tools. AI Enterprises also prioritize the adoption of new technologies and methodologies, while contract renewals and cost scrutiny drive buying behavior as well.
+        * **Biggest Concerns:** Security, privacy, and governance are the top concerns overall (especially data security). AI Natives also experience concerns regarding a talent and skills gap. Vendor lock-in, cost volatility, and regulatory compliance are additionally strong worries.
+        * **Must-Have Features:** Cost efficiency and elastic cost-efficient orchestration are the top must-haves for AI Enterprises. AI Natives highly value Python and open-source integration, model lineage governance, flexible/cost-efficient hardware accelerators, and predictable transparent pricing nearly equally.
+        * **Needs Beyond Features:** Smooth integration is universally required. AI Enterprises heavily emphasize regulatory compliance and audit readiness, while AI Natives need high-quality vendor support, community openness, and transparency the most. Both groups value cost transparency and efficiency.
+        * **Top Factors to Switch Vendors:** AI Natives would switch primarily for: 1) Transparency in Usage Policies, 2) Cost and Resource Efficiency, and 3) Cutting-Edge Features & Tech Advantage. AI Enterprises would switch for: 1) Cost and Resource Efficiency, 2) Integration & Interoperability, and 3) Cutting-Edge Features & Tech Advantage.
+        * **Vendors Top of Mind:** Hugging Face is the clear #1 for AI Natives, who also recall specialized and open-source stacks like NVIDIA NeMo and MosaicML. AI Enterprises more frequently recall hyperscalers and headline brands with established trust, such as OpenAI, NVIDIA, AWS (SageMaker), Google (Vertex AI), Microsoft (Azure ML), and Weights & Biases.
+        * **Information Sources:** Internal colleagues and peer companies resonate across both groups. AI Natives highly value vendor references and case studies grounded in data, while AI Enterprises lean more heavily on industry reports and research publications.
+        * **Most Impactful Infrastructure Factors:** Compute availability (access to GPUs/TPUs when needed) is universally the most important factor, alongside reliability and uptime during development. Cost efficiency and predictable pricing are especially critical for AI Natives. Speed of training and low latency in production are also highly impactful.
+
+      Persona Profile: Paul, Platform Engineer
+
+        ## Overview
+        * **Role:** Platform Engineer.
+        * **Alternative Titles:** Site Reliability Engineer - AI/ML (SRE), DevOps Engineer (AI/ML), Data/Feature Platform Engineer (AI/ML workloads), Model Infrastructure Engineer, Compute Infrastructure Engineer, and Platform Reliability Engineer (AI/ML).
+        * **Who I Am:** Paul leads end‑to‑end AI development and operations—including building and training models, engineering the underlying platforms, and automating deployment and reproducibility. He views himself as a "Swiss Army knife" who might be debugging distributed training one day and architecting deployment pipelines or chasing down inference latency the next. 
+        * **How I Am Evaluated:** Key evaluation criteria include technical performance (e.g., cost‑per‑inference, speed) and operational efficiency/reliability. Success is also measured by shipped capabilities, stable latency/uptime, compliant practices, and scalable spend.
+
+        ---
+
+        ## Responsibilities & Challenges
+        * **Primary Responsibilities:** Model Development and Optimization oversight are his top responsibilities, followed closely by Infrastructure Design and Systems Management.
+        * **Biggest Challenges:** Cost Management and resource optimization are his most significant hurdles. Scalability and performance constraints are also major struggles, especially when ML pipelines fail to keep up in real time. Vendor lock-in is another frustrating pain point that limits flexibility.
+
+        ---
+
+        ## Motivations & Excitements
+        * **What Excites Me:** He is primarily excited by innovation and tackling complex engineering challenges, like solving hardware constraints or memory optimization (especially among AI Natives). Within AI Enterprises, excitement is driven more by creating real business, societal, and competitive impact.
+        * **What Motivates Me:** Innovation and tech problem-solving, alongside a desire for meaningful impact and purpose, are his top motivators. 
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * **Why I Buy:** Hardware and technology upgrades are the primary buying triggers for AI Natives, whereas AI Enterprises are heavily driven by cost and pricing pressures. Both groups look to buy new AI infrastructure tools to resolve performance and scalability challenges.
+        * **Biggest Concerns:** Vendor lock-in and contractual dependency are his top concerns when evaluating new tools. Cost unpredictability, security, compliance, and hardware/supply-chain constraints are also major worries.
+        * **Must-Have Features:** Advanced scalable compute and accelerator access are universally desired by this persona. Open-source ecosystem compatibility is the top must-have specifically for AI Natives.
+        * **Needs Beyond Features:** Cost transparency and predictable pricing are universally important to him. He also highly values vendor independence, integration flexibility, open-source commitment, and high-quality vendor support. 
+        * **Top Factors to Switch Vendors:** He would be motivated to switch tools for High Performance & Scalability, Cost Transparency & Predictable Pricing, Open-Source Support, and Vendor Independence.
+        * **Vendors Top of Mind:** AWS SageMaker is top of mind overall. AI Enterprises most often think of Google Vertex AI and Microsoft Azure Machine Learning, while AI Natives frequently mention tools like Modal and Hugging Face that allow them to swap components.
+        * **Information Sources:** When evaluating vendors, he relies heavily on his internal colleagues (like the AI Engineering team). AI Natives also depend strongly on online communities, forums, and peer companies.
+        * **Most Impactful Infrastructure Factors:** Observability (metrics, logs, tracing), cost guardrails, budgets, and usage visibility are the most impactful factors for managing AI initiatives. CI/CD reproducibility and environment provisioning speed are also crucial.
+
+      Persona Profile: Sonia, AI Engineer
+
+        ## Overview
+        * [cite_start]**Role:** AI Engineer [cite: 1]
+        * [cite_start]**Alternative Titles:** AI Software Engineer, AI Solutions Engineer, Generative AI Engineer, Conversational AI Engineer, AI Product Engineer, AI Integration Engineer [cite: 1]
+        * [cite_start]**Who I Am:** Sonia builds and deploys LLM-powered applications and agents[cite: 1]. [cite_start]She stitches together prompts, tools, and retrieval pipelines to create reliable, safe, and useful AI experiences[cite: 1]. [cite_start]She owns everything from early prototyping and integration to deployment and monitoring—ensuring the solution meets business goals, scales reliably, and complies with platform and policy constraints[cite: 1]. [cite_start]Success means launching functional, trustworthy agents that balance quality, latency, and cost[cite: 1].
+        * [cite_start]**How I Am Evaluated:** Her success is evaluated primarily by technical performance & security, delivery & iteration velocity, and business impact[cite: 1].
+
+        ---
+
+        ## Responsibilities & Challenges
+        * [cite_start]**Primary Responsibilities:** AI Natives in her role focus on rapid prototyping, fine-tuning, and end-to-end app development, while AI Enterprises emphasize governance, compliance, and safe integration into larger systems[cite: 1]. [cite_start]Core responsibilities include turning LLMs into trustworthy systems, designing prompts and agent flows, integrating data safely, fallback logic, monitoring, and compliance reviews[cite: 1].
+        * [cite_start]**Biggest Challenges:** AI Natives frequently hit cost, resource, and throughput constraints, while AI Enterprises wrestle with governance and integrating into complex stacks[cite: 1]. [cite_start]Scaling is a universal challenge—specifically handling latency, cost, cloud bill spikes, rate limits, and memory bottlenecks under real traffic[cite: 1].
+
+        ---
+
+        ## Motivations & Excitements
+        * [cite_start]**What Excites Me:** AI Natives prioritize innovation & problem-solving, scalability, learning, and collaboration[cite: 1]. [cite_start]AI Enterprises are also most excited about innovation, but lean more toward ROI and tangible business impact[cite: 1]. [cite_start]Enabling developer breakthroughs and solving complex problems at scale drive her excitement[cite: 1].
+        * [cite_start]**What Motivates Me:** Innovation, a passion for technology, and intellectual challenges are the top motivators overall[cite: 1]. [cite_start]The intellectual puzzle of making an agent reliable and continuous learning keep her motivated every day[cite: 1].
+
+        ---
+
+        ## Buying Behavior & Preferences
+        * [cite_start]**Why I Build/Buy:** AI Natives build when new technology or competitive opportunities emerge (innovation and R&D)[cite: 1]. [cite_start]AI Enterprises are more often prompted to build by clear customer demand, cost pressures, and governance or strategic mandates[cite: 1].
+        * [cite_start]**Biggest Concerns:** AI Enterprises are most worried about security & privacy, while AI Natives are most worried about performance, reliability, and scalability[cite: 1]. [cite_start]Integration complexity (getting tools to talk to each other) and production performance (latency spikes, reliability issues) are major shared concerns[cite: 1].
+        * [cite_start]**Must-Have Features:** Scalable infrastructure is table stakes for both[cite: 1]. [cite_start]AI Enterprises lean hardest into security/governance and integration/RAG, while AI Natives prioritize cost optimization and robust evaluation/monitoring[cite: 1].
+        * [cite_start]**Needs Beyond Features:** Support quality and responsiveness are top of mind for AI Natives, whereas compliance, security, and data sovereignty are most important for AI Enterprises[cite: 1]. [cite_start]She also needs vendor financial stability, cost predictability and transparency, and open-source integration flexibility to avoid lock-in[cite: 1].
+        * [cite_start]**Top Factors to Switch Vendors:** * **AI Natives** would switch for: 1) Performance and Scalability Needs, 2) Interoperability and Integration Flexibility, and 3) Development Speed and User Experience[cite: 1]. 
+          * [cite_start]**AI Enterprises** would switch for: 1) Cost and Budget Predictability, 2) Interoperability and Integration Flexibility, and 3) Security, Compliance, and Regulation[cite: 1].
+        * [cite_start]**Vendors Top of Mind:** OpenAI dominates overall mindshare[cite: 1]. [cite_start]AI Natives favor specialized AI development platforms (Hugging Face, Weights & Biases) and direct model access (Anthropic, Mistral)[cite: 1]. [cite_start]AI Enterprises prefer established cloud providers and data platforms (AWS, Microsoft Azure, Google Cloud, Databricks)[cite: 1].
+        * [cite_start]**Information Sources:** AI Natives use online communities and forums (like Reddit and Stack Overflow) most[cite: 1]. [cite_start]AI Enterprises rely heavily on internal colleagues and peer companies/professional networks[cite: 1].
+        * [cite_start]**Most Impactful Infrastructure Factors:** Inference latency is the top factor overall[cite: 1]. [cite_start]Experimentation and evaluation speed is most important for AI Natives, while AI Enterprises see inference latency and reliability as most impactful[cite: 1]. [cite_start]Cost predictability is also a crucial factor[cite: 1].
+
+  - name: Implied marketing strategy
+    guidance: >
+      Considering assessed positioning, value propositions, ideal customer profile, etc
+      What is the implied marketing strategy for the company?
+      What is implied about how it will win?
+      What competitive moat are they building? 
+      What market dynamics are they exploiting?
+      What trends are they riding?
+      This is interpretive — lookfor patterns across pricing, partnerships, technology choices, and geographic expansion.
+
+
+
+
+
+
+
+
+
+

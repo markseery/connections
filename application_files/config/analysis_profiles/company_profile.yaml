@@ -1,0 +1,63 @@
+# Analysis profile: Marketing – Factual & Quantitative
+#
+# Used by batch_analysis.py via --profile marketing_factual
+# Extracts hard facts, numbers, names, and structured data that
+# are explicitly stated on the website.  High context_pct works
+# well here because the model is pattern-matching concrete data.
+
+name: Marketing – Factual & Quantitative
+description: >
+  Extract concrete, verifiable facts from a company's website:
+  corporate details, infrastructure specs, customer names,
+  product listings, and quantitative claims.
+
+# ── Storage source ──
+namespace: webscrape
+key_separator: "\x00"
+
+# ── AI settings ──
+ai_profile: agent
+context_pct: 0.80
+chars_per_token: 3.5
+ai_timeout: 660
+
+topics:
+  - name: Headquarters
+    guidance: >
+      Look for the company's main office location, headquarters city/state/country,
+      and any mention of corporate address or registered office.
+
+  - name: Years in business
+    guidance: >
+      Look for founding date, year established, "since YYYY" language, company
+      history timeline, or mentions of how long the company has been operating.
+
+  - name: Company executive names and titles
+    guidance: >
+      Extract names and titles of executives, founders, C-suite, board members,
+      and senior leadership.  Include any biographical details mentioned.
+
+  - name: Customer names, locations, industry/type of entity, and other relevant details
+    guidance: >
+      Look for named customers, case studies, testimonials, partner logos,
+      customer industries (e.g. finance, healthcare, AI research), and any
+      details about customer deployments or use cases.
+
+  - name: Partner names, locations, industry/type of entity, and other relevant details
+    guidance: >
+      Look for named partners and integrations.
+
+  - name: Products
+    guidance: >
+      Extract product names, product lines, product categories, and brief
+      descriptions of what each product does.  Include pricing tiers if mentioned.
+
+  - name: Solutions
+    guidance: >
+      Look for packaged solutions, vertical-specific offerings, end-to-end
+      solution bundles, and how the company frames problem-solution pairings.
+
+  - name: Services
+    guidance: >
+      Extract professional services, managed services, support tiers,
+      consulting offerings, training programs, and SLAs mentioned.

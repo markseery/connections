@@ -1,0 +1,11 @@
+# Multi-step example: each step can use files and placeholders.
+# Placeholders: {previous_output}, {step_1_output}, {step_2_output}, {<id>_output}
+
+steps:
+  - id: analyze
+    prompt: |
+      Thoughtfully and critically evaluate the following content, in a succinct and terse manner without attempting explanations, highlight any contradictions in stated facts, and just the contradiction, nothing else. 
+    profile: agent
+    files:
+    - coreweave_report.md
+    - coreweave_facts.md

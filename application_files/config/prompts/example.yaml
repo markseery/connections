@@ -1,0 +1,13 @@
+# Example configuration for run_prompt_with_context.py
+# Paths under 'files' are relative to the project root (connections/).
+
+prompt: |
+  Summarize the key points from the context above in 3–5 bullet points.
+
+profile: agent
+
+# Optional: force provider (e.g. ollama, openai, wandb). Omit to use server default for profile.
+# provider: ollama
+
+files:
+  - README.md

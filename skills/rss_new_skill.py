@@ -20,7 +20,9 @@ import os
 import re
 import ssl
 import sys
+import threading
 import time
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -43,6 +45,11 @@ router = APIRouter()
 REGISTRY_URL = os.environ.get("REGISTRY_SERVER_URL", "http://127.0.0.1:7002").rstrip("/")
 STORAGE_NAMESPACE = "rss_notified"
 _conf = SkillConfig("rss_new_skill")
+
+# ── async job store ──────────────────────────────────────────────────────
+
+_jobs: dict[str, dict[str, Any]] = {}
+_jobs_lock = threading.Lock()
 
 
 def _truncate_to_words(text: str, max_words: int) -> str:
@@ -508,9 +515,8 @@ def _process_feed(
     return entries, ids_to_add, True
 
 
-@router.post("/run")
-def run(body: RunRequest) -> dict[str, Any]:
-    """Get new items from a named RSS feed list (diff vs storage). Body: list_name (required, e.g. cloud-news), dry_run (optional), skip_content (optional). Use when user asks for new items from a feed list. Does not send email or persist."""
+def _execute_run(body: RunRequest) -> dict[str, Any]:
+    """Core processing logic for fetching new RSS items."""
     global _debug_log
     list_name = body.list_name.strip()
     dry_run = body.dry_run
@@ -520,28 +526,22 @@ def run(body: RunRequest) -> dict[str, Any]:
         print("[rss_new_skill] skip_content=True: no article fetch, links only", file=sys.stderr, flush=True)
         _log("skip_content=True: no article fetch")
 
-    try:
-        t0 = time.perf_counter()
-        feeds = _load_feed_list(list_name)
-        elapsed = time.perf_counter() - t0
-        msg = f"Loaded feed list in {elapsed:.2f}s: {len(feeds)} feeds"
-        print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
-        _log(msg)
-    except (ValueError, FileNotFoundError) as e:
-        raise HTTPException(status_code=400, detail=str(e)) from e
+    t0 = time.perf_counter()
+    feeds = _load_feed_list(list_name)
+    elapsed = time.perf_counter() - t0
+    msg = f"Loaded feed list in {elapsed:.2f}s: {len(feeds)} feeds"
+    print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
+    _log(msg)
 
     storage_base = ""
     if not dry_run:
-        try:
-            storage_base = _storage_url()
-        except Exception as e:
-            raise HTTPException(status_code=503, detail=f"Storage: {e}") from e
+        storage_base = _storage_url()
 
     worker_url = (body.worker_url or "").strip().rstrip("/")
     if not worker_url:
         w = find_live_worker(REGISTRY_URL)
         if not w:
-            raise HTTPException(status_code=503, detail="No live worker in registry")
+            raise RuntimeError("No live worker in registry")
         worker_url = w.rstrip("/")
 
     t0 = time.perf_counter()
@@ -573,11 +573,9 @@ def run(body: RunRequest) -> dict[str, Any]:
             errors += 1
 
     if skip_content:
-        # Warmup: no content fetch, no content-based filtering. Just links.
         for entry in all_entries:
             entry["content"] = ""
     else:
-        # Fetch and sanitize page content for each new item (parallel, capped concurrency)
         def _fetch_content_for_link(link: str) -> str:
             try:
                 return _fetch_page_content(link) if link else ""
@@ -599,7 +597,6 @@ def run(body: RunRequest) -> dict[str, Any]:
         for entry, content in zip(all_entries, contents):
             entry["content"] = content
 
-        # When many items, cap each item's content to avoid overwhelming summarization/later steps
         if n_links > _conf.get("content_cap_links_threshold", 100):
             cap_words = _conf.get("content_cap_words", 500)
             thresh = _conf.get("content_cap_links_threshold", 100)
@@ -611,7 +608,6 @@ def run(body: RunRequest) -> dict[str, Any]:
             print(f"[rss_new_skill] {msg}", file=sys.stderr, flush=True)
             _log(msg)
 
-        # Drop Google News items that have no meaningful content (e.g. 429, or Angular wrapper stub)
         decoder = _get_google_news_decoder()
         filtered_entries = []
         filtered_ids = []
@@ -655,6 +651,64 @@ def run(body: RunRequest) -> dict[str, Any]:
         extra["fetch_debug"] = _debug_log
     _debug_log = None
     return skill_result(summary=summary, items=items, **extra)
+
+
+@router.post("/run")
+def run(body: RunRequest) -> dict[str, Any]:
+    """Accept a run request, execute in a background thread, return job_id immediately.
+    Poll GET /jobs/{job_id} for status and results. Use when user asks for new items from a feed list."""
+    job_id = str(uuid.uuid4())
+
+    try:
+        _load_feed_list(body.list_name.strip())
+    except (ValueError, FileNotFoundError) as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+    with _jobs_lock:
+        _jobs[job_id] = {
+            "status": "running",
+            "started_at": datetime.now(timezone.utc).isoformat(),
+            "result": None,
+            "error": None,
+        }
+
+    def _bg() -> None:
+        try:
+            result = _execute_run(body)
+            with _jobs_lock:
+                _jobs[job_id]["status"] = "completed"
+                _jobs[job_id]["result"] = result
+                _jobs[job_id]["completed_at"] = datetime.now(timezone.utc).isoformat()
+        except Exception as exc:
+            with _jobs_lock:
+                _jobs[job_id]["status"] = "failed"
+                _jobs[job_id]["error"] = str(exc)
+                _jobs[job_id]["completed_at"] = datetime.now(timezone.utc).isoformat()
+
+    threading.Thread(target=_bg, daemon=True).start()
+
+    return {"job_id": job_id, "status": "running", "poll": f"/skills/rss_new_skill/jobs/{job_id}"}
+
+
+@router.get("/jobs/{job_id}")
+def get_job(job_id: str) -> dict[str, Any]:
+    """Poll job status. Returns full result when completed."""
+    with _jobs_lock:
+        job = _jobs.get(job_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+    out: dict[str, Any] = {
+        "job_id": job_id,
+        "status": job["status"],
+        "started_at": job.get("started_at"),
+    }
+    if job["status"] == "completed":
+        out["result"] = job["result"]
+        out["completed_at"] = job.get("completed_at")
+    elif job["status"] == "failed":
+        out["error"] = job["error"]
+        out["completed_at"] = job.get("completed_at")
+    return out
 
 
 def get_router() -> APIRouter:

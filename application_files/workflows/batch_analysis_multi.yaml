@@ -1,0 +1,91 @@
+# Multi-profile batch analysis across one or more sites.
+#
+# Runs batch_analysis.py sequentially for each (site, profile) combination.
+# Reports are written to application_files/data/reports/<profile>/<site>.md.
+#
+# CLI:
+#   python3 application_files/scripts/workflow_run.py batch_analysis_multi.yaml \
+#     --set site_1=https://nebius.com --set site_1_name=nebius
+#
+#   # Two sites, all profiles:
+#   python3 application_files/scripts/workflow_run.py batch_analysis_multi.yaml \
+#     --set site_1=https://nebius.com --set site_1_name=nebius \
+#     --set site_2=https://coreweave.com --set site_2_name=coreweave
+#
+# Submit via API:
+#   POST /workflows/submit
+#   {
+#     "config": "batch_analysis_multi.yaml",
+#     "vars": {
+#       "site_1": "https://nebius.com",
+#       "site_2": "https://coreweave.com"
+#     },
+#     "subprocess_timeout": 7200
+#   }
+
+id: batch_analysis_multi
+parallel: true
+description: >
+  Multi-profile batch analysis: run {profile_1}, {profile_2}, {profile_3}
+  against {site_1} and {site_2}.
+
+vars:
+  site_1: https://example.com
+  site_2: https://example.com
+  site_1_name: example
+  site_2_name: example
+  profile_1: company_profile
+  profile_2: operational_metrics
+  profile_3: marketing_analysis
+  profile_4: compute_profile
+
+steps:
+  # ── Site 1 ──
+
+  - id: s1_p1
+    type: subprocess
+    timeout: 3600
+    command:
+      - python3
+      - application_files/scripts/batch_analysis.py
+      - "{site_1}"
+      - "--profile"
+      - "{profile_1}"
+      - "--out"
+      - "application_files/data/reports/{profile_1}/{site_1_name}.md"
+
+  - id: s1_p2
+    type: subprocess
+    timeout: 3600
+    command:
+      - python3
+      - application_files/scripts/batch_analysis.py
+      - "{site_1}"
+      - "--profile"
+      - "{profile_2}"
+      - "--out"
+      - "application_files/data/reports/{profile_2}/{site_1_name}.md"
+
+  - id: s1_p3
+    type: subprocess
+    timeout: 3600
+    command:
+      - python3
+      - application_files/scripts/batch_analysis.py
+      - "{site_1}"
+      - "--profile"
+      - "{profile_3}"
+      - "--out"
+      - "application_files/data/reports/{profile_3}/{site_1_name}.md"
+
+  - id: s1_p4
+    type: subprocess
+    timeout: 3600
+    command:
+      - python3
+      - application_files/scripts/batch_analysis.py
+      - "{site_1}"
+      - "--profile"
+      - "{profile_4}"
+      - "--out"
+      - "application_files/data/reports/{profile_4}/{site_1_name}.md"

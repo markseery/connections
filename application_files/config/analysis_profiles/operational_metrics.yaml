@@ -1,0 +1,52 @@
+# Analysis profile: Marketing – Factual & Quantitative
+#
+# Used by batch_analysis.py via --profile marketing_factual
+# Extracts hard facts, numbers, names, and structured data that
+# are explicitly stated on the website.  High context_pct works
+# well here because the model is pattern-matching concrete data.
+
+name: Marketing – Factual & Quantitative
+description: >
+  Extract concrete, verifiable facts from a company's website:
+  corporate details, infrastructure specs, customer names,
+  product listings, and quantitative claims.
+
+# ── Storage source ──
+namespace: webscrape
+key_separator: "\x00"
+
+# ── AI settings ──
+ai_profile: agent
+context_pct: 0.80
+chars_per_token: 3.5
+ai_timeout: 660
+
+topics:
+
+  - name: Number of data centers, their locations, GPUs, and power capacity
+    guidance: >
+      Look for data center counts, geographic locations (city, state, country),
+      GPU types and quantities (e.g. H100, A100), and power capacity in
+      megawatts or gigawatts.  Include both operational and planned facilities.
+
+  - name: Active and contracted megawatts, terawatts, and other measures of power
+    guidance: >
+      Extract any power consumption or capacity figures: megawatts (MW),
+      gigawatts (GW), terawatts (TW), power purchase agreements (PPAs),
+      and energy sourcing details (renewable, grid, etc.).
+
+  - name: Installed, active and future number of GPUs
+    guidance: >
+      Look for current GPU fleet size, planned GPU deployments, GPU roadmaps,
+      specific GPU models and counts, and any capacity expansion announcements.
+
+  - name: Teraflops and exaflops
+    guidance: >
+      Extract any compute performance figures: teraflops (TFLOPS), petaflops
+      (PFLOPS), exaflops (EFLOPS), benchmarks, or performance comparisons.
+
+  - name: Other Capacity and Performance
+    guidance: >
+      Any other capacity or performance related metrics.
+
+

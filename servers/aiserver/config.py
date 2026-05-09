@@ -20,10 +20,10 @@ from dotenv import load_dotenv
 logger = logging.getLogger(__name__)
 
 Provider = Literal["ollama", "openai", "xai", "google", "perplexity", "wandb", "anthropic", "mlx"]
-Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"]
+Profile = Literal["fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch", "local"]
 
 SUPPORTED_PROVIDERS: set[str] = {"ollama", "openai", "xai", "google", "perplexity", "wandb", "anthropic", "mlx"}
-SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch"}
+SUPPORTED_PROFILES: set[str] = {"fast", "chat", "reason", "agent", "code", "image", "video", "search", "batch", "local"}
 
 
 from common.simple.user_dir import resolve_env_file
@@ -81,6 +81,8 @@ def get_provider_for_profile(profile: Profile) -> Provider:
         return "anthropic"
     if profile == "batch":
         return "mlx"
+    if profile == "local":
+        return "ollama"
     return get_default_provider()
 
 
@@ -180,6 +182,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "gemma3:4b",
             "video": "gemma3:4b",
             "search": "gemma3:4b",
+            "local": "gemma4:e4b",
         }
         return defaults[profile]
 
@@ -193,6 +196,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "gpt-image-1",
             "video": "gpt-4o",
             "search": "gpt-4o-mini",
+            "local": "gpt-4o-mini",
         }
         return defaults[profile]
 
@@ -206,6 +210,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "grok-3",
             "video": "grok-3",
             "search": "grok-3-mini",
+            "local": "grok-3-mini",
         }
         return defaults[profile]
 
@@ -219,6 +224,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "gemini-2.0-flash",
             "video": "gemini-2.0-flash",
             "search": "gemini-2.0-flash",
+            "local": "gemini-2.0-flash",
         }
         return defaults[profile]
 
@@ -235,6 +241,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "zai-org/GLM-5-FP8",
             "video": "zai-org/GLM-5-FP8",
             "search": "zai-org/GLM-5-FP8",
+            "local": "zai-org/GLM-5-FP8",
         }
         return defaults[profile]
 
@@ -248,6 +255,7 @@ def get_model(provider: Provider, profile: Profile) -> str:
             "image": "claude-sonnet-4-20250514",
             "video": "claude-sonnet-4-20250514",
             "search": "claude-haiku-4-5-20251001",
+            "local": "claude-haiku-4-5-20251001",
         }
         return defaults[profile]
 

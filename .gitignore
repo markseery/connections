@@ -10,11 +10,10 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# Runtime data — lives in user dir (application_files/)
+# Runtime data — lives in user dir (application_files/ logs + data still ignored below)
 logs/
 data/
 application/
-application_files/
 
 .DS_Store
 

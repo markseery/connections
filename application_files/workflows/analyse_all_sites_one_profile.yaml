@@ -1,0 +1,54 @@
+# Run batch_analysis_multi against multiple sites.
+#
+# Each step is a nested workflow that runs all three analysis profiles
+# (company_profile, operational_metrics, marketing_analysis) for one site.
+#
+# Sites run sequentially to stay within AI provider rate limits.
+# The inner batch_analysis_multi.yaml runs profiles in parallel per site.
+#
+# CLI:
+#   python3 application_files/scripts/workflow_run.py analyse_all_sites.yaml
+#
+# Submit via API:
+#   POST /workflows/submit
+#   { "config": "analyse_all_sites.yaml", "subprocess_timeout": 7200 }
+
+id: analyse_all_sites
+description: >
+  Run all analysis profiles against nebius, coreweave, iren, nscale, and lambda.
+
+steps:
+  - id: nebius
+    type: workflow
+    config: batch_analysis_single_profile.yaml
+    vars:
+      site_1: https://nebius.com
+      site_1_name: nebius
+
+  - id: coreweave
+    type: workflow
+    config: batch_analysis_multi.yaml
+    vars:
+      site_1: batch_analysis_single_profile.yaml
+      site_1_name: coreweave
+
+  - id: iren
+    type: workflow
+    config: batch_analysis_single_profile.yaml
+    vars:
+      site_1: https://iren.com
+      site_1_name: iren
+
+  - id: nscale
+    type: workflow
+    config: batch_analysis_single_profile.yaml
+    vars:
+      site_1: https://nscale.com
+      site_1_name: nscale
+
+  - id: lambda
+    type: workflow
+    config: batch_analysis_single_profile.yaml
+    vars:
+      site_1: https://lambda.ai
+      site_1_name: lambda

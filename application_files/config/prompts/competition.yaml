@@ -1,0 +1,22 @@
+# Multi-step example: each step can use files and placeholders.
+# Placeholders: {previous_output}, {step_1_output}, {step_2_output}, {<id>_output}
+
+steps:
+  - id: analyze
+    prompt: |
+      What is the basis of competition in AI cloud?
+    profile: agent
+    files:
+    - coreweave_report.md
+    - nebius_report.md
+    - nscale_report.md
+    - iren_report.md
+
+  - id: summarize
+    prompt: |
+      Summarize the below in a few succinct and terse bullet points :
+
+      {previous_output}
+
+    profile: agent
+    # no files; input comes from placeholder

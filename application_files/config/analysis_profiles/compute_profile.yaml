@@ -1,0 +1,51 @@
+# Analysis profile: Marketing – Factual & Quantitative
+#
+# Used by batch_analysis.py via --profile marketing_factual
+# Extracts hard facts, numbers, names, and structured data that
+# are explicitly stated on the website.  High context_pct works
+# well here because the model is pattern-matching concrete data.
+
+name: How compute products and services are messaged
+description: >
+  Extract concrete, verifiable facts from a company's website:
+  compute products and services, H100, B200, GB200, B300, GB300, NVL72, Vera Rubin
+
+# ── Storage source ──
+namespace: webscrape
+key_separator: "\x00"
+
+# ── AI settings ──
+ai_profile: agent
+context_pct: 0.80
+chars_per_token: 3.5
+ai_timeout: 660
+
+topics:
+  - name: Compute products and services
+    guidance: >
+      All mentions of compute products and services including GPUs, CPUs, NVIDIA products, Non-NVDIA products,
+      pricing, performance, capacity, benefits, and differentiators
+
+  - name: Vera Rubin
+    guidance: >
+      All mentions of Vera Rubin or Rubin
+
+  - name: NVL72
+    guidance: >
+      All mentions of rack-based offerings
+
+  - name: GB300
+    guidance: >
+      All mentions of GB300
+
+  - name: GB200
+    guidance: >
+      All mentions of GB200
+
+  - name: B300
+    guidance: >
+      All mentions of B300
+
+  - name: B200
+    guidance: >
+      All mentions of B200

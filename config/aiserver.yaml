@@ -52,6 +52,7 @@ context_windows:
 
   # Ollama
   gemma3:4b: 128000
+  gemma4:e4b: 128000
 
   # MLX
   mlx-community/Mistral-7B-Instruct-v0.3-4bit: 32768
