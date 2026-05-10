@@ -6,3 +6,5 @@ logs/
 __pycache__/
 *.pyc
 .DS_Store
+data/site_crawl_baselines/
+data/
