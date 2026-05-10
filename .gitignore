@@ -2,3 +2,7 @@
 application_files/
 scripts/
 tests/
+logs/
+__pycache__/
+*.pyc
+.DS_Store
