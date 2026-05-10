@@ -1,0 +1,255 @@
+{
+  "facts": [
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "AI Cloud",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "The ultimate cloud for AI innovators Built to democratize AI infrastructure and empower builders everywhere."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA GB300 NVL72",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Choose the GPU that suits you best: NVIDIA GB300 NVL72, GB200 NVL72, B300, B200, H200 or H100."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA GB200 NVL72",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Pre-order Be among the first to get access to NVIDIA GB200 NVL72, the most advanced NVIDIA accelerators on the market."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA B200 GPU",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "$3.00 / per hour Intel Emerald Rapids 1x or 8x B200 GPU 180GB SXM 16x or 128x vCPU 224 or 1792 GB DDR5 3.2 Tbit/s InfiniBand Available now"
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA H200 GPU",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "$2.30 / per hour Intel Sapphire Rapids 1x or 8x H200 GPU 141GB SXM 16x or 128x vCPU 200 or 1600 GB DDR5 3.2 Tbit/s InfiniBand Available now"
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA H100 GPU",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "$2.00 / per hour Intel Sapphire Rapids 1x or 8x H100 GPU 80GB SXM 16x or 128x vCPU 200 or 1600 GB DDR5 3.2 Tbit/s InfiniBand Available now"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "80-90%",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Junior researchers with no gene editing experience now achieve 80-90% efficiency on first attempt."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "100%",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "100% success rates for novice researchers"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "1 day",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Training time reduced from weeks-to-months down to 1 day"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "1 week",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "1 week to get cluster online"
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "CRISPR-GPT",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "CRISPR-GPT is an LLM-powered agent system developed by scientists from Stanford, Princeton and Google DeepMind to automate gene editing experiments, from CRISPR system selection to sgRNA design and data analysis."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "vLLM",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "vLLM is an open-source framework under the Linux Foundation, designed to optimize LLM inference at scale."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Answer with AI",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Its AI-powered feature, Answer with AI, provides real-time, privacy-centric summaries for user queries."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "CentML Platform",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "The CentML Platform powers open-source model deployment with automated compute optimizations and flexible configurations."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Stable diffusion inference",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "TheStage AI builds inference simulators and DNN optimization tools for a wide range of hardware, significantly reducing GPU costs."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Recraft",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Recraft is an AI design tool that lets users create and edit digital illustrations, vector art, icons and 3D graphics in a uniform brand style."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Stanford",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "CRISPR-GPT is an LLM-powered agent system developed by scientists from Stanford, Princeton and Google DeepMind to automate gene editing experiments, from CRISPR system selection to sgRNA design and data analysis."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Princeton",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "CRISPR-GPT is an LLM-powered agent system developed by scientists from Stanford, Princeton and Google DeepMind to automate gene editing experiments, from CRISPR system selection to sgRNA design and data analysis."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Google DeepMind",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "CRISPR-GPT is an LLM-powered agent system developed by scientists from Stanford, Princeton and Google DeepMind to automate gene editing experiments, from CRISPR system selection to sgRNA design and data analysis."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Brave Software",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Brave Software, with over 80 million users, develops a fast, privacy-focused browser and Brave Search, an independent search engine."
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "EU-based compute capabilities",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Enhanced compliance with EU compute requirements"
+    },
+    {
+      "fact_type": "event",
+      "value_type": "name",
+      "value": "ISEG",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "We filmed this video 60 kilometers from Helsinki, the home of the first Nebius data center. This is where we built ISEG, the #19 most powerful supercomputer in the world."
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "name",
+      "value": "Nebius",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "The ultimate cloud for AI innovators Built to democratize AI infrastructure and empower builders everywhere."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "60",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "We filmed this video 60 kilometers from Helsinki, the home of the first Nebius data center."
+    },
+    {
+      "fact_type": "location",
+      "value_type": "name",
+      "value": "Helsinki",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "We filmed this video 60 kilometers from Helsinki, the home of the first Nebius data center."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "11M+",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "11M+ AI-generated answers daily"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "1.3B",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "1.3B search queries per month"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "80M",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Brave Software, with over 80 million users, develops a fast, privacy-focused browser and Brave Search, an independent search engine."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "500 ms",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "~500 ms to process one image during inference"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "4x",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "4x leap in speed over the early version of the framework running on A100"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "1B",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "1B parameters of the model"
+    }
+  ],
+  "count": 31,
+  "source_file": "nebius.md",
+  "site": "https://nebius.com"
+}

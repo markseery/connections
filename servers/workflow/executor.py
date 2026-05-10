@@ -23,6 +23,7 @@ from typing import Any
 
 import yaml
 
+from common.compound.aiserver_discovery import get_aiserver_base_url
 from common.compound.http_client import http_client
 from common.complex.skill_lifecycle import find_live_worker
 from common.simple.timeouts import get as _timeout
@@ -169,14 +170,10 @@ class WorkflowExecutor:
     def _get_ai_url(self) -> str:
         if self._aiserver_url:
             return self._aiserver_url
-        with http_client("registry") as client:
-            r = client.get(f"{self.registry_url}/servers/aiserver")
-            r.raise_for_status()
-            url = (r.json() or {}).get("url")
-            if not url:
-                raise ValueError("Registry missing url for aiserver")
-            self._aiserver_url = str(url).rstrip("/")
-            return self._aiserver_url
+        self._aiserver_url = get_aiserver_base_url(
+            registry_override=self.registry_url.strip().rstrip("/"),
+        )
+        return self._aiserver_url
 
     def _get_worker_url(self) -> str:
         if self._worker_url:

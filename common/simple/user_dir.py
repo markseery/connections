@@ -79,7 +79,12 @@ def resolve_logs() -> Path:
 
 
 def resolve_env_file() -> Path | None:
-    """Return path to ``.env`` in user dir if it exists, else repo root."""
+    """Return one ``.env`` path for callers that need a single file (e.g. display).
+
+    Prefer ``application_files/.env`` when it exists, else repo root ``.env``.
+    For loading variables into ``os.environ``, use :func:`load_connections_dotenv`
+    instead so keys in *either* file are applied.
+    """
     user_env = user_dir() / ".env"
     if user_env.is_file():
         return user_env
@@ -87,6 +92,28 @@ def resolve_env_file() -> Path | None:
     if repo_env.is_file():
         return repo_env
     return None
+
+
+def load_connections_dotenv() -> None:
+    """Load ``.env`` from repo root and user dir into ``os.environ``.
+
+    Loads ``<repo>/.env`` first with ``override=False`` (does not clobber vars
+    already exported in the shell), then ``application_files/.env`` with
+    ``override=True`` so user entries win on the same key.
+
+    When both files exist, variables present only in the repo file are still
+    visible after the second load (dotenv does not unset keys omitted from the
+    user file). That matches the common layout: secrets in repo ``.env``, plus a
+    smaller ``application_files/.env`` for overrides.
+    """
+    from dotenv import load_dotenv
+
+    repo_env = _REPO_ROOT / ".env"
+    if repo_env.is_file():
+        load_dotenv(repo_env, override=False)
+    user_env = user_dir() / ".env"
+    if user_env.is_file():
+        load_dotenv(user_env, override=True)
 
 
 def resolve_workflows_dir() -> tuple[Path | None, Path | None]:

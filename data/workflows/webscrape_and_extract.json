@@ -1,0 +1,57 @@
+{
+  "name": "webscrape_and_extract",
+  "description": "Scrape a URL (with pages/depth) and summarize only content related to a topic (e.g. products, brand, positioning).",
+  "params": ["url", "topic"],
+  "optional_params": {
+    "max_pages": 30,
+    "max_depth": 2
+  },
+  "param_aliases": {
+    "pages": "max_pages",
+    "depth": "max_depth"
+  },
+  "param_constraints": {
+    "max_pages": { "min": 1, "max": 200 },
+    "max_depth": { "min": 1, "max": 8 }
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "skill": "webscraper_skill",
+      "method": "POST",
+      "route": "/skills/webscraper_skill/scrape",
+      "args": {
+        "url": "{{url}}",
+        "max_pages": "{{max_pages}}",
+        "max_depth": "{{max_depth}}",
+        "summarize": false
+      },
+      "poll": {
+        "route": "/skills/webscraper_skill/scrape/$step.1.job_id",
+        "field": "status",
+        "target": "completed",
+        "interval": 2,
+        "max_attempts": 120
+      }
+    },
+    {
+      "step_id": 2,
+      "skill": "webscraper_skill",
+      "method": "GET",
+      "route": "/skills/webscraper_skill/scrape/$step.1.job_id/markdown",
+      "depends_on": [1]
+    },
+    {
+      "step_id": 3,
+      "skill": "webscraper_skill",
+      "method": "POST",
+      "route": "/skills/webscraper_skill/summarize_text",
+      "args": {
+        "text": "$step.2.markdown",
+        "topic": "{{topic}}"
+      },
+      "depends_on": [2]
+    }
+  ],
+  "created_at": "2026-03-10T00:00:00Z"
+}

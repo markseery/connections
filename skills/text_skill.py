@@ -20,27 +20,17 @@ import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from common.simple.skill_response import skill_result
+from common.compound.aiserver_discovery import get_aiserver_base_url
 from common.compound.skill_config import SkillConfig
+from common.simple.skill_response import skill_result
 from decorations.monitor import monitor
 
 router = APIRouter()
 _conf = SkillConfig("text_skill")
 
 
-_AISERVER_FALLBACK = "http://127.0.0.1:7012"
-
-
-def _aiserver_url() -> str:
-    try:
-        from common.compound.registry_client import get_server_url
-        return get_server_url("aiserver")
-    except Exception:
-        return _AISERVER_FALLBACK
-
-
 def _ai_generate(prompt: str, profile: str | None = None) -> str:
-    aiserver = _aiserver_url()
+    aiserver = get_aiserver_base_url()
     profile = profile or _conf.get("default_ai_profile", "fast")
     timeout = _conf.get("ai_timeout", 120.0)
     with httpx.Client(timeout=timeout) as client:

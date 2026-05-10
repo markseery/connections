@@ -31,8 +31,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 
+from common.compound.aiserver_discovery import get_aiserver_base_url
 from common.compound.http_client import http_client
-from common.compound.registry_client import get_server_url
 from common.complex.skill_lifecycle import find_live_worker
 
 _ROOT = Path(__file__).resolve().parents[2]
@@ -338,7 +338,7 @@ class ContextCurator:
 
 def _ai_call(prompt: str, *, profile: str, timeout: float) -> str:
     """Call the AI server. Raises on failure — no silent fallbacks."""
-    aiserver = get_server_url("aiserver")
+    aiserver = get_aiserver_base_url()
     payload: dict[str, Any] = {"prompt": prompt, "profile": profile}
 
     with http_client("context_curator", timeout=timeout) as client:

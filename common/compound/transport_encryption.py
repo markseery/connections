@@ -11,22 +11,20 @@ from __future__ import annotations
 import base64
 import json
 import os
-from pathlib import Path
 from typing import Any
 
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from dotenv import load_dotenv
 
 
 TRANSPORT_ENCRYPTION_KEY_ENV = "TRANSPORT_ENCRYPTION_KEY"
 
 
 def _load_env() -> None:
-    from common.simple.user_dir import resolve_env_file
-    env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
-    load_dotenv(env_path)
+    from common.simple.user_dir import load_connections_dotenv
+
+    load_connections_dotenv()
 
 
 def _derive_fernet_key(key_bytes: bytes) -> bytes:

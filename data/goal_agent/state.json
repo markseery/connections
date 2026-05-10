@@ -1,0 +1,15 @@
+{
+  "tick_count": 1,
+  "recent_tick_summaries": [
+    {
+      "tick": 1,
+      "request_id": "ab50ecf0-5c58-4410-a4d6-5b6bf06b47fe",
+      "success": false,
+      "had_steps": true,
+      "answer": "Objective: test\n\nResults:\n\nFailed:\n  - help_skill: {\"detail\":\"Not Found\"}"
+    }
+  ],
+  "last_gap_signature": "3c0c0254a9948b389357bd819e8984ee3f5d0acedb8d862326f11e907b30e3cf",
+  "last_notification_at": "2026-03-21T17:13:57.842226Z",
+  "last_tick_at": "2026-03-21T17:13:36.185554Z"
+}

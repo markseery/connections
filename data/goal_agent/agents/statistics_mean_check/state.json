@@ -1,0 +1,39 @@
+{
+  "agent_id": "statistics_mean_check",
+  "tick_count": 4,
+  "recent_tick_summaries": [
+    {
+      "tick": 1,
+      "request_id": "52934d18-5826-40ab-b3ca-c03a4e880be1",
+      "success": true,
+      "had_steps": true,
+      "answer": "What is the arithmetic mean of the numbers 7, 14, 21, 28, and 35?\nstatistics: **Mean:** 21.0"
+    },
+    {
+      "tick": 2,
+      "request_id": "4e10a7b3-7c88-410f-ae6f-b89531a7a786",
+      "success": true,
+      "had_steps": true,
+      "answer": "What is the arithmetic mean of the numbers 7, 14, 21, 28, and 35? Use the statistics skill to compute it and state the numeric result.\nstatistics: **Mean:** 21.0"
+    },
+    {
+      "tick": 3,
+      "request_id": "005aa950-a239-4d0d-ba18-12772e04453e",
+      "success": true,
+      "had_steps": true,
+      "answer": "What is the arithmetic mean of the numbers 7, 14, 21, 28, and 35? Use the statistics skill to compute it and state the numeric result.\nstatistics: **Mean:** 21.0"
+    },
+    {
+      "tick": 4,
+      "request_id": "71522aba-90c8-447e-94e6-b6b6d4f524a5",
+      "success": true,
+      "had_steps": true,
+      "answer": "Once a day, detect and notify any new https://nebius.com pages since the last webscrape.\nnotification_skill: Notification config (sender, throttle).\nnotification_skill: **160** notifications (by status: {'failed': 38, 'sent': 122}).\nwebscraper_skill: **0** scrape jobs.\nwebscraper_skill: failed \u2014 {\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"url\"],\"msg\":\"Field required\",\"input\":{}}]}\nwebscraper_skill: failed \u2014 307\nnotification_skill: failed \u2014 {\"detail\":[{\"type\":\"value_error\",\"loc\":[\"body\"],\"msg\":\"Value error, to is required\",\"input\":{},\"ctx\":{\"error\":{}}}]}\n(Partial result \u2014 some steps failed.)"
+    }
+  ],
+  "last_gap_signature": "a2f32e5c4d3509a81666b54a0c7d3dd6a3ff2d784e20817047cd76501c0294b6",
+  "last_notification_at": "2026-03-21T19:16:12.192750Z",
+  "last_tick_at": "2026-03-21T19:15:43.508377Z",
+  "last_scheduled_interval_seconds": 86400.0,
+  "last_schedule_rationale": "The last run failed due to missing parameters in both webscraper and notification skills, requiring manual debugging before the next daily attempt."
+}

@@ -95,6 +95,20 @@ SKILL_CATALOG: dict[str, dict[str, Any]] = {
             "GET /skills/stock_skill/earnings/{symbol}": "Earnings data.",
         },
     },
+    "distribution_history_skill": {
+        "description": "Compare dividend/distribution history across yfinance and StockAnalysis, and compute confidence-weighted distribution signal.",
+        "examples": [
+            "distribution history signal for SCHD",
+            "compare distribution history for JEPI",
+            "show source agreement for VYM distributions",
+        ],
+        "routes": {
+            "GET /skills/distribution_history_skill/signal/{symbol}": "Distribution signal with 30-day per-share rate and confidence.",
+            "POST /skills/distribution_history_skill/signal": "Same as GET, body: {\"symbol\": \"SCHD\"}.",
+            "GET /skills/distribution_history_skill/compare/{symbol}": "Side-by-side source comparison rows.",
+            "POST /skills/distribution_history_skill/compare": "Same as GET with row limit, body: {\"symbol\": \"SCHD\", \"limit\": 50}.",
+        },
+    },
     "news_skill": {
         "description": "Search for news on any topic or stock. Combines yfinance ticker news with web search results.",
         "examples": [

@@ -96,8 +96,11 @@ checks the user directory first when resolving config paths.
 
 ## Environment variables
 
-Your `.env` is loaded from `application_files/.env` (preferred) or the repo
-root `.env` as a fallback.  Some values are required; many are optional.
+At runtime, **`load_connections_dotenv()`** (in `common/simple/user_dir.py`) loads **both** `/.env` files when they exist: first **`<repo>/.env`**, then **`application_files/.env`** (user entries override the same variable name). Put secrets in either file; if you use both, keys only in the repo file still apply after the user file is loaded.
+
+`resolve_env_file()` still returns a **single** path for tools that need one file (user `.env` if present, else repo). That is not the same as “which keys are loaded”—servers use the dual-file merge above.
+
+Some values are required; many are optional.
 
 ### Core / required for most runs
 - **`STORAGE_ENCRYPTION_KEY`**: Fernet key for encrypting records at rest in the storage server.

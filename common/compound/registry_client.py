@@ -10,15 +10,12 @@ from __future__ import annotations
 
 import os
 import threading
-from pathlib import Path
 
 import httpx
-from dotenv import load_dotenv
 
-from common.simple.user_dir import resolve_env_file
+from common.simple.user_dir import load_connections_dotenv
 
-_env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(_env_path)
+load_connections_dotenv()
 
 _REGISTRY_ENV = "REGISTRY_SERVER_URL"
 _DEFAULT_REGISTRY = "http://127.0.0.1:7002"

@@ -1,0 +1,555 @@
+{
+  "facts": [
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA GB200 NVL72",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Nebius offers the NVIDIA GB200 NVL72, described as the most advanced NVIDIA accelerator on the market."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Nebius AI Cloud",
+      "source_url": "https://nebius.com/ai-cloud",
+      "source_name": "Nebius",
+      "context": "Nebius AI Cloud provides access to NVIDIA accelerated computing clusters with pre-installed drivers and engineering support."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "$3.00 / per hour",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "The hourly cost for the NVIDIA B200 GPU instance on Nebius AI Cloud."
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "HIPAA, SOC 2, GDPR, ISO 27001",
+      "source_url": "https://nebius.com/ai-cloud",
+      "source_name": "Nebius",
+      "context": "Nebius AI Cloud maintains compliance with HIPAA, SOC 2, GDPR, and ISO 27001 standards."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "DataRobot",
+      "source_url": "https://nebius.com/blog",
+      "source_name": "Nebius",
+      "context": "Nebius and DataRobot announced a validated AI Factory stack for production-grade agent workloads."
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "person",
+      "value": "Arkady Volozh",
+      "source_url": "https://nebius.com/about",
+      "source_name": "Nebius",
+      "context": "Arkady Volozh serves as the Founder, Chief Executive Officer, and Board member of Nebius."
+    },
+    {
+      "fact_type": "location",
+      "value_type": "name",
+      "value": "Amsterdam",
+      "source_url": "https://nebius.com/about",
+      "source_name": "Nebius",
+      "context": "Nebius is headquartered in Amsterdam."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "datetime",
+      "value": "March 16-19, 2026",
+      "source_url": "https://nebius.com/blog/posts/datarobot-validated-ai-factory-stack",
+      "source_name": "Nebius",
+      "context": "NVIDIA GTC 2026 takes place in San Jose, California."
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Eliot Andres",
+      "source_url": "https://nebius.com/ai-cloud",
+      "source_name": "Nebius",
+      "context": "Eliot Andres, Co-founder & CTO at Photoroom, stated that Nebius provided the reliable infrastructure needed to scale training seamlessly."
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "InfiniBand",
+      "source_url": "https://nebius.com",
+      "source_name": "Nebius",
+      "context": "Nebius uses high-performance InfiniBand and Quantum-X800 InfiniBand networking for its clusters."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "Inference Frontier Program",
+      "source_url": "https://nebius.com/blog/posts/elevating-the-craft-introducing-the-inference-frontier-program",
+      "source_name": "Nebius",
+      "context": "A new builder-to-builder initiative dedicated to production inference systems and sharing optimizations."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "datetime",
+      "value": "March 15, 2026",
+      "source_url": "https://nebius.com/blog/posts/elevating-the-craft-introducing-the-inference-frontier-program",
+      "source_name": "Nebius",
+      "context": "The date the Inference Frontier Program was introduced."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "NVIDIA Blackwell GPUs",
+      "source_url": "https://nebius.com/blog/posts/fragmented-data-to-production-agents-nebius-and-nexla",
+      "source_name": "Nebius",
+      "context": "Self-service NVIDIA HGX B200 instances made available in Nebius AI Cloud."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "169,800 GPU hours",
+      "source_url": "https://nebius.com/blog/posts/how-we-build-reliable-clusters",
+      "source_name": "Nebius",
+      "context": "Measurement of stable operation for a 3,000-GPU production cluster."
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Gaurav Misra",
+      "source_url": "https://nebius.com/blog/posts/how-we-build-reliable-clusters",
+      "source_name": "Nebius",
+      "context": "Co-Founder and CEO of Mirage, testifying to the predictability and efficiency of Nebius clusters."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "SWE-rebench-V2",
+      "source_url": "https://nebius.com/blog/posts/meet-swe-rebench-v2",
+      "source_name": "Nebius",
+      "context": "A multilingual, executable dataset for training Software Engineering Agents."
+    },
+    {
+      "fact_type": "other",
+      "value_type": "location",
+      "value": "eu-north-1",
+      "source_url": "https://nebius.com/blog/posts/incident-post-mortem-analysis-eu-north-1-service-disruption",
+      "source_name": "Nebius",
+      "context": "The region affected by a power infrastructure fault on February 26, 2026."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "NVIDIA Inception",
+      "source_url": "https://nebius.com/blog/posts/elevating-the-craft-introducing-the-inference-frontier-program",
+      "source_name": "Nebius",
+      "context": "Nebius AI Cloud collaboration to accelerate AI startup innovation with cloud credits."
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "person",
+      "value": "Boris Yangel",
+      "source_url": "https://nebius.com/blog/posts/llm/in-house-llm-rnd-team",
+      "source_name": "Nebius",
+      "context": "Leader of the AI R&D team at Nebius."
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "Slurm",
+      "source_url": "https://nebius.com/blog/posts/model-pre-training/slurm-vs-k8s",
+      "source_name": "Nebius",
+      "context": "Workload manager for resource orchestration used for model training."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Nebius and Eigen AI",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-eigen-ai-partner-to-accelerate-frontier-open-source-ai-inference",
+      "source_name": "Nebius",
+      "context": "Nebius and Eigen AI are partnering to bring faster, optimized open-source AI models to Token Factory."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "Token Factory",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-eigen-ai-partner-to-accelerate-frontier-open-source-ai-inference",
+      "source_name": "Nebius",
+      "context": "Nebius's production-grade managed inference platform."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "911 output tokens per second",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-eigen-ai-partner-to-accelerate-frontier-open-source-ai-inference",
+      "source_name": "Nebius",
+      "context": "Eigen currently holds the #1 output speed for GPT-OSS-120B models."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "Nebius and Toloka",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-toloka-to-introduce-integration-to-bring-human-experts-on-demand-to-ai-agents",
+      "source_name": "Nebius",
+      "context": "Nebius and Toloka are introducing an integration to bring Tendem, a human expert platform, into the Nebius ecosystem."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA Nemotron 3 Super",
+      "source_url": "https://nebius.com/blog/posts/nemotron3-super-now-available",
+      "source_name": "Nebius",
+      "context": "120B parameter hybrid MoE model now available on Nebius Token Factory."
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "NVIDIA Blackwell",
+      "source_url": "https://nebius.com/blog/posts/nemotron3-super-now-available",
+      "source_name": "Nebius",
+      "context": "Self-service NVIDIA Blackwell GPUs (HGX B200 instances) are available in Nebius AI Cloud."
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Assaf Elovic",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-toloka-to-introduce-integration-to-bring-human-experts-on-demand-to-ai-agents",
+      "source_name": "Nebius",
+      "context": "Head of AI at Monday.com stating that enterprise AI requires a cohesive ecosystem."
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "location",
+      "value": "Finland",
+      "source_url": "https://nebius.com/blog/posts/scaling-inference-with-runai-fractional-gpus",
+      "source_name": "Nebius",
+      "context": "Location of Nebius data center deploying NVIDIA GB300 NVL72 systems."
+    },
+    {
+      "fact_type": "other",
+      "value_type": "datetime",
+      "value": "March 17, 2026",
+      "source_url": "https://nebius.com/blog/posts/nebius-and-eigen-ai-partner-to-accelerate-frontier-open-source-ai-inference",
+      "source_name": "Nebius",
+      "context": "Publication date of the Nebius and Eigen AI partnership announcement."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Nebius AI Cloud",
+      "source_url": "https://nebius.com/customer-stories/dubformer",
+      "source_name": "Nebius",
+      "context": "Cloud infrastructure service used by customers like Dubformer for GPU-intensive AI training."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "name",
+      "value": "KubeCon 2026",
+      "source_url": "https://nebius.com/events/kube-con-2026",
+      "source_name": "Nebius",
+      "context": "The Cloud Native Computing Foundation’s flagship conference in Amsterdam, Netherlands, from 23-26 March, 2026."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "datetime",
+      "value": "2026-03-23T00:00:00",
+      "source_url": "https://nebius.com/events/kube-con-2026",
+      "source_name": "Nebius",
+      "context": "KubeCon 2026 conference start date in Amsterdam."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "location",
+      "value": "Amsterdam, Netherlands",
+      "source_url": "https://nebius.com/events/kube-con-2026",
+      "source_name": "Nebius",
+      "context": "Location for the KubeCon 2026 conference."
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "person",
+      "value": "Arkady Volozh",
+      "source_url": "https://nebius.com/events/ai-dna-ai-day-by-nebius-academy",
+      "source_name": "Nebius",
+      "context": "Chief Executive Officer and Board member at Nebius."
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "Soperator",
+      "source_url": "https://nebius.com/events/kube-con-2026",
+      "source_name": "Nebius",
+      "context": "An open-source project by Nebius that bridges Slurm and Kubernetes for ML/AI workloads."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "name",
+      "value": "NVIDIA GTC 2026",
+      "source_url": "https://nebius.com/events/nvidia-gtc-2026",
+      "source_name": "Nebius",
+      "context": "Premier global AI conference where Nebius is an Elite sponsor, held in San Jose, CA, from March 16-19, 2026."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Nebius Token Factory",
+      "source_url": "https://nebius.com/docs",
+      "source_name": "Nebius",
+      "context": "An inference service offered by Nebius AI Cloud to access and run AI models."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "name",
+      "value": "AiDevTLV 2025",
+      "source_url": "https://nebius.com/events/ai-dev-tel-aviv-2025",
+      "source_name": "Nebius",
+      "context": "Israel's largest conference for AI engineers held on December 17, 2025."
+    },
+    {
+      "fact_type": "event",
+      "value_type": "location",
+      "value": "Berlin, Germany",
+      "source_url": "https://nebius.com/events/gtc-watch-night-berlin-edition",
+      "source_name": "Nebius",
+      "context": "Location for the NVIDIA GTC 2026 Watch Party."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "NVIDIA",
+      "source_url": "https://nebius.com/events/nvidia-gtc-2026",
+      "source_name": "Nebius",
+      "context": "Nebius is an Elite sponsor of NVIDIA GTC 2026 and provides cloud infrastructure for NVIDIA-accelerated computing."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "NVIDIA H100",
+      "source_url": "https://nebius.com/services/compute",
+      "source_name": "Nebius",
+      "context": "Available GPU host configuration for AI workloads"
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Managed Service for Kubernetes",
+      "source_url": "https://nebius.com/services/managed-kubernetes",
+      "source_name": "Nebius",
+      "context": "Fully managed container orchestrator optimized for modern AI workloads"
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "$2.95 / hour",
+      "source_url": "https://nebius.com/prices",
+      "source_name": "Nebius",
+      "context": "Price per NVIDIA HGX H100 GPU-hour"
+    },
+    {
+      "fact_type": "event",
+      "value_type": "datetime",
+      "value": "Thursday, April 16, 2026 18:00 (CEST)",
+      "source_url": "https://nebius.com/events/webinar-practical-serverless-ai-for-developers",
+      "source_name": "Nebius",
+      "context": "Webinar: Practical Serverless AI for developers"
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "NVIDIA",
+      "source_url": "https://nebius.com/newsroom/nebius-teams-with-nvidia-to-build-cloud-for-robotics-and-physical-ai",
+      "source_name": "Nebius",
+      "context": "Collaboration to accelerate physical AI development"
+    },
+    {
+      "fact_type": "profile",
+      "value_type": "person",
+      "value": "Mikhail Rozhkov",
+      "source_url": "https://nebius.com/events/webinar-practical-serverless-ai-for-developers",
+      "source_name": "Nebius",
+      "context": "Technical Product Manager and webinar host"
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Agentic search",
+      "source_url": "https://nebius.com/newsroom",
+      "source_name": "Nebius",
+      "context": "Nebius acquired Tavily to add agentic search to its AI cloud platform"
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "Digital Services Act",
+      "source_url": "https://nebius.com/report-abuse",
+      "source_name": "Nebius",
+      "context": "Regulatory compliance regarding abuse handling and point of contact"
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Ed Goode",
+      "source_url": "https://nebius.com/nebius-partner-program",
+      "source_name": "Nebius",
+      "context": "CEO testimonial regarding Nebius infrastructure solutions"
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "NVIDIA Quantum-2 InfiniBand",
+      "source_url": "https://nebius.com/infiniband",
+      "source_name": "Nebius",
+      "context": "Technology facilitating connection of GPU-equipped servers within a cluster"
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "Managed Service for PostgreSQL",
+      "source_url": "https://nebius.com/services/managed-postgresql",
+      "source_name": "Nebius",
+      "context": "A fully managed object-relational database for ML development and AI applications."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Nebius Token Factory",
+      "source_url": "https://nebius.com/services/token-factory",
+      "source_name": "Nebius",
+      "context": "Inference at enterprise scale, supporting open-source AI models with optimized serving pipelines."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Managed Soperator",
+      "source_url": "https://nebius.com/services/soperator",
+      "source_name": "Nebius",
+      "context": "A fully managed Slurm-on-Kubernetes solution for simplified AI training on NVIDIA GPU clusters."
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "SOC 2 Type II",
+      "source_url": "https://nebius.com/services/token-factory",
+      "source_name": "Nebius",
+      "context": "Nebius Token Factory processes data in facilities with SOC 2 Type II, HIPAA and ISO 27001 certifications."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "1 TB/s",
+      "source_url": "https://nebius.com/services/storage",
+      "source_name": "Nebius",
+      "context": "Storage for AI workloads delivers up to 1 TB/s read throughput for shared filesystems."
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Eliot Andres",
+      "source_url": "https://nebius.com/services/managed-spark",
+      "source_name": "Nebius",
+      "context": "Co-founder & CTO at Photoroom who noted that Nebius provided reliable infrastructure to scale training seamlessly."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "WEKA",
+      "source_url": "https://nebius.com/services/storage",
+      "source_name": "Nebius",
+      "context": "Strategic partnership to provide ultra-high-performance cloud infrastructure storage solutions."
+    },
+    {
+      "fact_type": "technology",
+      "value_type": "name",
+      "value": "NVIDIA Blackwell",
+      "source_url": "https://nebius.com/services/managed-spark",
+      "source_name": "Nebius",
+      "context": "High-performance GPU architecture utilized in Nebius AI Cloud clusters."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "name",
+      "value": "Tavily by Nebius",
+      "source_url": "https://nebius.com/solutions/agentic-search",
+      "source_name": "Nebius",
+      "context": "An API service that connects LLMs and AI agents to the web with real-time search."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "99.9%",
+      "source_url": "https://nebius.com/services/token-factory",
+      "source_name": "Nebius",
+      "context": "SLA uptime guarantee for dedicated endpoints in Nebius Token Factory."
+    },
+    {
+      "fact_type": "product",
+      "value_type": "name",
+      "value": "Nebius AI Cloud",
+      "source_url": "https://nebius.com/solutions/life-sciences-and-healthcare",
+      "source_name": "Nebius",
+      "context": "Nebius provides cutting-edge AI cloud platform and machine learning tools for healthcare, life sciences and biotech."
+    },
+    {
+      "fact_type": "metric",
+      "value_type": "amount",
+      "value": "16th",
+      "source_url": "https://nebius.com/supercomputer",
+      "source_name": "Nebius",
+      "context": "As of November 2023, Nebius’ supercomputer ISEG ranks 16th in the Top 500 ranking."
+    },
+    {
+      "fact_type": "customer_testimonial",
+      "value_type": "person",
+      "value": "Alexey Bukhtiyarov",
+      "source_url": "https://nebius.com/solutions/life-sciences-and-healthcare",
+      "source_name": "Nebius",
+      "context": "Alexey Bukhtiyarov, ML Infrastructure Lead, states Nebius' performance, flexibility, and reliability have been key to accelerating progress in mental health AI."
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "SOC 2 Type II",
+      "source_url": "https://nebius.com/trust-center/soc-2",
+      "source_name": "Nebius",
+      "context": "Nebius undergoes regular independent SOC 2 Type II audits covering its products, systems and infrastructure."
+    },
+    {
+      "fact_type": "partnership",
+      "value_type": "name",
+      "value": "NVIDIA",
+      "source_url": "https://nebius.com/solutions/media-and-entertainment",
+      "source_name": "Nebius",
+      "context": "Nebius is a Reference Platform Cloud Partner of NVIDIA, adhering to a tested and optimized reference architecture."
+    },
+    {
+      "fact_type": "service",
+      "value_type": "amount",
+      "value": "$5,000",
+      "source_url": "https://nebius.com/startup-program",
+      "source_name": "Nebius",
+      "context": "Nebius Startup Program offers $5,000 in introductory credits for immediate use."
+    },
+    {
+      "fact_type": "compliance_certification",
+      "value_type": "name",
+      "value": "HIPAA",
+      "source_url": "https://nebius.com/trust-center/soc-2",
+      "source_name": "Nebius",
+      "context": "Nebius underwent a HIPAA audit evaluating compliance with applicable HIPAA Security Rule requirements."
+    },
+    {
+      "fact_type": "solution",
+      "value_type": "name",
+      "value": "Retrieval-Augmented Generation (RAG)",
+      "source_url": "https://nebius.com/solutions/rag",
+      "source_name": "Nebius",
+      "context": "Nebius offers RAG solutions to help manage and control the production of AI applications."
+    }
+  ],
+  "count": 68,
+  "source_file": "nebius.md",
+  "site": "https://nebius.com",
+  "ai_strength": "fast",
+  "batch_size": 20,
+  "batch_count": 7,
+  "max_context_chars": 80000
+}

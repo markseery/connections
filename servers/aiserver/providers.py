@@ -26,10 +26,17 @@ from .config import (
 )
 
 
+class MissingProviderApiKeyError(RuntimeError):
+    """Selected provider has no API key in the environment the aiserver loaded."""
+
+
 def _require_key(provider: Provider) -> str:
     key = get_provider_key(provider)
     if not key:
-        raise RuntimeError(f"Missing API key for provider '{provider}' in .env")
+        raise MissingProviderApiKeyError(
+            f"Missing API key for provider '{provider}' after loading .env files "
+            f"(set the key in repo or application_files/.env and restart aiserver)."
+        )
     return key
 
 

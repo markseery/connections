@@ -8,6 +8,6 @@ from common.simple.skill_response import skill_response_to_markdown  # noqa: F40
 from common.simple.timeouts import get as timeout_get  # noqa: F401
 from common.simple.user_dir import (  # noqa: F401
     user_dir, repo_root, resolve_config, resolve_config_dir,
-    resolve_data, resolve_logs, resolve_env_file,
+    resolve_data, resolve_logs, resolve_env_file, load_connections_dotenv,
     resolve_workflows_dir, resolve_workflow, user_skills_dir,
 )

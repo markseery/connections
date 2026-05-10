@@ -17,10 +17,12 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, model_validator
 
 from common.simple.skill_response import skill_result
+from common.simple.yfinance_warnings import suppress_utcnow_deprecation_warning
 from common.compound.skill_config import SkillConfig
 
 router = APIRouter()
 _conf = SkillConfig("news_skill")
+suppress_utcnow_deprecation_warning()
 
 
 class SearchRequest(BaseModel):

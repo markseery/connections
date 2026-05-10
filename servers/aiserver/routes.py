@@ -8,6 +8,7 @@ per provider, and supports transport encryption for request and response bodies.
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any
 
@@ -21,7 +22,7 @@ from .config import (
     get_model_info,
     get_provider_for_profile,
 )
-from .providers import generate
+from .providers import MissingProviderApiKeyError, generate
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,32 @@ def _maybe_encrypt_response(request: Request, payload: Any) -> Any:
     return payload
 
 
+def _upstream_json_message(body: str) -> str | None:
+    """If *body* is JSON with a provider-style error payload, return a short line."""
+    if not body or not body.strip():
+        return None
+    try:
+        obj = json.loads(body)
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(obj, dict):
+        return None
+    err = obj.get("error")
+    if isinstance(err, dict):
+        nested = err.get("message")
+        if isinstance(nested, str) and nested.strip():
+            return nested.strip()
+    if isinstance(err, str) and err.strip():
+        cod = obj.get("code")
+        if isinstance(cod, str) and cod.strip():
+            return f"{cod.strip()}: {err.strip()}"
+        return err.strip()
+    msg = obj.get("message")
+    if isinstance(msg, str) and msg.strip():
+        return msg.strip()
+    return None
+
+
 def _extract_upstream_error(exc: Exception) -> tuple[str, int]:
     """Return (detail_string, http_status) from an upstream exception.
 
@@ -59,20 +86,24 @@ def _extract_upstream_error(exc: Exception) -> tuple[str, int]:
     upstream_status: int | None = None
     snippet = ""
     rate_info = ""
+    human: str | None = None
 
     if response is not None:
         try:
             upstream_status = int(response.status_code)
         except (ValueError, TypeError):
             pass
+        body = ""
         try:
-            body = response.text
-            if body:
+            body = response.text or ""
+        except Exception:
+            body = ""
+        if body.strip():
+            human = _upstream_json_message(body)
+            if not human:
                 snippet = body[:800].strip()
                 if len(body) > 800:
                     snippet += "..."
-        except Exception:
-            pass
 
         if upstream_status == 429:
             rl_parts: list[str] = []
@@ -92,9 +123,12 @@ def _extract_upstream_error(exc: Exception) -> tuple[str, int]:
             if rl_parts:
                 rate_info = " | rate-limit: " + ", ".join(rl_parts)
 
-    detail = str(exc)
-    if snippet:
-        detail = f"{detail}; upstream response: {snippet}"
+    if human:
+        detail = human
+    else:
+        detail = str(exc)
+        if snippet:
+            detail = f"{detail}; upstream response: {snippet}"
     if rate_info:
         detail += rate_info
 
@@ -110,7 +144,7 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
     """
     Body:
       - prompt: str (required)
-      - profile: one of fast/chat/reason/agent/code/image/video/batch (required)
+      - profile: aiserver profile (e.g. fast, chat, reason, market_analyser, …) (required)
       - provider: one of ollama/openai/xai/google/perplexity/wandb/anthropic/mlx (optional)
     """
     body_any = _maybe_decrypt_body(body)
@@ -140,6 +174,9 @@ def generate_route(request: Request, body: dict[str, Any]) -> Any:
 
     try:
         result = generate(prompt=prompt, profile=profile, provider=provider)  # type: ignore[arg-type]
+    except MissingProviderApiKeyError as e:
+        logger.warning("generate refused: %s | profile=%s provider=%s", e, profile, provider)
+        raise HTTPException(status_code=503, detail=str(e)) from e
     except httpx.HTTPError as e:  # type: ignore[name-defined]
         detail, status = _extract_upstream_error(e)
         logger.error(

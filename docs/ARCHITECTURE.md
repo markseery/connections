@@ -48,6 +48,7 @@ This project is a small, local-first “agentic framework” built from multiple
 - Purpose: provider/profile-based generation behind a single `POST /generate`
 - Inputs: `prompt`, `profile`, optional `provider`
 - Provider/model mapping is driven by environment variables (see `docs/SETUP.md`)
+- CLIs and skills that call aiserver should follow **`docs/SCRIPTS_AND_CLIENT_PATTERNS.md`** (use **`get_aiserver_base_url()`** from **`common.compound.aiserver_discovery`**).
 
 ### Connections UI (`servers/connections_ui`)
 - Purpose: serve simple HTML/CSS/JS pages (e.g. chat)

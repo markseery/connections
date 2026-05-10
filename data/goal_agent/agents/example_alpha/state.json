@@ -1,0 +1,16 @@
+{
+  "agent_id": "example_alpha",
+  "tick_count": 1,
+  "recent_tick_summaries": [
+    {
+      "tick": 1,
+      "request_id": "a35f8209-4050-4d28-a2d7-23895d42bdfd",
+      "success": false,
+      "had_steps": true,
+      "answer": "Objective: Replace this text with your long-running objective.\n\nResults:\n\nFailed:\n  - help_skill: {\"detail\":\"Not Found\"}"
+    }
+  ],
+  "last_gap_signature": "4a89a528ca03e728df0e0dc84966ca53969c6f0cc4d95c05ea067d474cea5f66",
+  "last_notification_at": "2026-03-21T17:18:59.884573Z",
+  "last_tick_at": "2026-03-21T17:18:42.589292Z"
+}

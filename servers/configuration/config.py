@@ -6,14 +6,10 @@ Description: Loads configuration server settings from environment (.env).
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
-from dotenv import load_dotenv
+from common.simple.user_dir import load_connections_dotenv
 
-from common.simple.user_dir import resolve_env_file
-
-_env_path = resolve_env_file() or Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(_env_path)
+load_connections_dotenv()
 
 STORAGE_SERVER_URL_ENV = "STORAGE_SERVER_URL"
 
