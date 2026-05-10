@@ -1,9 +1,0 @@
-{
-  "summary": "Email sent.",
-  "items": [],
-  "text": "",
-  "data": {
-    "notification_id": "4f6dd161-a89a-49cb-b4a0-787f88fac0d3",
-    "status": "sent"
-  }
-}
