@@ -137,7 +137,7 @@ class AskAiCommand(BaseCommand[AskAiArgs]):
         except Exception as exc:
             if not args.inprocess:
                 raise UsageError(
-                    f"{exc}\nTip: if the server isn't running, try: python ask_ai.py \"...\" --inprocess"
+                    f"{exc}\nTip: if the server isn't running, try: python mgmt/ask_ai.py \"...\" --inprocess"
                 ) from exc
             raise UsageError(str(exc)) from exc
 

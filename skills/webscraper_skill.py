@@ -243,12 +243,14 @@ def _send_new_urls_notification(
 def _build_page_value(namespace: str, sitename: str, page_url: str, content: str) -> dict[str, Any]:
     sn = _canonical_sitename(sitename)
     pu = _strip_url_query((page_url or "").strip())
+    raw = content if isinstance(content, str) else ""
+    stored_content = _format_page_block(pu, raw, stopwords=False)
     return {
         "namespace": namespace,
         "sitename": sn,
         "url": pu,
-        "content": content if isinstance(content, str) else "",
-        "contenthash": _content_hash(content if isinstance(content, str) else ""),
+        "content": stored_content,
+        "contenthash": _content_hash(raw),
     }
 
 
@@ -827,8 +829,14 @@ def parse_combined_text(combined_text: str) -> list[tuple[str, str]]:
 
 
 def _format_page_block(url: str, content: str, *, stopwords: bool) -> str:
+    raw = (content or "").strip()
+    page_url = _strip_url_query((url or "").strip())
+    if raw.startswith(URL_LINE_PREFIX):
+        return _remove_stopwords(raw) if stopwords else raw
     body = _remove_stopwords(content) if stopwords else (content or "")
-    return f"{URL_LINE_PREFIX}{url}\n\n{body}"
+    if not page_url:
+        return body
+    return f"{URL_LINE_PREFIX}{page_url}\n\n{body}"
 
 
 def _fetch_page_value(
@@ -1198,7 +1206,8 @@ def post_stored_legacy(body: LegacyStoredRequest) -> dict[str, Any]:
             if val is None:
                 continue
             u = str(val.get("url") or pu)
-            content_by_url[u] = str(val.get("content") or "")
+            raw = str(val.get("content") or "")
+            content_by_url[u] = _format_page_block(u, raw, stopwords=False)
     urls = sorted(content_by_url.keys())
     if not urls:
         raise HTTPException(status_code=404, detail="No stored pages for this sitename/namespace")

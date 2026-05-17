@@ -1,6 +1,6 @@
 ## Connections architecture
 
-This project is a small, local-first “agentic framework” built from multiple cooperating FastAPI servers started and supervised by `start_app.py`.
+This project is a small, local-first “agentic framework” built from multiple cooperating FastAPI servers started and supervised by `mgmt/start_app.py`.
 
 ### Goals
 - **Composable services**: each concern is a small server with a health endpoint.
@@ -13,7 +13,7 @@ This project is a small, local-first “agentic framework” built from multiple
 
 ## Runtime topology
 
-### Supervisor (`start_app.py`)
+### Supervisor (`mgmt/start_app.py`)
 - Reads `app_config.yaml`
 - Allocates unique ports (default 7000–7999 range)
 - Starts each server via `uvicorn` in a new process group

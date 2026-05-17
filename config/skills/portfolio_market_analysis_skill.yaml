@@ -1,0 +1,19 @@
+# portfolio_market_analysis_skill configuration
+default_period: 5y
+default_sec_sleep_sec: 0.12
+max_workers: 8
+bollinger_band_pct: 5.0
+calmer_than_spy_max_ratio: 0.9
+
+route_risk:
+  "POST /skills/portfolio_market_analysis_skill/run": safe
+  "POST /skills/portfolio_market_analysis_skill/summarize": safe
+
+# Workflow skill step example:
+#   skill: portfolio_market_analysis_skill
+#   method: POST
+#   path: /skills/portfolio_market_analysis_skill/run
+#   arguments:
+#     symbols: ["GLD", "SPY", "QQQ"]
+#     period: "5y"
+#     include_summaries: true

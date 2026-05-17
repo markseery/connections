@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ### Initialize your user directory
 
 ```bash
-python connections_init.py
+python mgmt/connections_init.py
 ```
 
 This creates `application_files/` with subdirectories for your personal
@@ -27,7 +27,7 @@ the git pre-commit hook.  The `application_files/` directory is gitignored.
 Override the location with `CONNECTIONS_USER_DIR`:
 ```bash
 export CONNECTIONS_USER_DIR=/path/to/my/workspace
-python connections_init.py
+python mgmt/connections_init.py
 ```
 
 ### Configure `.env`
@@ -42,7 +42,7 @@ $EDITOR application_files/.env
 ### Run the stack (supervised)
 
 ```bash
-python start_app.py
+python mgmt/start_app.py
 ```
 
 This starts servers listed in `app_config.yaml`, monitors `/health`, and registers each server into the registry.
@@ -112,7 +112,7 @@ Some values are required; many are optional.
 - **`REGISTRY_SERVER_URL`**: base URL of the registry (used by clients/servers to discover others).
   - Example: `http://127.0.0.1:7002`
 - **`STORAGE_SERVER_URL`**: base URL of the storage server (used by configuration server).
-  - This is injected by `start_app.py` when it starts the configuration server, but it can also be set manually.
+  - This is injected by `mgmt/start_app.py` when it starts the configuration server, but it can also be set manually.
 
 ### AI server configuration (`servers/aiserver`)
 
@@ -166,5 +166,5 @@ Some `run.py` entrypoints honor:
 Ensure the worker process sees your `.env`. The worker loads `.env` on startup; if you run workers some other way, ensure `.env` is present or the variables are exported.
 
 ### Ports already in use
-`start_app.py` will automatically pick a different free port in the configured range and will register the chosen port in the registry.
+`mgmt/start_app.py` will automatically pick a different free port in the configured range and will register the chosen port in the registry.
 

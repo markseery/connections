@@ -1,0 +1,6 @@
+# market_indicators_skill configuration
+default_period: 5y
+
+route_risk:
+  "POST /skills/market_indicators_skill/analyze": safe
+  "POST /skills/market_indicators_skill/analyze/batch": safe

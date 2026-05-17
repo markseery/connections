@@ -41,7 +41,7 @@ base = get_aiserver_base_url()
 Optional keyword arguments:
 
 - **`explicit`** — e.g. CLI `--url`; skips the registry.
-- **`registry_override`** — if it differs from **`get_registry_url()`**, updates **`REGISTRY_SERVER_URL`** and invalidates the cached aiserver URL (used by **`ask_ai.py --registry-url`**).
+- **`registry_override`** — if it differs from **`get_registry_url()`**, updates **`REGISTRY_SERVER_URL`** and invalidates the cached aiserver URL (used by **`mgmt/ask_ai.py --registry-url`**).
 
 On registry failure this returns **`AISERVER_DEV_FALLBACK`** (`http://127.0.0.1:7012`).
 
@@ -57,7 +57,7 @@ For **other** services (storage, configuration, …), keep using **`get_server_u
 - **Body:** `{"prompt": str, "profile": str}`; optional `"provider"`.
 - **Response:** JSON; `output` is usually `{"type": "text", "text": "..."}`.
 
-**CLIs:** **`ask_ai.py`**, **`application_files/portfolio_analyser.py`**.
+**CLIs:** **`mgmt/ask_ai.py`**, **`application_files/portfolio_analyser.py`**.
 
 **In-process:** `TestClient` on **`servers.aiserver.main:app`**, `POST /generate`.
 

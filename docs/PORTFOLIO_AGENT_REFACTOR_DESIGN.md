@@ -42,7 +42,7 @@ Create a reusable client in `common/compound/aiserver_generate_client.py`:
 
 Used by:
 
-- `ask_ai.py`
+- `mgmt/ask_ai.py`
 - `run_portfolio_intent_agent.py`
 - future script and tool modules
 
@@ -107,7 +107,7 @@ For script entrypoints:
 ### Phase 1 (start now)
 
 - Add shared AI server generate client.
-- Wire `ask_ai.py` and `run_portfolio_intent_agent.py` to shared client.
+- Wire `mgmt/ask_ai.py` and `run_portfolio_intent_agent.py` to shared client.
 - Extract positions report formatting/totals into reusable module.
 - Wire `run_robinhood_positions.py` to reusable presenter.
 
@@ -154,7 +154,7 @@ Completed so far:
 - portfolio intent command class extraction
 - shared `BaseCommand` + command error abstraction extraction
 - `run_robinhood_csvimport.py` migration to `BaseCommand`
-- `ask_ai.py` migration to `BaseCommand`
+- `mgmt/ask_ai.py` migration to `BaseCommand`
 - unit tests for `BaseCommand`, planner parsing, and loop runner behavior
 
 Remaining high-value extractions:

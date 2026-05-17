@@ -21,6 +21,7 @@ from fastapi import APIRouter, HTTPException, Response
 from common.simple.skill_response import skill_result
 from common.simple.yfinance_warnings import suppress_utcnow_deprecation_warning
 from common.compound.skill_config import SkillConfig
+from common.compound.yfinance_history import fetch_history_records
 
 
 router = APIRouter()
@@ -195,6 +196,34 @@ def fundamentals(symbol: str, response: Response) -> dict[str, Any]:
             status_code=502,
             detail=f"fundamentals failed for {sym}: {exc}",
         ) from exc
+    finally:
+        response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
+
+
+@router.get("/history/{symbol}")
+def history(symbol: str, response: Response, period: str = "5y") -> dict[str, Any]:
+    """OHLCV price history. Replace {symbol} with ticker; period is a yfinance period (default 5y)."""
+    start = time.perf_counter()
+    sym = symbol.strip().upper()
+    if not sym:
+        raise HTTPException(status_code=400, detail="symbol is required")
+    per = (period or _conf.get("history_default_period", "5y")).strip()
+    try:
+        records = fetch_history_records(sym, per)
+    except Exception as exc:
+        print(f"[stock_skill] history yfinance failed for {sym}: {exc}", flush=True)
+        raise HTTPException(
+            status_code=502,
+            detail=f"Yahoo Finance history unavailable for {sym}: {exc}",
+        ) from exc
+    try:
+        return skill_result(
+            summary=f"**{len(records)}** bars for **{sym}** ({per}).",
+            symbol=sym,
+            period=per,
+            history=records,
+            bar_count=len(records),
+        )
     finally:
         response.headers["X-Processing-Time-Ms"] = f"{(time.perf_counter() - start) * 1000:.2f}"
 

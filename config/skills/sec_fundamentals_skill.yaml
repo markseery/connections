@@ -1,0 +1,6 @@
+# sec_fundamentals_skill configuration
+default_sleep_sec: 0.12
+
+route_risk:
+  "POST /skills/sec_fundamentals_skill/analyze": safe
+  "POST /skills/sec_fundamentals_skill/analyze/batch": safe

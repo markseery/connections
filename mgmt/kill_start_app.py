@@ -3,11 +3,15 @@ License: MIT
 Description: Terminates ALL processes related to this project.
 
 Finds and kills:
-  1. `start_app.py` supervisor processes
-  2. Orphaned uvicorn child servers (`servers.*.main:app`)
-  3. Any `run_agent_mean_demo.py` or similar project scripts
+  1. ``mgmt/start_app.py`` supervisor processes
+  2. Orphaned uvicorn child servers (``servers.*.main:app``)
+  3. Any ``run_agent_mean_demo.py`` or similar project scripts
 
 Sends SIGTERM first, waits briefly, then escalates to SIGKILL.
+
+Usage (from repo root)::
+
+    python mgmt/kill_start_app.py
 """
 
 from __future__ import annotations
@@ -15,12 +19,15 @@ from __future__ import annotations
 import argparse
 import os
 import re
-import shlex
 import signal
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
+
+import script_env
+
+script_env.ensure_repo_cwd()
 
 _MY_PID = os.getpid()
 
@@ -180,4 +187,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

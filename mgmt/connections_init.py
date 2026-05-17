@@ -6,9 +6,10 @@ Creates the directory structure at ``application_files/`` (or ``CONNECTIONS_USER
 copies ``.env.example`` as a starting ``.env`` if none exists, and configures the
 git hooks path to use the committed ``.hooks/`` directory.
 
-Usage:
-    python connections_init.py
-    CONNECTIONS_USER_DIR=/other/path python connections_init.py
+Usage (from repo root)::
+
+    python mgmt/connections_init.py
+    CONNECTIONS_USER_DIR=/other/path python mgmt/connections_init.py
 """
 
 from __future__ import annotations
@@ -16,9 +17,10 @@ from __future__ import annotations
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent
+import script_env
+
+REPO_ROOT = script_env.ensure_repo_cwd()
 
 SUBDIRS = [
     "config/skills",
@@ -34,7 +36,6 @@ SUBDIRS = [
 
 
 def main() -> int:
-    sys.path.insert(0, str(REPO_ROOT))
     from common.simple.user_dir import user_dir
 
     udir = user_dir()

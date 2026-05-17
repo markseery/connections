@@ -261,9 +261,9 @@ original = te.decrypt_json(encrypted_body)
 
 ## 7. Server Lifecycle Scripts
 
-Whenever a server is **created** or **removed** from the project, both `start_app.py` and `kill_start_app.py` **must** be updated to reflect the change.
+Whenever a server is **created** or **removed** from the project, both `mgmt/start_app.py` and `mgmt/kill_start_app.py` **must** be updated to reflect the change.
 
-### `start_app.py`
+### `mgmt/start_app.py`
 
 The supervisor manages startup, port allocation, health checks, and registry registration for all servers. When adding a new server:
 
@@ -275,7 +275,7 @@ When removing a server:
 1. Remove its `ServerConfig` entry.
 2. Remove any special-case logic that references it.
 
-### `kill_start_app.py`
+### `mgmt/kill_start_app.py`
 
 The kill script uses pattern matching to find and terminate all project-related processes. When adding a new server:
 
@@ -290,7 +290,7 @@ When removing a server:
 If these scripts are not kept in sync, you will end up with:
 
 - New servers that don't start with the rest of the application.
-- Orphaned processes that survive `kill_start_app.py` and cause port conflicts, stale responses, or phantom behavior on the next run.
+- Orphaned processes that survive `mgmt/kill_start_app.py` and cause port conflicts, stale responses, or phantom behavior on the next run.
 - Hours of debugging "why is the old server still responding on port X."
 
 ---
@@ -306,4 +306,4 @@ If these scripts are not kept in sync, you will end up with:
 | Abstracted storage | JSON/YAML backing with abstract classes; prefer the storage server |
 | Storage encryption | All storage server data encrypted at rest via `STORAGE_ENCRYPTION_KEY` |
 | Transport encryption | All inter-server HTTP payloads encrypted via `TRANSPORT_ENCRYPTION_KEY` |
-| Server lifecycle scripts | `start_app.py` and `kill_start_app.py` must be updated when servers are added/removed |
+| Server lifecycle scripts | `mgmt/start_app.py` and `mgmt/kill_start_app.py` must be updated when servers are added/removed |

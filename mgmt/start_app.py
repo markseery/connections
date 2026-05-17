@@ -5,6 +5,10 @@ Description: Application startup supervisor.
 Reads `app_config.yaml`, starts all configured FastAPI servers using uvicorn,
 performs periodic health checks, and restarts servers that fail repeated health
 checks. If this supervisor process is terminated, it terminates all child servers.
+
+Usage (from repo root)::
+
+    python mgmt/start_app.py
 """
 
 from __future__ import annotations
@@ -21,6 +25,10 @@ from typing import Any
 
 import httpx
 import yaml
+
+import script_env
+
+REPO_ROOT = script_env.ensure_repo_cwd()
 
 
 @dataclass
@@ -51,8 +59,9 @@ class ServerConfig:
 
 
 class Supervisor:
-    def __init__(self, config_path: Path) -> None:
+    def __init__(self, config_path: Path, *, repo_root: Path) -> None:
         self.config_path = config_path
+        self.repo_root = repo_root
         self.health = HealthConfig()
         self.servers: list[ServerConfig] = []
         self.procs: dict[str, subprocess.Popen[bytes]] = {}
@@ -157,14 +166,14 @@ class Supervisor:
         self.stop_one(s.name)
 
         env = os.environ.copy()
-        # Port is pre-allocated in start_all() via _allocate_ports().
+        repo = str(self.repo_root)
+        existing = env.get("PYTHONPATH", "")
+        env["PYTHONPATH"] = repo if not existing else f"{repo}{os.pathsep}{existing}"
 
         registry = next((x for x in self.servers if x.name == "registry"), None)
         if registry is not None:
             env["REGISTRY_SERVER_URL"] = registry.base_url
 
-        # Inject derived configuration between servers.
-        # Configuration and worker (skills) talk to the storage server.
         storage = next((x for x in self.servers if x.base_name == "storage" or x.name == "storage"), None)
         if storage is not None:
             if s.base_name == "configuration" or s.name == "configuration":
@@ -182,8 +191,14 @@ class Supervisor:
             "--port",
             str(s.port),
         ]
-        # Start a new session so we can kill the whole process group on Unix.
-        proc = subprocess.Popen(cmd, env=env, start_new_session=True, stdout=None, stderr=None)
+        proc = subprocess.Popen(
+            cmd,
+            env=env,
+            cwd=self.repo_root,
+            start_new_session=True,
+            stdout=None,
+            stderr=None,
+        )
         self.procs[s.name] = proc
         self.fail_counts[s.name] = 0
         self._registered.discard(s.name)
@@ -230,10 +245,6 @@ class Supervisor:
             return False
 
     def _check_health_with_retries(self, s: ServerConfig) -> bool:
-        """
-        Do a normal health check; if it fails, retry quickly `retries` times
-        before declaring the server unhealthy.
-        """
         if self._check_health_once(s):
             return True
         for _ in range(max(1, self.health.retries)):
@@ -243,16 +254,10 @@ class Supervisor:
         return False
 
     def _register_with_registry(self, s: ServerConfig) -> None:
-        """
-        Register a healthy server in the registry: PUT /servers/{name}.
-        Uses transport-encrypted responses if desired by callers, but here we
-        send plain JSON for simplicity.
-        """
         registry = next((x for x in self.servers if x.name == "registry"), None)
         if registry is None:
             return
 
-        # Registry must be reachable.
         try:
             with httpx.Client(timeout=2.0) as client:
                 r = client.get(f"{registry.base_url}/health")
@@ -287,7 +292,6 @@ class Supervisor:
                     self.start_one(s)
                     continue
 
-                # Healthy: ensure registered.
                 if s.name not in self._registered:
                     self._register_with_registry(s)
 
@@ -298,13 +302,12 @@ class Supervisor:
 
 
 def main() -> int:
-    root = Path(__file__).resolve().parent
-    cfg_path = root / "app_config.yaml"
+    cfg_path = REPO_ROOT / "app_config.yaml"
     if not cfg_path.is_file():
         print(f"[supervisor] missing config: {cfg_path}", file=sys.stderr)
         return 2
 
-    sup = Supervisor(cfg_path)
+    sup = Supervisor(cfg_path, repo_root=REPO_ROOT)
     sup.load_config()
 
     def _handle_signal(_signum: int, _frame: Any) -> None:
@@ -325,4 +328,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
