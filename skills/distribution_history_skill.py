@@ -13,7 +13,7 @@ Input:
 
 Requires:
 - internet access to Yahoo Finance and StockAnalysis
-- finance_pipeline distribution-history modules
+- ``common.compound.finance_pipeline`` distribution-history modules
 """
 
 from __future__ import annotations
@@ -23,8 +23,10 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from common.compound.finance_pipeline.distribution_history_comparison import (
+    DistributionHistoryComparison,
+)
 from common.simple.skill_response import skill_result
-from finance_pipeline.distribution_history_comparison import DistributionHistoryComparison
 
 router = APIRouter()
 
@@ -58,11 +60,14 @@ def signal_get(symbol: str) -> dict[str, Any]:
         raise HTTPException(status_code=502, detail=f"distribution signal failed: {exc}") from exc
 
     sym = symbol.strip().upper()
+    aum_part = ""
+    if signal.get("aum_display") or signal.get("aum_usd") is not None:
+        aum_part = f", AUM={signal.get('aum_display') or signal.get('aum_usd')}"
     summary = (
         f"Distribution signal for **{sym}**: "
         f"source={signal.get('source')}, "
         f"rate_30_day_per_share={signal.get('rate_30_day_per_share')}, "
-        f"confidence={signal.get('confidence_score')}."
+        f"confidence={signal.get('confidence_score')}{aum_part}."
     )
     return skill_result(summary=summary, symbol=sym, signal=signal)
 
