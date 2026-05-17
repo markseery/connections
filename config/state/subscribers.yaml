@@ -1,0 +1,23 @@
+subscribers:
+  - id: symbol_state_email
+    on:
+      machine_id: "*"
+      dimension: "*"
+      when: state_changed
+    action:
+      type: notification_skill
+      params:
+        to: "{vars.email_to}"
+        subject: "[{event.machine_id}] {event.dimension} → {event.new_state_id}"
+        body_template: |
+          Symbol state change for {event.entity.symbol}
+
+          Machine: {event.machine_id}
+          Dimension: {event.dimension}
+          Previous: {event.old_state_id}
+          Current: {event.new_state_id}
+
+          Raw values:
+          {event.new_raw_json}
+
+          At: {event.changed_at}

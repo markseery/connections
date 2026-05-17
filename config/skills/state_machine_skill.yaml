@@ -1,0 +1,7 @@
+# state_machine_skill configuration
+default_refresh_timeout_sec: 120
+
+route_risk:
+  "GET /skills/state_machine_skill/machines": safe
+  "GET /skills/state_machine_skill/machines/{symbol}": safe
+  "POST /skills/state_machine_skill/refresh": reversible

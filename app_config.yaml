@@ -44,6 +44,10 @@ servers:
     app: servers.workflow.main:app
     host: 127.0.0.1
     port: 7026
+  - name: state
+    app: servers.state.main:app
+    host: 127.0.0.1
+    port: 7028
   - name: worker
     app: servers.worker.main:app
     host: 127.0.0.1

@@ -1,0 +1,63 @@
+# State orchestrator — all runtime parameters (no hard-coded values in code).
+orchestrator:
+  symbols_from:
+    type: positions_yaml
+    path: application_files/config/rh.symbols.yaml
+    symbol_field: symbol
+
+  machine_defaults:
+    entity:
+      type: symbol
+    refresh:
+      interval_sec: 3600
+      jitter_sec: 120
+      on_failure: hold
+    dimensions:
+      aum:
+        source:
+          adapter: stockanalysis_aum
+          params: {}
+        compare:
+          mode: numeric_delta
+          field: aum_usd
+          min_absolute: 500000
+          min_relative: 0.005
+        initial_state_id: unknown
+      latest_distribution:
+        source:
+          adapter: distribution_latest
+          params: {}
+        compare:
+          mode: composite_delta
+          fields:
+            - amount_per_share
+            - ex_dividend_date
+        state_id_template: "{amount_per_share}@{ex_dividend_date}"
+        initial_state_id: unknown
+
+  storage:
+    namespace: state_machines
+    events_namespace: state_events
+    events_retention_max: 500
+
+  scheduler:
+    tick_sec: 60
+    max_concurrent_pulls: 4
+
+  registry:
+    worker_names:
+      - worker-1
+      - worker-2
+      - worker
+    notification_skill: notification_skill
+    notification_endpoint: send
+
+  defaults:
+    source_timeout_sec: 25
+
+  vars:
+    email_to: mark.a.seery@gmail.com
+
+env_substitution:
+  enabled: true
+  pattern: "${VAR_NAME}"
