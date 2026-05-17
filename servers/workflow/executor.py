@@ -31,6 +31,7 @@ from common.simple.user_dir import repo_root, user_dir, resolve_workflow, resolv
 
 REPORTS_DIR = user_dir() / "data" / "reports"
 CONFIG_DIR = user_dir() / "config" / "workflows"
+REPO_CONFIG_WORKFLOWS_DIR = repo_root() / "config" / "workflows"
 WORKFLOWS_DATA_DIR = repo_root() / "data" / "workflows"
 PROJECT_ROOT = repo_root()
 
@@ -205,6 +206,10 @@ class WorkflowExecutor:
             return (CONFIG_DIR / p).resolve()
         if (CONFIG_DIR / p.name).is_file():
             return (CONFIG_DIR / p.name).resolve()
+        if (REPO_CONFIG_WORKFLOWS_DIR / p).is_file():
+            return (REPO_CONFIG_WORKFLOWS_DIR / p).resolve()
+        if (REPO_CONFIG_WORKFLOWS_DIR / p.name).is_file():
+            return (REPO_CONFIG_WORKFLOWS_DIR / p.name).resolve()
         if (WORKFLOWS_DATA_DIR / p).is_file():
             return (WORKFLOWS_DATA_DIR / p).resolve()
         if (WORKFLOWS_DATA_DIR / p.name).is_file():

@@ -159,7 +159,7 @@ Placeholders like `{previous_output}`, `{step_1_output}`, and config `vars` are 
 |-------|--------|--------------------------|
 | **rss_skill** | Fetch and parse one RSS/Atom feed | `process_rss_feeds.py`, `rss_new_skill` (internal), prompt configs |
 | **rss_new_skill** | Fetch new items from a feed list, fetch article content, diff vs storage | `rss_new_and_save_skill`, warmup script |
-| **rss_new_and_save_skill** | Run rss_new_skill and persist new item IDs to storage | `rss_notify_new.py`, warmup script, `cloud_services_notify_multistep.yaml` |
+| **rss_new_and_save_skill** | Run rss_new_skill and persist new item IDs to storage | `rss_notify_new.py`, warmup script, `config/workflows/cloud_services_notify_multistep.yaml` |
 | **notification_skill** | Send email (SMTP), list/stats | `rss_notify_new.py`, `send_test_email.py`, notify configs |
 | **webscraper_skill** | Single crawler: per-page storage (`webscrape` namespace), job markdown + optional summary, `/pages` CRUD, `/stored` aggregate for tools | `website_marketing_analysis.py`, `StoredSiteContent`, `webscrape_save.py`, `webscrape_site_facts.py`, help_skill, chatagent |
 | **help_skill** | List skills, examples, about | Chat/agent UIs |

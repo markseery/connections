@@ -168,7 +168,7 @@ Reuse **`httpx`** via existing `http_client` patterns for consistency and timeou
 |--------|----------------|
 | Job store | Persist job state (SQLite or storage server) so restarts don’t lose in-flight workflows. |
 | Step progress | Extend `WorkflowStepProgress` with `poll_attempt`, `last_poll_field` for observability. |
-| List configs | Already merges `CONFIG_DIR` + `data/workflows`; document single convention: **`data/workflows` for product workflows**. |
+| List configs | Merges user `config/workflows`, repo **`config/workflows`** (tracked examples), and **`data/workflows`** (runtime/product). |
 | Security | Subprocess remains gated: optional **allowlist** of command prefixes or env `WORKFLOW_SUBPROCESS_ALLOW=1`. |
 
 ---

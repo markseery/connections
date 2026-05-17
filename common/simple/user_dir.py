@@ -127,12 +127,15 @@ def resolve_workflows_dir() -> tuple[Path | None, Path | None]:
 
 
 def resolve_workflow(name: str) -> Path | None:
-    """Find a workflow YAML by name — user dir first, then repo data/workflows."""
+    """Find a workflow YAML by name — user dir, then repo config/workflows, then data/workflows."""
     user_wf, repo_wf = resolve_workflows_dir()
     if user_wf:
         p = user_wf / name
         if p.is_file():
             return p
+    repo_cfg = _REPO_ROOT / "config" / "workflows" / name
+    if repo_cfg.is_file():
+        return repo_cfg
     if repo_wf:
         p = repo_wf / name
         if p.is_file():

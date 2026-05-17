@@ -75,7 +75,10 @@ def shutdown_workflow_thread_pool() -> None:
 
 
 class SubmitRequest(BaseModel):
-    config: str = Field(..., description="Config file name or path (e.g. cloud_services_notify_multistep.yaml)")
+    config: str = Field(
+        ...,
+        description="Workflow config file name or path (e.g. cloud_services_notify_multistep.yaml under config/workflows/)",
+    )
     vars: dict[str, str] = Field(default_factory=dict, description="Variable overrides")
     skill_timeout: float = Field(default=300, ge=1)
     ai_timeout: float = Field(default=300, ge=1)
@@ -262,9 +265,11 @@ def list_jobs(limit: int = 20) -> dict[str, Any]:
 @router.get("/configs")
 def list_configs() -> dict[str, Any]:
     """List available workflow configuration files."""
-    from .executor import CONFIG_DIR, WORKFLOWS_DATA_DIR
+    from .executor import CONFIG_DIR, REPO_CONFIG_WORKFLOWS_DIR, WORKFLOWS_DATA_DIR
     configs = sorted(
-        set(CONFIG_DIR.glob("*.yaml")) | set(WORKFLOWS_DATA_DIR.glob("*.yaml")),
+        set(CONFIG_DIR.glob("*.yaml"))
+        | set(REPO_CONFIG_WORKFLOWS_DIR.glob("*.yaml"))
+        | set(WORKFLOWS_DATA_DIR.glob("*.yaml")),
         key=lambda c: (c.name.lower(), str(c)),
     )
     return {
