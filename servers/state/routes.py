@@ -20,8 +20,8 @@ router = APIRouter(prefix="/state", tags=["state"])
 
 _lock = threading.Lock()
 _config: OrchestratorConfig | None = None
-_engine: StateEngine | None = None
-_scheduler: StateScheduler | None = None
+_engine_instance: StateEngine | None = None
+_scheduler_instance: StateScheduler | None = None
 
 
 def _orch() -> OrchestratorConfig:
@@ -32,45 +32,45 @@ def _orch() -> OrchestratorConfig:
         return _config
 
 
-def _engine() -> StateEngine:
-    global _engine
+def _get_engine() -> StateEngine:
+    global _engine_instance
     with _lock:
-        if _engine is None:
-            _engine = StateEngine(_orch())
-        return _engine
+        if _engine_instance is None:
+            _engine_instance = StateEngine(_orch())
+        return _engine_instance
 
 
-def _scheduler() -> StateScheduler:
-    global _scheduler
+def _get_scheduler() -> StateScheduler:
+    global _scheduler_instance
     with _lock:
-        if _scheduler is None:
-            _scheduler = StateScheduler(_engine(), _orch())
-        return _scheduler
+        if _scheduler_instance is None:
+            _scheduler_instance = StateScheduler(_get_engine(), _orch())
+        return _scheduler_instance
 
 
 def startup_scheduler() -> None:
-    _scheduler().start()
+    _get_scheduler().start()
 
 
 def shutdown_scheduler() -> None:
-    global _config, _engine, _scheduler
+    global _config, _engine_instance, _scheduler_instance
     with _lock:
-        if _scheduler is not None:
-            _scheduler.stop()
-            _scheduler = None
-        _engine = None
+        if _scheduler_instance is not None:
+            _scheduler_instance.stop()
+            _scheduler_instance = None
+        _engine_instance = None
         _config = None
 
 
 def reload_config() -> None:
-    global _config, _engine, _scheduler
+    global _config, _engine_instance, _scheduler_instance
     with _lock:
-        if _scheduler is not None:
-            _scheduler.stop()
+        if _scheduler_instance is not None:
+            _scheduler_instance.stop()
         _config = OrchestratorConfig.load()
-        _engine = StateEngine(_config)
-        _scheduler = StateScheduler(_engine, _config)
-        _scheduler.start()
+        _engine_instance = StateEngine(_config)
+        _scheduler_instance = StateScheduler(_engine_instance, _config)
+        _scheduler_instance.start()
 
 
 class RefreshRequest(BaseModel):
@@ -82,7 +82,7 @@ class RefreshRequest(BaseModel):
 
 @router.get("/machines")
 def list_machines() -> dict[str, Any]:
-    eng = _engine()
+    eng = _get_engine()
     ids = eng.list_machine_ids()
     snaps = []
     for mid in ids:
@@ -99,7 +99,7 @@ def list_machines() -> dict[str, Any]:
 
 @router.get("/machines/{machine_id}")
 def get_machine(machine_id: str) -> dict[str, Any]:
-    snap = _engine().get_snapshot(machine_id)
+    snap = _get_engine().get_snapshot(machine_id)
     if snap is None:
         raise HTTPException(status_code=404, detail="machine snapshot not found")
     return snap.to_storage()
@@ -109,7 +109,7 @@ def get_machine(machine_id: str) -> dict[str, Any]:
 def refresh_machine(machine_id: str, body: RefreshRequest | None = None) -> dict[str, Any]:
     dim = body.dimension if body else None
     try:
-        snap = _engine().refresh_machine(machine_id, dimension=dim)
+        snap = _get_engine().refresh_machine(machine_id, dimension=dim)
     except Exception as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
     return snap.to_storage()
@@ -117,7 +117,7 @@ def refresh_machine(machine_id: str, body: RefreshRequest | None = None) -> dict
 
 @router.post("/refresh-due")
 def refresh_due() -> dict[str, Any]:
-    refreshed = _scheduler().tick_once()
+    refreshed = _get_scheduler().tick_once()
     return {"refreshed": refreshed, "count": len(refreshed)}
 
 
